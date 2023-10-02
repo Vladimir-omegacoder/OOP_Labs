@@ -15,14 +15,7 @@ struct Point
 class Shape
 {
 
-private:
-
-	Point m_pos			{ 0, 0 }; // Position
-	Point m_origin		{ 0, 0 }; // Origin of the shape
-
-
 public:
-
 
 	virtual ~Shape() {}
 
