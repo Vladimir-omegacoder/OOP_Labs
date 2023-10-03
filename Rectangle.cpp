@@ -6,7 +6,7 @@ void Rectangle::Draw() const
 {
 
 	std::cout << "~~~ Drawing a " << m_width << 'x' << m_height 
-		<< " rectangle at " << '(' << m_pos.x << "; " << m_pos.y << ") ~~~";
+		<< " rectangle at " << '(' << m_pos.x << "; " << m_pos.y << ") ~~~\n";
 
 }
 
