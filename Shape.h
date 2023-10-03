@@ -8,7 +8,18 @@ struct Point
 {
 	float x = 0;
 	float y = 0;
+
 };
+
+Point operator+(const Point a, const Point b)
+{
+	return Point{ a.x + b.x, a.y + b.y };
+}
+
+Point operator-(const Point a, const Point b)
+{
+	return Point{ a.x - b.x, a.y - b.y };
+}
 
 
 
