@@ -17,6 +17,8 @@ private:
 
 public:
 
+	Rectangle() : m_pos{ 0, 0 }, m_width(0), m_height(0) {}
+
 	Rectangle(Point pos, float width, float height)
 		: m_pos(pos), m_width(width), m_height(height) {}
 
