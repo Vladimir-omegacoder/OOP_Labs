@@ -4,23 +4,21 @@
 
 
 
-class Rectangle : public Shape
+class Circle : public Shape
 {
 
 private:
 
 	Point m_pos;
 
-	float m_width;
-	float m_height;
+	float m_radius;
 
-
+	
 public:
 
-	Rectangle() : m_pos{ 0, 0 }, m_width(0), m_height(0) {}
+	Circle() : m_pos{0, 0}, m_radius(0) {}
 
-	Rectangle(Point pos, float width, float height)
-		: m_pos(pos), m_width(width), m_height(height) {}
+	Circle(Point pos, float radius) : m_pos(pos), m_radius(radius) {}
 
 
 
@@ -37,25 +35,14 @@ public:
 	}
 
 
-	inline float	Get_width() const
+	inline float	Get_radius() const
 	{
-		return m_width;
+		return m_radius;
 	}
 
-	inline void		Set_width(float width)
+	inline void		Set_radius(float radius)
 	{
-		m_width = width;
-	}
-
-
-	inline float	Get_height() const
-	{
-		return m_height;
-	}
-
-	inline void		Set_height(float height)
-	{
-		m_height = height;
+		m_radius = radius;
 	}
 
 	//-----------------------------------------------
