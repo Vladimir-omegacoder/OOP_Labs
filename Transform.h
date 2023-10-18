@@ -187,6 +187,8 @@ bool operator==(const Transform& a, const Transform& b)
 		}
 	}
 
+	return true;
+
 }
 
 bool operator!=(const Transform& a, const Transform& b)
@@ -199,6 +201,8 @@ bool operator!=(const Transform& a, const Transform& b)
 			return false;
 		}
 	}
+
+	return true;
 
 }
 
