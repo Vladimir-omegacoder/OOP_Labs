@@ -95,7 +95,8 @@ public:
 	}
 
 
-	Vector2f apply_to(const Vector2f& point)
+
+	Vector2f transform_point(const Vector2f& point)
 	{
 		/*float vector_line[3] { point.x, point.y, 0 };
 		float result_vector_line[3];
