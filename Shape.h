@@ -7,6 +7,15 @@
 
 
 
+struct Color
+{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
+};
+
+
 
 class Shape : sf::Drawable
 {
@@ -14,6 +23,10 @@ class Shape : sf::Drawable
 public:
 
 	virtual ~Shape(){}
+
+	virtual void set_color(Color color) = 0;
+
+	virtual Color get_color() = 0;
 
 	virtual void move(const Vector2f& offset) = 0;
 
