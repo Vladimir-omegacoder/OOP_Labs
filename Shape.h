@@ -8,6 +8,8 @@
 class Shape
 {
 
+	virtual ~Shape(){}
+
 	virtual void draw() = 0;
 
 	virtual void move(const Vector2f& offset) = 0;
