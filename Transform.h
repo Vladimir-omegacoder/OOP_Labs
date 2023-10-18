@@ -98,19 +98,9 @@ public:
 
 	Vector2f transform_point(const Vector2f& point)
 	{
-		float vector_line[3] { point.x, point.y, 1 };
-		float result_vector_line[3];
-
-		for (int i = 0; i < 3; ++i)
-		{
-			result_vector_line[i] =
-				vector_line[0] * m_matrix[i] +
-				vector_line[1] * m_matrix[i + 3] +
-				vector_line[2] * m_matrix[i + 6];
-		}
-
-		return Vector2f(result_vector_line[0], result_vector_line[1]);
+		return Vector2f(point.x * m_matrix[0] + point.y * m_matrix[3] + m_matrix[6], point.x * m_matrix[1] + point.y * m_matrix[4] + m_matrix[7]);
 	}
+
 
 
 
