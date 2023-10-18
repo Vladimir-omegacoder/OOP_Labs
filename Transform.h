@@ -35,14 +35,14 @@ public:
 
 		moving.m_matrix[0] = 0;
 		moving.m_matrix[1] = 0;
-		moving.m_matrix[2] = offset.x;
+		moving.m_matrix[2] = 0;
 
 		moving.m_matrix[3] = 0;
 		moving.m_matrix[4] = 0;
-		moving.m_matrix[5] = offset.y;
+		moving.m_matrix[5] = 0;
 
-		moving.m_matrix[6] = 0;
-		moving.m_matrix[7] = 0;
+		moving.m_matrix[6] = offset.x;
+		moving.m_matrix[7] = offset.y;
 		moving.m_matrix[8] = 0;
 
 		(*this) *= moving;
@@ -98,7 +98,7 @@ public:
 
 	Vector2f transform_point(const Vector2f& point)
 	{
-		float vector_line[3] { point.x, point.y, 0 };
+		float vector_line[3] { point.x, point.y, 1 };
 		float result_vector_line[3];
 
 		for (int i = 0; i < 3; ++i)
