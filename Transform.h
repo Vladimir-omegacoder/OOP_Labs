@@ -96,7 +96,7 @@ public:
 
 
 
-	Vector2f transform_point(const Vector2f& point)
+	Vector2f transform_point(const Vector2f& point) const
 	{
 		return Vector2f(point.x * m_matrix[0] + point.y * m_matrix[3] + m_matrix[6], point.x * m_matrix[1] + point.y * m_matrix[4] + m_matrix[7]);
 	}
