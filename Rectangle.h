@@ -12,8 +12,6 @@ protected:
 
 	Vector2f m_vertices[4];
 
-	Color m_color;
-
 
 public:
 
@@ -24,14 +22,6 @@ public:
 
 
 	//Getters and setters
-
-	virtual void set_color(Color color);
-
-	virtual Color get_color();
-
-
-
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 
 
