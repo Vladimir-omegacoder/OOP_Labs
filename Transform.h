@@ -98,19 +98,18 @@ public:
 
 	Vector2f transform_point(const Vector2f& point)
 	{
-		/*float vector_line[3] { point.x, point.y, 0 };
+		float vector_line[3] { point.x, point.y, 0 };
 		float result_vector_line[3];
 
 		for (int i = 0; i < 3; ++i)
 		{
-			for (int j = 0; j < 3; ++j)
-			{
-				result_vector_line[j] =
-					vector_line[j] * m_matrix[i] +
-					a.m_matrix[j + 3] * b.m_matrix[i + 1] +
-					a.m_matrix[j + 6] * b.m_matrix[i + 2];
-			}
-		}*/
+			result_vector_line[i] =
+				vector_line[0] * m_matrix[i] +
+				vector_line[1] * m_matrix[i + 3] +
+				vector_line[2] * m_matrix[i + 6];
+		}
+
+		return Vector2f(result_vector_line[0], result_vector_line[1]);
 	}
 
 
@@ -149,9 +148,9 @@ Transform operator*(const Transform &a, const Transform &b)
 		for (int j = 0; j < 3; ++j)
 		{
 			new_transform.m_matrix[i * 3 + j] =
-				a.m_matrix[j] * b.m_matrix[i] +
-				a.m_matrix[j + 3] * b.m_matrix[i + 1] +
-				a.m_matrix[j + 6] * b.m_matrix[i + 2];
+				a.m_matrix[i * 3] * b.m_matrix[j] +
+				a.m_matrix[i * 3 + 1] * b.m_matrix[j + 3] +
+				a.m_matrix[i * 3 + 2] * b.m_matrix[j + 6];
 		}
 	}
 
@@ -167,9 +166,9 @@ Transform& operator*=(Transform& a, const Transform& b)
 		for (int j = 0; j < 3; ++j)
 		{
 			a.m_matrix[i * 3 + j] =
-				a.m_matrix[j] * b.m_matrix[i] +
-				a.m_matrix[j + 3] * b.m_matrix[i + 1] +
-				a.m_matrix[j + 6] * b.m_matrix[i + 2];
+				a.m_matrix[i * 3] * b.m_matrix[j] +
+				a.m_matrix[i * 3 + 1] * b.m_matrix[j + 3] +
+				a.m_matrix[i * 3 + 2] * b.m_matrix[j + 6];
 		}
 	}
 
