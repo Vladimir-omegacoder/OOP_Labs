@@ -12,6 +12,8 @@ protected:
 
 	Vector2f m_vertices[32];
 
+	Vector2f m_pos;
+
 	float m_radius;
 
 
@@ -22,7 +24,8 @@ public:
 	Circle(float radius, const Vector2f& pos);
 
 	
-
+	Vector2f get_pos() const;
+	
 	float get_radius() const;
 
 

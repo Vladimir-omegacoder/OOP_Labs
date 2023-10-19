@@ -25,8 +25,6 @@ public:
 
 	Vector2f get_pos() const;
 
-	void set_pos(const Vector2f& pos);
-
 	Vector2f get_size() const;
 
 

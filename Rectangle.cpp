@@ -19,14 +19,6 @@ Vector2f Rectangle::get_pos() const
 	return m_vertices[0];
 }
 
-void Rectangle::set_pos(const Vector2f& pos)
-{
-	m_vertices[0] = pos;
-	m_vertices[1] = Vector2f(pos.x + m_size.x, pos.y);
-	m_vertices[2] = (pos + m_size);
-	m_vertices[3] = Vector2f(pos.x, pos.y + m_size.y);
-}
-
 Vector2f Rectangle::get_size() const
 {
 	return m_size;

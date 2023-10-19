@@ -35,6 +35,11 @@ Circle::Circle(float radius, const Vector2f& pos) : m_pos(pos), m_radius(radius)
 
 
 
+Vector2f Circle::get_pos() const
+{
+	return m_pos;
+}
+
 float Circle::get_radius() const
 {
 	return m_radius;
