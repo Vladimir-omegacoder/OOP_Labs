@@ -15,9 +15,9 @@ protected:
 
 public:
 
-	Rectangle(const Vector2f& size, const Vector2f& pos);
+	Rectangle() : Rectangle(Vector2f(0, 0), Vector2f(0, 0)) {}
 
-	Rectangle(float width, float height, float x, float y);
+	Rectangle(const Vector2f& size, const Vector2f& pos);
 
 
 

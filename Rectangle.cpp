@@ -12,14 +12,6 @@ Rectangle::Rectangle(const Vector2f& size, const Vector2f& pos)
 	m_vertices[3] = Vector2f(pos.x, pos.y + size.y);
 }
 
-Rectangle::Rectangle(float width, float height, float x, float y)
-{
-	m_vertices[0] = Vector2f(x, y);
-	m_vertices[1] = Vector2f(x + width, y);
-	m_vertices[2] = Vector2f(x + width, y + height);
-	m_vertices[3] = Vector2f(x, y + height);
-}
-
 
 
 Vector2f Rectangle::get_pos() const
