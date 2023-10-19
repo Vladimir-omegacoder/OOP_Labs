@@ -119,16 +119,20 @@ Transform operator*(const Transform& a, const Transform& b)
 Transform& operator*=(Transform& a, const Transform& b)
 {
 
+	Transform new_transform;
+
 	for (int i = 0; i < 3; ++i)
 	{
 		for (int j = 0; j < 3; ++j)
 		{
-			a.m_matrix[i * 3 + j] =
+			new_transform.m_matrix[i * 3 + j] =
 				a.m_matrix[i * 3] * b.m_matrix[j] +
 				a.m_matrix[i * 3 + 1] * b.m_matrix[j + 3] +
 				a.m_matrix[i * 3 + 2] * b.m_matrix[j + 6];
 		}
 	}
+
+	a = new_transform;
 
 	return a;
 
