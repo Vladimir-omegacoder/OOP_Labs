@@ -21,7 +21,13 @@ public:
 
 
 
-	//Getters and setters
+	Vector2f get_pos() const;
+
+	void set_pos(const Vector2f& pos);
+
+	Vector2f get_size() const;
+
+	void set_size(const Vector2f& size);
 
 
 
