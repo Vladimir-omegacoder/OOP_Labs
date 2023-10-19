@@ -26,51 +26,102 @@ public:
 
 
 template<class T>
-Vector<T> operator+(const Vector<T>& a);
+Vector<T> operator+(const Vector<T>& a)
+{
+	return Vector<T>(a);
+}
 
 template<class T>
-Vector<T> operator-(const Vector<T>& a);
-
-
-
-template<class T>
-Vector<T> operator+(const Vector<T>& a, const Vector<T>& b);
-
-template<class T>
-Vector<T> operator-(const Vector<T>& a, const Vector<T>& b);
-
-template<class T>
-Vector<T>& operator+=(Vector<T>& a, const Vector<T>& b);
-
-template<class T>
-Vector<T>& operator-=(Vector<T>& a, const Vector<T>& b);
+Vector<T> operator-(const Vector<T>& a)
+{
+	return Vector<T>(-a.x, -a.y);
+}
 
 
 
 template<class T>
-Vector<T> operator*(const Vector<T>& a, const T k);
+Vector<T> operator+(const Vector<T>& a, const Vector<T>& b)
+{
+	return Vector<T>(a.x + b.x, a.y + b.y);
+}
 
 template<class T>
-Vector<T> operator*(const T k, const Vector<T>& a);
+Vector<T> operator-(const Vector<T>& a, const Vector<T>& b)
+{
+	return Vector<T>(a.x - b.x, a.y - b.y);
+}
 
 template<class T>
-Vector<T>& operator*=(Vector<T>& a, const T k);
+Vector<T>& operator+=(Vector<T>& a, const Vector<T>& b)
+{
+	a.x += b.x;
+	a.y += b.y;
+
+	return a;
+}
+
+template<class T>
+Vector<T>& operator-=(Vector<T>& a, const Vector<T>& b)
+{
+	a.x -= b.x;
+	a.y -= b.y;
+
+	return a;
+}
 
 
 
 template<class T>
-Vector<T> operator/(const Vector<T>& a, const T k);
+Vector<T> operator*(const Vector<T>& a, const T k)
+{
+	return Vector<T>(a.x * k, a.y * k);
+}
 
 template<class T>
-Vector<T>& operator/=(Vector<T>& a, const T k);
+Vector<T> operator*(const T k, const Vector<T>& a)
+{
+	return Vector<T>(k * a.x, k * a.y);
+}
+
+template<class T>
+Vector<T>& operator*=(Vector<T>& a, const T k)
+{
+	a.x *= k;
+	a.y *= k;
+
+	return a;
+}
 
 
 
 template<class T>
-bool operator==(const Vector<T>& a, const Vector<T>& b);
+Vector<T> operator/(const Vector<T>& a, const T k)
+{
+	return Vector<T>(a.x / k, a.y / k);
+}
 
 template<class T>
-bool operator!=(const Vector<T>& a, const Vector<T>& b);
+Vector<T>& operator/=(Vector<T>& a, const T k)
+{
+	a.x /= k;
+	a.y /= k;
+
+	return a;
+}
+
+
+
+template<class T>
+bool operator==(const Vector<T>& a, const Vector<T>& b)
+{
+	return (a.x == b.x && a.y == b.y);
+}
+
+template<class T>
+bool operator!=(const Vector<T>& a, const Vector<T>& b)
+{
+	return (a.x != b.x || a.y != b.y);
+}
 
 
 
