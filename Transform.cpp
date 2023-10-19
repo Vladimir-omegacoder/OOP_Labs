@@ -6,17 +6,17 @@ Transform& Transform::move(const Vector2f& offset)
 {
 	Transform moving;
 
-	moving.m_matrix[0] = 0;
+	moving.m_matrix[0] = 1;
 	moving.m_matrix[1] = 0;
 	moving.m_matrix[2] = 0;
 
 	moving.m_matrix[3] = 0;
-	moving.m_matrix[4] = 0;
+	moving.m_matrix[4] = 1;
 	moving.m_matrix[5] = 0;
 
 	moving.m_matrix[6] = offset.x;
 	moving.m_matrix[7] = offset.y;
-	moving.m_matrix[8] = 0;
+	moving.m_matrix[8] = 1;
 
 	(*this) *= moving;
 
@@ -39,7 +39,7 @@ Transform& Transform::rotate(float angle)
 
 	rotation.m_matrix[6] = 0;
 	rotation.m_matrix[7] = 0;
-	rotation.m_matrix[8] = 0;
+	rotation.m_matrix[8] = 1;
 
 	(*this) *= rotation;
 
@@ -60,7 +60,7 @@ Transform& Transform::scale(const Vector2f& factor)
 
 	scaling.m_matrix[6] = 0;
 	scaling.m_matrix[7] = 0;
-	scaling.m_matrix[8] = 0;
+	scaling.m_matrix[8] = 1;
 
 	(*this) *= scaling;
 
