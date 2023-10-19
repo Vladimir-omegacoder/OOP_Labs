@@ -41,7 +41,7 @@ Transform& Transform::rotate(float angle)
 	rotation.m_matrix[7] = 0;
 	rotation.m_matrix[8] = 1;
 
-	(*this) *= rotation;
+	(*this) = rotation * (*this);
 
 	return *this;
 }

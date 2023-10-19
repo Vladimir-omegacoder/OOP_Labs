@@ -17,7 +17,7 @@ protected:
 
 public:
 
-	Rectangle() : Rectangle(Vector2f(0, 0), Vector2f(0, 0)) {}
+	Rectangle() : Rectangle(Vector2f(100, 100), Vector2f(0, 0)) {}
 
 	Rectangle(const Vector2f& size, const Vector2f& pos);
 
