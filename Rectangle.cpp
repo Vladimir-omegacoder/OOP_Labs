@@ -85,15 +85,4 @@ void Rectangle::apply_transform(const Transform& transform)
 	}
 }
 
-void Rectangle::apply_transform(const Vector2f& offset, float angle, const Vector2f& factor)
-{
-	Transform transform;
-	transform.move(offset);
-	transform.rotate(angle);
-	transform.scale(factor);
 
-	for (int i = 0; i < 4; ++i)
-	{
-		m_vertices[i] = transform.transform_point(m_vertices[i]);
-	}
-}

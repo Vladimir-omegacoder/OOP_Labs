@@ -20,7 +20,5 @@ public:
 
 	virtual void apply_transform(const Transform& transform) = 0;
 
-	virtual void apply_transform(const Vector2f& offset, float angle, const Vector2f& factor) = 0;
-
 };
 
