@@ -12,6 +12,8 @@ protected:
 
 	Vector2f m_vertices[4];
 
+	Vector2f m_size;
+
 
 public:
 
@@ -27,7 +29,6 @@ public:
 
 	Vector2f get_size() const;
 
-	void set_size(const Vector2f& size);
 
 
 

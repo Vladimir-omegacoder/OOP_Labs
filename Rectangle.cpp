@@ -4,7 +4,7 @@
 
 
 
-Rectangle::Rectangle(const Vector2f& size, const Vector2f& pos)
+Rectangle::Rectangle(const Vector2f& size, const Vector2f& pos) : m_size(size)
 {
 	m_vertices[0] = Vector2f(pos.x, pos.y);
 	m_vertices[1] = Vector2f(pos.x + size.x, pos.y);
@@ -21,26 +21,15 @@ Vector2f Rectangle::get_pos() const
 
 void Rectangle::set_pos(const Vector2f& pos)
 {
-	Vector2f size = get_size();
-
 	m_vertices[0] = pos;
-	m_vertices[1] = Vector2f(pos.x + size.x, pos.y);
-	m_vertices[2] = (pos + size);
-	m_vertices[3] = Vector2f(pos.x, pos.y + size.y);
+	m_vertices[1] = Vector2f(pos.x + m_size.x, pos.y);
+	m_vertices[2] = (pos + m_size);
+	m_vertices[3] = Vector2f(pos.x, pos.y + m_size.y);
 }
 
 Vector2f Rectangle::get_size() const
 {
-	return Vector2f(m_vertices[1].x - m_vertices[0].x, m_vertices[3].y - m_vertices[0].y);
-}
-
-void Rectangle::set_size(const Vector2f& size)
-{
-	Vector2f cur_size = get_size();
-
-	m_vertices[1].x += size.x - cur_size.x;
-	m_vertices[2] += size - cur_size;
-	m_vertices[3].y += size.y - cur_size.y;
+	return m_size;
 }
 
 
