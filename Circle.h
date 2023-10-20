@@ -30,12 +30,12 @@ public:
 
 
 
-	virtual void move(const Vector2f& offset) override {};
+	virtual void move(const Vector2f& offset) override;
 
-	virtual void rotate(float angle) override {};
+	virtual void rotate(float angle) override;
 
-	virtual void scale(const Vector2f& factor) override {};
+	virtual void scale(const Vector2f& factor) override;
 
-	virtual void apply_transform(const Transform& transform) override {};
+	virtual void apply_transform(const Transform& transform) override;
 
 };
