@@ -33,3 +33,49 @@ Convex& Convex::operator=(const Convex& other)
 	return *this;
 }
 
+
+
+Vector2f& Convex::operator[](int index)
+{
+	return m_vertices[index];
+}
+
+Vector2f Convex::operator[](int index) const
+{
+	return m_vertices[index];
+}
+
+
+
+void Convex::move(const Vector2f& offset)
+{
+	Transform moving;
+	moving.move(offset);
+
+	apply_transform(moving);
+}
+
+void Convex::rotate(float angle)
+{
+	Transform rotation;
+	rotation.rotate(angle);
+
+	apply_transform(rotation);
+}
+
+void Convex::scale(const Vector2f& factor)
+{
+	Transform scaling;
+	scaling.scale(factor);
+
+	apply_transform(scaling);
+}
+
+void Convex::apply_transform(const Transform& transform)
+{
+	for (int i = 0; i < m_vertex_count; ++i)
+	{
+		m_vertices[i] = transform.transform_point(m_vertices[i]);
+	}
+}
+

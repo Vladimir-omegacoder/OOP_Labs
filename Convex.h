@@ -27,17 +27,19 @@ public:
 
 
 
+	Vector2f& operator[](int index);
+
+	Vector2f operator[](int index) const;
 
 
 
+	virtual void move(const Vector2f& offset);
 
-	virtual void move(const Vector2f& offset) {};
+	virtual void rotate(float angle);
 
-	virtual void rotate(float angle) {};
+	virtual void scale(const Vector2f& factor);
 
-	virtual void scale(const Vector2f& factor) {};
-
-	virtual void apply_transform(const Transform& transform) {};
+	virtual void apply_transform(const Transform& transform);
 
 };
 
