@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 
 
@@ -121,6 +122,24 @@ template<class T>
 bool operator!=(const Vector<T>& a, const Vector<T>& b)
 {
 	return (a.x != b.x || a.y != b.y);
+}
+
+
+
+template<class T>
+std::ostream& operator<<(std::ostream& out, const Vector<T>& a)
+{
+	out << a.x << ' ' << a.y;
+
+	return out;
+}
+
+template<class T>
+std::istream& operator>>(std::istream& in, Vector<T>& a)
+{
+	in >> a.x >> a.y;
+
+	return in;
 }
 
 
