@@ -18,7 +18,7 @@ Transform& Transform::move(const Vector2f& offset)
 	moving.m_matrix[7] = offset.y;
 	moving.m_matrix[8] = 1;
 
-	(*this) *= moving;
+	(*this) = moving * (*this);
 
 	return *this;
 }
@@ -27,7 +27,7 @@ Transform& Transform::rotate(float angle)
 {
 	Transform rotation;
 
-	angle /= 57.2958f;
+	angle /= -57.2958f;
 
 	rotation.m_matrix[0] = cosf(angle);
 	rotation.m_matrix[1] = -sinf(angle);
@@ -62,7 +62,7 @@ Transform& Transform::scale(const Vector2f& factor)
 	scaling.m_matrix[7] = 0;
 	scaling.m_matrix[8] = 1;
 
-	(*this) *= scaling;
+	(*this) = scaling * (*this);
 
 	return *this;
 }

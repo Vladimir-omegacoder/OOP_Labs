@@ -56,6 +56,12 @@ void Rectangle::apply_transform(const Transform& transform)
 	{
 		m_vertices[i] = transform.transform_point(m_vertices[i]);
 	}
+
+	Vector2f width = m_vertices[0] - m_vertices[1];
+	Vector2f height = m_vertices[0] - m_vertices[3];
+
+	m_size.x = sqrtf(width.x * width.x + width.y * width.y);
+	m_size.y = sqrtf(height.x * height.x + height.y * height.y);
 }
 
 
