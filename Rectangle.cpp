@@ -24,6 +24,11 @@ Vector2f Rectangle::get_size() const
 	return m_size;
 }
 
+void Rectangle::set_size(const Vector2f& size)
+{
+	(*this) = Rectangle(size, Vector2f(0, 0));
+}
+
 
 
 void Rectangle::move(const Vector2f& offset)
@@ -65,3 +70,25 @@ void Rectangle::apply_transform(const Transform& transform)
 }
 
 
+
+std::ostream& operator<<(std::ostream& out, const Rectangle& rect)
+{
+	out << rect.m_size << " ; " << rect.get_pos();
+
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, Rectangle& rect)
+{
+	Vector2f temp;
+
+	in >> temp;
+	rect.set_size(temp);
+
+	in.ignore(2);
+
+	in >> temp;
+	rect.move(temp);
+
+	return in;
+}

@@ -1,5 +1,6 @@
 #pragma once
 #include "Shape.h"
+#include <iostream>
 
 
 
@@ -17,7 +18,7 @@ protected:
 
 public:
 
-	Rectangle() : Rectangle(Vector2f(100, 100), Vector2f(0, 0)) {}
+	Rectangle() : Rectangle(Vector2f(0, 0), Vector2f(0, 0)) {}
 
 	Rectangle(const Vector2f& size, const Vector2f& pos);
 
@@ -27,6 +28,7 @@ public:
 
 	Vector2f get_size() const;
 
+	void set_size(const Vector2f& size);
 
 
 
@@ -37,6 +39,12 @@ public:
 	virtual void scale(const Vector2f& factor) override;
 
 	virtual void apply_transform(const Transform& transform) override;
+
+
+
+	friend std::ostream& operator<<(std::ostream& out, const Rectangle& rect);
+
+	friend std::istream& operator>>(std::istream& in, Rectangle& rect);
 
 };
 
