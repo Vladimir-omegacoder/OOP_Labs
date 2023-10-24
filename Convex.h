@@ -41,5 +41,11 @@ public:
 
 	virtual void apply_transform(const Transform& transform);
 
+
+
+	friend std::ostream& operator<<(std::ostream& out, const Convex& convex);
+
+	friend std::istream& operator>>(std::istream& in, Convex& convex);
+
 };
 

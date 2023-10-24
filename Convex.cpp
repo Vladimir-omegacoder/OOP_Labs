@@ -79,3 +79,29 @@ void Convex::apply_transform(const Transform& transform)
 	}
 }
 
+
+
+std::ostream& operator<<(std::ostream& out, const Convex& convex)
+{
+	for (int i = 0; i < convex.m_vertex_count - 1; ++i)
+	{
+		out << convex[i] << " ; ";
+	}
+
+	out << convex[convex.m_vertex_count - 1];
+
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, Convex& convex)
+{
+	for (int i = 0; i < convex.m_vertex_count - 1; ++i)
+	{
+		in >> convex[i];
+		in.ignore(2);
+	}
+
+	in >> convex[convex.m_vertex_count - 1];
+
+	return in;
+}
