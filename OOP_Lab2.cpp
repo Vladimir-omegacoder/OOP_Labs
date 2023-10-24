@@ -27,17 +27,17 @@ void print_matrix(const Transform& tr)
 int main()
 {
 
-	Rectangle rect(Vector2f(140, 100), Vector2f(50, 50));
+	Circle circle(50, Vector2f(40, 100));
 
-	rect.rotate(45);
+	circle.rotate(45);
 
-	std::cout << rect << '\n';
+	std::cout << circle << '\n';
 
-	std::cout << "Rect values: ";
-	std::cin >> rect;
+	std::cout << "Enter circle values: ";
+	std::cin >> circle;
 
-	std::cout << "Entered rect:\n";
-	std::cout << rect << '\n';
+	std::cout << "Entered circle:\n";
+	std::cout << circle << '\n';
 
 }
 

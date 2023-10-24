@@ -19,7 +19,7 @@ protected:
 
 public:
 
-	Circle() : Circle(50, Vector2f(0, 0)) {}
+	Circle() : Circle(0, Vector2f(0, 0)) {}
 
 	Circle(float radius, const Vector2f& pos);
 
@@ -27,6 +27,8 @@ public:
 	Vector2f get_pos() const;
 	
 	float get_radius() const;
+
+	void set_radius(float radius);
 
 
 
@@ -37,5 +39,11 @@ public:
 	virtual void scale(const Vector2f& factor) override;
 
 	virtual void apply_transform(const Transform& transform) override;
+
+
+
+	friend std::ostream& operator<<(std::ostream& out, const Circle& circle);
+
+	friend std::istream& operator>>(std::istream& in, Circle& circle);
 
 };
