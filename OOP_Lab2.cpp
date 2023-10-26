@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <memory>
+
 #include "Vector.h"
 #include "Transform.h"
 #include "Rectangle.h"
@@ -10,10 +12,10 @@
 
 
 
-#define RECTANGLES_PATH ""
-#define CIRCLES_PATH    ""
-#define CONVEXES_PATH   ""
-#define OUTPUT_PATH     ""
+#define RECTANGLES_PATH "file_source\\Rectangles.csv"
+#define CIRCLES_PATH    "file_source\\Circles.csv"
+#define CONVEXES_PATH   "file_source\\Convexes.csv"
+#define OUTPUT_PATH     "file_source\\Output.csv"
 
 
 
@@ -55,9 +57,6 @@ int main()
 
     Shape* shape = nullptr;
 
-    std::fstream rectangles(RECTANGLES_PATH), circles(CIRCLES_PATH),
-        convexes(CONVEXES_PATH), output(OUTPUT_PATH);
-
 
     char command;
     bool run = true;
@@ -98,7 +97,6 @@ int main()
 
         case Menu_commands::PRINT_SHAPE:
             print_shape(*shape);
-            std::cout << '\n';
             break;
 
 
@@ -265,7 +263,7 @@ void print_shape(const Shape& shape)
     }
     else if (choice == '2')
     {
-        destination = new std::ofstream(OUTPUT_PATH);
+        destination = new std::ofstream(OUTPUT_PATH, std::ios::app);
     }
     else
     {
@@ -284,6 +282,8 @@ void print_shape(const Shape& shape)
     {
         (*destination) << *temp3;
     }
+
+    (*destination) << '\n';
 
     if(destination != &std::cout)
     {
