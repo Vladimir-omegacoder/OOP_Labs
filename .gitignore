@@ -2,3 +2,6 @@
 *.vcxproj*
 x64
 bin
+
+# Other files
+file_source

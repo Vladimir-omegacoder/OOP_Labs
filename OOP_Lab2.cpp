@@ -12,10 +12,10 @@
 
 
 
-#define RECTANGLES_PATH "file_source\\Rectangles.csv"
-#define CIRCLES_PATH    "file_source\\Circles.csv"
-#define CONVEXES_PATH   "file_source\\Convexes.csv"
-#define OUTPUT_PATH     "file_source\\Output.csv"
+#define RECTANGLES_PATH "file_source\\Rectangles.txt"
+#define CIRCLES_PATH    "file_source\\Circles.txt"
+#define CONVEXES_PATH   "file_source\\Convexes.txt"
+#define OUTPUT_PATH     "file_source\\Output.txt"
 
 
 
@@ -56,7 +56,6 @@ int main()
 {
 
     Shape* shape = nullptr;
-
 
     char command;
     bool run = true;
@@ -123,8 +122,6 @@ int main()
 
 
 
-
-
 void print_command_info()
 {
 
@@ -173,12 +170,17 @@ void select_shape(Shape*& shape)
             std::cin >> position;
 
             std::ifstream file(RECTANGLES_PATH);
-            std::string temp;
-            for (size_t i = 0; i < position; ++i)
+            if (!file.is_open())
             {
-                std::getline(file, temp);
+                throw;
             }
-            std::ifstream(RECTANGLES_PATH) >> static_cast<Rectangle&>(*shape);
+
+            for (int i = 0; i < position; ++i)
+            {
+                while (file.peek() != '\n') file.ignore(1);
+                file.ignore(1);
+            }
+            file >> static_cast<Rectangle&>(*shape);
         }
         break;
 
@@ -200,12 +202,17 @@ void select_shape(Shape*& shape)
             std::cin >> position;
 
             std::ifstream file(CIRCLES_PATH);
-            std::string temp;
-            for (size_t i = 0; i < position; ++i)
+            if(!file.is_open())
             {
-                std::getline(file, temp);
+                throw;
             }
-            std::ifstream(CIRCLES_PATH) >> static_cast<Circle&>(*shape);
+
+            for (int i = 0; i < position; ++i)
+            {
+                while (file.peek() != '\n') file.ignore(1);
+                file.ignore(1);
+            }
+            file >> static_cast<Circle&>(*shape);
         }
         break;
 
@@ -231,12 +238,17 @@ void select_shape(Shape*& shape)
             std::cin >> position;
 
             std::ifstream file(CONVEXES_PATH);
-            std::string temp;
-            for (size_t i = 0; i < position; ++i)
+            if (!file.is_open())
             {
-                std::getline(file, temp);
+                throw;
             }
-            std::ifstream(CONVEXES_PATH) >> static_cast<Convex&>(*shape);
+
+            for (int i = 0; i < position; ++i)
+            {
+                while (file.peek() != '\n') file.ignore(1);
+                file.ignore(1);
+            }
+            file >> static_cast<Convex&>(*shape);
         }
         break;
 
@@ -248,6 +260,8 @@ void select_shape(Shape*& shape)
     }
 
 }
+
+
 
 void print_shape(const Shape& shape)
 {
@@ -264,6 +278,11 @@ void print_shape(const Shape& shape)
     else if (choice == '2')
     {
         destination = new std::ofstream(OUTPUT_PATH, std::ios::app);
+        if(!static_cast<std::ofstream*>(destination)->is_open())
+        {
+            delete destination;
+            throw;
+        }
     }
     else
     {
@@ -290,6 +309,8 @@ void print_shape(const Shape& shape)
         delete destination;
     }
 }
+
+
 
 void transform_shape(Shape& shape)
 {
