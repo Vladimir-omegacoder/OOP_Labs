@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <string>
 
 template<typename T>
 class Queue
@@ -21,26 +20,22 @@ private:
 
 	Node<T>* head;
 	Node<T>* tail;
-	int max_size;
 	int size;
-	int time;
 
 public:
 
 	Queue();
-
-	Queue(int max_size = 0, int time = 0);
 
 	Queue(const Queue<T>& other);
 
 	~Queue();
 
 
+	const T& operator[] (const int index) const;
 	T& operator[] (const int index);
 
 
-
-	int getSize() { return size; }
+	int getSize() const { return size; }
 
 
 	void push(T data);
