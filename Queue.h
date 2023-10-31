@@ -42,7 +42,6 @@ public:
 
 
 
-
 	void pop();
 
 	void clear();

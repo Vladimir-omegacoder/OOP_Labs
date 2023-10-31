@@ -30,6 +30,14 @@ public:
 	Customer& operator[] (const int index);
 
 
+	Cash_register& operator= (const Cash_register& other);
+
+	friend bool operator == (const Cash_register& cash1, const Cash_register& cash2);
+	friend bool operator != (const Cash_register& cash1, const Cash_register& cash2);
+
+	friend std::ostream& operator << (std::ostream& out, const Cash_register& cash);
+	friend std::istream& operator >> (std::istream& in, Cash_register& cash);
+
 
 	int getMaxSize() const { return max_size; }
 
@@ -52,16 +60,6 @@ public:
 	void pop();
 
 	void clear();
-
-
-
-	Cash_register& operator= (const Cash_register& other);
-
-	friend bool operator == (const Cash_register& cash1, const Cash_register& cash2);
-	friend bool operator != (const Cash_register& cash1, const Cash_register& cash2);
-
-	friend std::ostream& operator << (std::ostream& out, const Cash_register& cash);
-	friend std::istream& operator >> (std::istream& in, Cash_register& cash);
 };
 
 #include "Cash_register.inl"
