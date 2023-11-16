@@ -1,6 +1,5 @@
 #pragma once
 #include "Shape.h"
-#include <iostream>
 
 
 
@@ -8,6 +7,11 @@
 
 class Rectangle : public Shape
 {
+
+private:
+
+	friend class Convex_reshape;
+
 
 protected:
 

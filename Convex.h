@@ -8,6 +8,11 @@
 class Convex : public Shape
 {
 
+private:
+
+	friend class Convex_reshape;
+
+
 protected:
 
 	Vector2f* m_vertices;

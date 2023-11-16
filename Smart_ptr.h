@@ -85,8 +85,3 @@ public:
 	}
 
 };
-
-
-
-#include "Smart_ptr.inl"
-
