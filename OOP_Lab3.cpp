@@ -16,30 +16,35 @@
 
 enum class Menu_commands
 {
+
     DEFAULT = 0,
     CLEAR_CONSOLE = 'c',
     QUIT_PROGRAM = 'q',
     PRINT_HELP = 'h',
 
     SELECT_SHAPE = 's',
-    RECTANGLE = '1',
-    CIRCLE = '2',
-    CONVEX = '3',
+    SELECT_TEMP = 'a',
 
     PRINT_SHAPE = 'p',
+    PRINT_TEMP = 'y',
 
     TRANSFORM_SHAPE = 't',
+
+    INSERT_SHAPE = 'i',
+
 };
 
 
 
 void print_command_info();
 
-void select_shape(Smart_ptr<Convex> shape);
+void select_shape(Convex& shape);
 
-void print_shape(Smart_ptr<Convex> shape);
+void print_shape(Convex& shape);
 
 void transform_shape(Convex& shape);
+
+void insert_shape(Convex& shape1, const Convex& shape2);
 
 
 
@@ -49,6 +54,7 @@ int main()
 {
 
     Smart_ptr<Convex> shape(new Convex(1));
+    Smart_ptr<Convex> temp(new Convex(1));
 
     char command;
     bool run = true;
@@ -83,17 +89,32 @@ int main()
 
 
         case Menu_commands::SELECT_SHAPE:
-            select_shape(std::move(shape));
+            select_shape(*shape);
             break;
             
 
+        case Menu_commands::SELECT_TEMP:
+            select_shape(*temp);
+            break;
+
+
         case Menu_commands::PRINT_SHAPE:
-            print_shape(std::move(shape));
+            print_shape(*shape);
+            break;
+
+
+        case Menu_commands::PRINT_TEMP:
+            print_shape(*temp);
             break;
 
 
         case Menu_commands::TRANSFORM_SHAPE:
             transform_shape(*shape);
+            break;
+
+
+        case Menu_commands::INSERT_SHAPE:
+            insert_shape(*shape, *temp);
             break;
 
 
@@ -125,10 +146,14 @@ void print_command_info()
         << "\'" << (char)Menu_commands::QUIT_PROGRAM << "\' - quit program\n"
 
         << "\'" << (char)Menu_commands::SELECT_SHAPE << "\' - select shape\n"
+        << "\'" << (char)Menu_commands::SELECT_TEMP << "\' - select temp\n"
 
         << "\'" << (char)Menu_commands::PRINT_SHAPE << "\' - print shape\n"
+        << "\'" << (char)Menu_commands::PRINT_TEMP << "\' - print temp\n"
 
         << "\'" << (char)Menu_commands::TRANSFORM_SHAPE << "\' - transform shape\n"
+
+        << "\'" << (char)Menu_commands::INSERT_SHAPE << "\' - insert shape\n"
 
         << "\n\n";
 
@@ -136,131 +161,49 @@ void print_command_info()
 
 
 
-void select_shape(Smart_ptr<Convex> shape)
+void select_shape(Convex& shape)
 {
 
-    char choice, input;
+    char input;
     int position;
-    std::cout << "Choose shape 1 - rectangle, 2 - circle, 3 - convex: ";
-    std::cin >> choice;
 
-    Convex_reshape reshape(*shape);
+    int point_count;
+    std::cout << "Enter point count: ";
+    std::cin >> point_count;
 
-    switch ((Menu_commands)choice)
+    shape = Convex(point_count);
+
+    std::cout << "Choose source 1 - console, 2 - file: ";
+    std::cin >> input;
+    if (input == '1')
     {
+        std::cout << "Enter convex points: ";
+        std::cin >> shape;
+    }
+    else if (input == '2')
+    {
+        std::cout << "Enter position in the file: ";
+        std::cin >> position;
 
-    case Menu_commands::RECTANGLE:
-        std::cout << "Choose source 1 - console, 2 - file: ";
-        std::cin >> input;
-        if(input == '1')
+        std::ifstream file(CONVEXES_PATH);
+        if (!file.is_open())
         {
-            Rectangle temp;
-            std::cout << "Enter recatngle size and position: ";
-            std::cin >> temp;
-            reshape = temp;
+            throw;
         }
-        else if(input == '2')
+
+        for (int i = 0; i < position; ++i)
         {
-            std::cout << "Enter position in the file: ";
-            std::cin >> position;
-
-            std::ifstream file(RECTANGLES_PATH);
-            if (!file.is_open())
-            {
-                throw;
-            }
-
-            for (int i = 0; i < position; ++i)
-            {
-                while (file.peek() != '\n') file.ignore(1);
-                file.ignore(1);
-            }
-
-            Rectangle temp;
-            file >> temp;
-            reshape = temp;
+            while (file.peek() != '\n') file.ignore(1);
+            file.ignore(1);
         }
-        break;
-
-
-    case Menu_commands::CIRCLE:
-        std::cout << "Choose source 1 - console, 2 - file: ";
-        std::cin >> input;
-        if (input == '1')
-        {
-            Circle temp;
-            std::cout << "Enter circle radius and position: ";
-            std::cin >> temp;
-            reshape = temp;
-        }
-        else if (input == '2')
-        {
-            std::cout << "Enter position in the file: ";
-            std::cin >> position;
-
-            std::ifstream file(CIRCLES_PATH);
-            if(!file.is_open())
-            {
-                throw;
-            }
-
-            for (int i = 0; i < position; ++i)
-            {
-                while (file.peek() != '\n') file.ignore(1);
-                file.ignore(1);
-            }
-
-            Circle temp;
-            file >> temp;
-            reshape = temp;
-        }
-        break;
-
-
-    case Menu_commands::CONVEX:
-        int point_count;
-        std::cout << "Enter point count: ";
-        std::cin >> point_count;
-
-        std::cout << "Choose source 1 - console, 2 - file: ";
-        std::cin >> input;
-        if (input == '1')
-        {
-            std::cout << "Enter convex points: ";
-            std::cin >> *shape;
-        }
-        else if (input == '2')
-        {
-            std::cout << "Enter position in the file: ";
-            std::cin >> position;
-
-            std::ifstream file(CONVEXES_PATH);
-            if (!file.is_open())
-            {
-                throw;
-            }
-
-            for (int i = 0; i < position; ++i)
-            {
-                while (file.peek() != '\n') file.ignore(1);
-                file.ignore(1);
-            }
-            file >> *shape;
-        }
-        break;
-
-
-    default:
-        std::cout << "There is no such shape.\n";
-        break;
-
+        file >> shape;
     }
 
 }
 
 
 
-void print_shape(Smart_ptr<Convex> shape)
+void print_shape(Convex& shape)
 {
 
     char choice;
@@ -287,7 +230,7 @@ void print_shape(Smart_ptr<Convex> shape)
         return;
     }
 
-    (*destination) << *shape;
+    (*destination) << shape;
 
     (*destination) << '\n';
 
@@ -356,23 +299,19 @@ void transform_shape(Convex& shape)
 
     shape.apply_transform(transform);
 
-    Convex convex(5);
-    convex[0] = Vector2f(10, 10);
-    convex[1] = Vector2f(30, 20);
-    convex[2] = Vector2f(45, 20);
-    convex[3] = Vector2f(25, 15);
-    convex[4] = Vector2f(15, 15);
+}
 
-    Convex temp(3);
-    temp[0] = Vector2f(40, 20);
-    temp[1] = Vector2f(60, 40);
-    temp[2] = Vector2f(70, 30);
+void insert_shape(Convex& shape1, const Convex& shape2)
+{
 
-    std::cout << convex << '\n';
+    size_t begin, length;
 
-    convex(1, 2) = temp;
+    std::cout << "Enter begin index: ";
+    std::cin >> begin;
+    std::cout << "Enter length: ";
+    std::cin >> length;
 
-    std::cout << convex << '\n';
+    shape1(begin, length) = shape2;
 
 }
 
