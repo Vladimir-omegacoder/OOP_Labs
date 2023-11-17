@@ -8,11 +8,6 @@
 class Circle : public Shape
 {
 
-private:
-
-	friend class Convex_reshape;
-
-
 protected:
 
 	Vector2f m_vertices[32];

@@ -47,6 +47,18 @@ Vector2f Convex::operator[](int index) const
 
 
 
+Convex::Convex_utility Convex::operator()(size_t begin, size_t length)
+{
+	if(begin >= m_vertex_count)
+	{
+		throw std::out_of_range("Index was outside the array");
+	}
+
+	return Convex_utility(this, begin, length);
+}
+
+
+
 void Convex::move(const Vector2f& offset)
 {
 	Transform moving;
