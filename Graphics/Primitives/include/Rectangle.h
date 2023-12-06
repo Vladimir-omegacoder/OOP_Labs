@@ -2,12 +2,17 @@
 #include "Shape.h"
 
 
+
 class Rectangle : public Shape
 {
 
 private:
 
 	sf::RectangleShape rect;
+
+
+
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 
 public:
@@ -45,7 +50,7 @@ public:
 	virtual void move(float offset_x, float offset_y);
 	virtual void move(const sf::Vector2f& offset);
 
-	virtual void rotate(float angle) = 0;
+	virtual void rotate(float angle);
 
 	virtual void scale(float factor_x, float factor_y);
 	virtual void scale(const sf::Vector2f& factor);

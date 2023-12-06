@@ -76,7 +76,7 @@ const sf::Vector2f& Rectangle::get_origin() const
 
 const sf::Color& Rectangle::get_color() const
 {
-    rect.getFillColor();
+    return rect.getFillColor();
 }
 
 
@@ -89,6 +89,13 @@ void Rectangle::move(float offset_x, float offset_y)
 void Rectangle::move(const sf::Vector2f& offset) 
 {
     rect.move(offset);
+}
+
+
+
+void Rectangle::rotate(float angle)
+{
+    rect.rotate(angle);
 }
 
 
@@ -113,4 +120,11 @@ const sf::Transform& Rectangle::get_transform() const
 const sf::Transform& Rectangle::get_inverse_transform() const 
 {
     return rect.getInverseTransform();
+}
+
+
+
+void Rectangle::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    target.draw(rect, states);
 }
