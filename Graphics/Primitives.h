@@ -21,3 +21,8 @@
 #define LINE
 #include "Primitives/include/Line.h"
 #endif
+
+#ifndef TRIANGLE
+#define TRIANGLE
+#include "Primitives/include/Triangle.h"
+#endif
