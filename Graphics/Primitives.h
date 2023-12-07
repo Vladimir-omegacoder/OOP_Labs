@@ -26,3 +26,8 @@
 #define TRIANGLE
 #include "Primitives/include/Triangle.h"
 #endif
+
+#ifndef PENTAGON
+#define PENTAGON
+#include "Primitives/include/Pentagon.h"
+#endif
