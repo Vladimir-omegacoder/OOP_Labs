@@ -60,4 +60,26 @@ public:
 	virtual const sf::Transform& get_transform() const;
 	virtual const sf::Transform& get_inverse_transform() const;
 
+
+
+	static Regular triangle(float side_length)
+	{
+		return Regular(side_length, 3);
+	}
+
+	static Regular square(float side_length)
+	{
+		return Regular(side_length, 4);
+	}
+
+	static Regular pentagon(float side_length)
+	{
+		return Regular(side_length, 5);
+	}
+
+	static Regular hexagon(float side_length)
+	{
+		return Regular(side_length, 6);
+	}
+
 };

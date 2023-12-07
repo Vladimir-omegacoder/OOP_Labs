@@ -1,6 +1,0 @@
-#include "../include/Pentagon.h"
-
-
-
-
-
