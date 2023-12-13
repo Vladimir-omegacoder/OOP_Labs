@@ -11,6 +11,8 @@ public:
 
 	EventArgs() = default;
 
+	virtual ~EventArgs() = default;
+
 };
 
 
@@ -19,6 +21,10 @@ public:
 class Control
 {
 
+public:
 
+	Control() = default;
+
+	virtual ~Control() = default;
 
 };

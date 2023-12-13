@@ -3,7 +3,15 @@
 
 
 
+
 #ifndef CONTROL
 #define CONTROL
 #include "Interface/include/Control.h"
-#endif // !CONTROL
+#endif
+
+
+
+#ifndef BUTTON
+#define BUTTON
+#include "Interface/include/Button.h"
+#endif
