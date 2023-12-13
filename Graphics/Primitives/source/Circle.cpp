@@ -112,6 +112,18 @@ void Circle::scale(const sf::Vector2f& factor)
 
 
 
+size_t Circle::getPointCount() const
+{
+    return circle.getPointCount();
+}
+
+sf::Vector2f Circle::getPoint(std::size_t index) const
+{
+    return circle.getPoint(index);
+}
+
+
+
 const sf::Transform& Circle::get_transform() const
 {
     return circle.getTransform();

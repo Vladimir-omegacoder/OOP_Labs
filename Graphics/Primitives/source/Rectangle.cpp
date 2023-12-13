@@ -112,6 +112,18 @@ void Rectangle::scale(const sf::Vector2f& factor)
 
 
 
+size_t Rectangle::getPointCount() const
+{
+    return rect.getPointCount();
+}
+
+sf::Vector2f Rectangle::getPoint(std::size_t index) const
+{
+    return rect.getPoint(index);
+}
+
+
+
 const sf::Transform& Rectangle::get_transform() const 
 {
     return rect.getTransform();

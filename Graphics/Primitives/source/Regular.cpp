@@ -124,6 +124,18 @@ const sf::Transform& Regular::get_inverse_transform() const
 
 
 
+size_t Regular::getPointCount() const
+{
+    return polygon.getPointCount();
+}
+
+sf::Vector2f Regular::getPoint(std::size_t index) const
+{
+    return polygon.getPoint(index);
+}
+
+
+
 void Regular::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     target.draw(polygon, states);

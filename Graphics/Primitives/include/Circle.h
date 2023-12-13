@@ -56,6 +56,10 @@ public:
 	virtual void scale(const sf::Vector2f& factor);
 
 
+	virtual size_t getPointCount() const;
+	virtual sf::Vector2f getPoint(std::size_t index) const;
+
+
 	virtual const sf::Transform& get_transform() const;
 	virtual const sf::Transform& get_inverse_transform() const;
 

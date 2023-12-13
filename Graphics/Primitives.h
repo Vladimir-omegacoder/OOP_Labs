@@ -22,12 +22,7 @@
 #include "Primitives/include/Line.h"
 #endif
 
-#ifndef TRIANGLE
-#define TRIANGLE
-#include "Primitives/include/Triangle.h"
-#endif
-
-#ifndef PENTAGON
-#define PENTAGON
-#include "Primitives/include/Pentagon.h"
+#ifndef REGULAR
+#define REGULAR
+#include "Primitives/include/Regular.h"
 #endif

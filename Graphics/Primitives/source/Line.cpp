@@ -138,6 +138,29 @@ void Line::scale(const sf::Vector2f& factor)
 
 
 
+size_t Line::getPointCount() const
+{
+    return 2;
+}
+
+sf::Vector2f Line::getPoint(std::size_t index) const
+{
+
+    if (index == 0)
+    {
+        return sf::Vector2f(rect.getPoint(0).x, rect.getPoint(0).y + rect.getSize().y / 2);
+    }
+    if (index == 1)
+    {
+        return sf::Vector2f(rect.getPoint(1).x, rect.getPoint(1).y + rect.getSize().y / 2);
+    }
+
+    throw std::out_of_range("");
+
+}
+
+
+
 const sf::Transform& Line::get_transform() const 
 {
     return rect.getTransform();

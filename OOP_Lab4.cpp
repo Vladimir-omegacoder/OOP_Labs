@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include "SFML/Graphics.hpp"
-#include "Graphics/Primitives/Primitives.h"
+#include "Graphics/Primitives.h"
+#include "Geometric.h"
 
 
 
@@ -9,8 +10,13 @@ int main()
 
 	sf::RenderWindow main_window(sf::VideoMode(800, 600), "Graphics window");
 
-	Rectangle rect(sf::Vector2f(200, 100));
 
+
+	Geometric geom(Geometric::line);
+
+	geom.get_shape()->move(300, 300);
+
+	geom.select();
 
 
 	while (main_window.isOpen())
@@ -28,10 +34,14 @@ int main()
 
 		}
 
-		main_window.clear(sf::Color::Black);
-		main_window.draw(rect);
-		rect.move(0.1, 0.1);
 
+		geom.get_shape()->rotate(0.01f);
+		geom.get_shape()->move(0.01, 0.01);
+
+		
+
+		main_window.clear(sf::Color::Black);
+		main_window.draw(geom);
 		main_window.display();
 
 	}

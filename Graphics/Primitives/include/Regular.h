@@ -61,6 +61,10 @@ public:
 	virtual const sf::Transform& get_inverse_transform() const;
 
 
+	virtual size_t getPointCount() const;
+	virtual sf::Vector2f getPoint(std::size_t index) const;
+
+
 
 	static Regular triangle(float side_length)
 	{
