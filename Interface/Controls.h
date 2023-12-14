@@ -1,17 +1,22 @@
 #pragma once
 
 
+#ifndef CONTROLS_FONT
+#define CONTROLS_FONT "Calibri.tff"
+#endif
 
 
 
-#ifndef CONTROL
-#define CONTROL
+
+
+#ifndef _CONTROL
+#define _CONTROL
 #include "Interface/include/Control.h"
 #endif
 
 
 
-#ifndef BUTTON
-#define BUTTON
+#ifndef _BUTTON
+#define _BUTTON
 #include "Interface/include/Button.h"
 #endif
