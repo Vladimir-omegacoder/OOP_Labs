@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <list>
 #include "SFML/Graphics.hpp"
 
 
@@ -18,7 +18,7 @@ public:
 
 
 
-class Control
+class Control : public sf::Drawable
 {
 
 public:
