@@ -14,9 +14,12 @@
 #include "Interface/include/Control.h"
 #endif
 
-
-
 #ifndef _BUTTON
 #define _BUTTON
 #include "Interface/include/Button.h"
+#endif
+
+#ifndef _CHECKBOX
+#define _CHECKBOX
+#include "Interface/include/Checkbox.h"
 #endif

@@ -10,9 +10,8 @@ public:
 
 	enum Event_type
 	{
-		CLICK = 0,
-		RELEASE = 1,
-		CURSOR_HOVER = 2,
+		CHECK = 0,
+		CURSOR_HOVER = 1,
 		CURSOR_AWAY = 3,
 	};
 
@@ -39,68 +38,67 @@ private:
 
 	using CheckboxEventHandler = void(*)(Checkbox* sender, CheckboxEventArgs args);
 
-	std::list<CheckboxEventHandler> ñheckbox_clicked;
+	std::list<CheckboxEventHandler> ñheckbox_check;
 	std::list<CheckboxEventHandler> ñheckbox_cursor_hovered;
 	std::list<CheckboxEventHandler> ñheckbox_cursor_away;
+
+
 
 	bool checked;
 	bool cursor_inside;
 
-
-
 	sf::RectangleShape ñheckbox_graphics;
-	sf::Text 
+	sf::Text checkbox_label;
+
+
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		target.draw(button_graphics, states);
+		target.draw(ñheckbox_graphics, states);
+		target.draw(checkbox_label, states);
 	}
 
 
 public:
 
-	Button() = default;
+	Checkbox() = default;
 
 	sf::RectangleShape& get_graphics()
 	{
-		return button_graphics;
+		return ñheckbox_graphics;
+	}
+
+	sf::Text& get_text()
+	{
+		return checkbox_label;
 	}
 
 
 
 	void click()
 	{
-		clicked = true;
-		for (auto& handler : button_clicked)
+		checked = !checked;
+		for (auto& handler : ñheckbox_check)
 		{
-			handler(this, ButtonEventArgs(ButtonEventArgs::Event_type::CLICK));
-		}
-	}
-
-	void release()
-	{
-		clicked = false;
-		for (auto& handler : button_released)
-		{
-			handler(this, ButtonEventArgs(ButtonEventArgs::Event_type::RELEASE));
+			handler(this, CheckboxEventArgs(CheckboxEventArgs::Event_type::CHECK));
 		}
 	}
 
 	void hover_cursor()
 	{
 		cursor_inside = true;
-		for (auto& handler : button_cursor_hovered)
+		for (auto& handler : ñheckbox_cursor_hovered)
 		{
-			handler(this, ButtonEventArgs(ButtonEventArgs::Event_type::CURSOR_HOVER));
+			handler(this, CheckboxEventArgs(CheckboxEventArgs::Event_type::CURSOR_HOVER));
 		}
 	}
 
 	void unhover_cursor()
 	{
 		cursor_inside = false;
-		for (auto& handler : button_cursor_away)
+		for (auto& handler : ñheckbox_cursor_away)
 		{
-			handler(this, ButtonEventArgs(ButtonEventArgs::Event_type::CURSOR_AWAY));
+			handler(this, CheckboxEventArgs(CheckboxEventArgs::Event_type::CURSOR_AWAY));
 		}
 	}
 
@@ -114,20 +112,12 @@ public:
 		}
 	}
 
-	void try_release()
-	{
-		if (!cursor_inside)
-		{
-			release();
-		}
-	}
-
 	void try_hover(sf::Vector2i cursor_pos)
 	{
 
 		sf::Vector2f a, b;
-		a = button_graphics.getPosition();
-		b = a + button_graphics.getSize();
+		a = ñheckbox_graphics.getPosition();
+		b = a + ñheckbox_graphics.getSize();
 
 		if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 		{
@@ -140,8 +130,8 @@ public:
 	{
 
 		sf::Vector2f a, b;
-		a = button_graphics.getPosition();
-		b = a + button_graphics.getSize();
+		a = ñheckbox_graphics.getPosition();
+		b = a + ñheckbox_graphics.getSize();
 
 		if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 		{
@@ -152,9 +142,9 @@ public:
 
 
 
-	bool is_clicked()
+	bool is_checked()
 	{
-		return clicked;
+		return checked;
 	}
 
 	bool is_hovered()
@@ -164,26 +154,22 @@ public:
 
 
 
-	void add_event_handler(ButtonEventHandler handler, ButtonEventArgs::Event_type event_type)
+	void add_event_handler(CheckboxEventHandler handler, CheckboxEventArgs::Event_type event_type)
 	{
 
 		switch (event_type)
 		{
 
-		case ButtonEventArgs::CLICK:
-			button_clicked.push_front(handler);
+		case CheckboxEventArgs::CHECK:
+			ñheckbox_check.push_front(handler);
 			break;
 
-		case ButtonEventArgs::RELEASE:
-			button_released.push_front(handler);
+		case CheckboxEventArgs::CURSOR_HOVER:
+			ñheckbox_cursor_hovered.push_front(handler);
 			break;
 
-		case ButtonEventArgs::CURSOR_HOVER:
-			button_cursor_hovered.push_front(handler);
-			break;
-
-		case ButtonEventArgs::CURSOR_AWAY:
-			button_cursor_away.push_front(handler);
+		case CheckboxEventArgs::CURSOR_AWAY:
+			ñheckbox_cursor_away.push_front(handler);
 			break;
 
 		default:
@@ -193,26 +179,22 @@ public:
 
 	}
 
-	void remove_event_handler(ButtonEventHandler handler, ButtonEventArgs::Event_type event_type)
+	void remove_event_handler(CheckboxEventHandler handler, CheckboxEventArgs::Event_type event_type)
 	{
 
 		switch (event_type)
 		{
 
-		case ButtonEventArgs::CLICK:
-			button_clicked.remove(handler);
+		case CheckboxEventArgs::CHECK:
+			ñheckbox_check.remove(handler);
 			break;
 
-		case ButtonEventArgs::RELEASE:
-			button_released.remove(handler);
+		case CheckboxEventArgs::CURSOR_HOVER:
+			ñheckbox_cursor_hovered.remove(handler);
 			break;
 
-		case ButtonEventArgs::CURSOR_HOVER:
-			button_cursor_hovered.remove(handler);
-			break;
-
-		case ButtonEventArgs::CURSOR_AWAY:
-			button_cursor_away.remove(handler);
+		case CheckboxEventArgs::CURSOR_AWAY:
+			ñheckbox_cursor_away.remove(handler);
 			break;
 
 		default:
