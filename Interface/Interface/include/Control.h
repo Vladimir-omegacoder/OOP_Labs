@@ -4,13 +4,6 @@
 
 
 
-#ifdef CONTROLS_FONT
-#define _CONTROL_FONT = CONTROLS_FONT
-#else
-#define _CONTROL_FONT = "calibri.tff"
-#endif
-
-
 
 
 

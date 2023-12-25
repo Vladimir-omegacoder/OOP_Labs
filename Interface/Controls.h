@@ -1,8 +1,9 @@
 #pragma once
 
 
+
 #ifndef CONTROLS_FONT
-#define CONTROLS_FONT "calibri.ttf"
+#define CONTROLS_FONT "../../../resources/default/fonts/calibri.ttf"
 #endif
 
 
