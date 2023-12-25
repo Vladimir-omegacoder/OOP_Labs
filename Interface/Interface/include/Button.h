@@ -19,7 +19,7 @@ public:
 
 private:
 
-	Event_type event_type;
+	const Event_type event_type;
 
 
 public:
@@ -44,12 +44,14 @@ private:
 	std::list<Button_event_handler> button_cursor_hovered;
 	std::list<Button_event_handler> button_cursor_away;
 
+
+
 	bool clicked;
 	bool cursor_inside;
 
-
-
 	sf::RectangleShape button_graphics;
+
+
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{

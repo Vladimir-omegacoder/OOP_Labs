@@ -3,7 +3,7 @@
 
 
 
-class CheckboxEventArgs : public Event_args
+class Checkbox_event_args : public Event_args
 {
 
 public:
@@ -16,12 +16,14 @@ public:
 	};
 
 
+private:
 
 	const Event_type event_type;
 
 
+public:
 
-	CheckboxEventArgs(Event_type event_type) : event_type(event_type) {}
+	Checkbox_event_args(Event_type event_type) : event_type(event_type) {}
 
 };
 
@@ -34,11 +36,11 @@ class Checkbox : public Control
 
 private:
 
-	using CheckboxEventHandler = void(*)(Checkbox* sender, CheckboxEventArgs args);
+	using Checkbox_event_handler = void(*)(Checkbox* sender, Checkbox_event_args* args);
 
-	std::list<CheckboxEventHandler> ñheckbox_check;
-	std::list<CheckboxEventHandler> ñheckbox_cursor_hovered;
-	std::list<CheckboxEventHandler> ñheckbox_cursor_away;
+	std::list<Checkbox_event_handler> ñheckbox_check;
+	std::list<Checkbox_event_handler> ñheckbox_cursor_hovered;
+	std::list<Checkbox_event_handler> ñheckbox_cursor_away;
 
 
 
@@ -73,71 +75,34 @@ public:
 
 
 
-	void click()
-	{
-		checked = !checked;
-		for (auto& handler : ñheckbox_check)
-		{
-			handler(this, CheckboxEventArgs(CheckboxEventArgs::Event_type::CHECK));
-		}
-	}
+	static void click(Checkbox& checkbox, Checkbox_event_args* args);
 
-	void hover_cursor()
-	{
-		cursor_inside = true;
-		for (auto& handler : ñheckbox_cursor_hovered)
-		{
-			handler(this, CheckboxEventArgs(CheckboxEventArgs::Event_type::CURSOR_HOVER));
-		}
-	}
-
-	void unhover_cursor()
-	{
-		cursor_inside = false;
-		for (auto& handler : ñheckbox_cursor_away)
-		{
-			handler(this, CheckboxEventArgs(CheckboxEventArgs::Event_type::CURSOR_AWAY));
-		}
-	}
+	static void click(Checkbox& checkbox);
 
 
+	static void hover_cursor(Checkbox& checkbox, Checkbox_event_args* args);
 
-	void try_click()
-	{
-		if (cursor_inside)
-		{
-			click();
-		}
-	}
+	static void hover_cursor(Checkbox& checkbox);
 
-	void try_hover(sf::Vector2i cursor_pos)
-	{
 
-		sf::Vector2f a, b;
-		a = ñheckbox_graphics.getPosition();
-		b = a + ñheckbox_graphics.getSize();
+	static void unhover_cursor(Checkbox& checkbox, Checkbox_event_args* args);
 
-		if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
-		{
-			hover_cursor();
-		}
+	static void unhover_cursor(Checkbox& checkbox);
 
-	}
 
-	void try_unhover(sf::Vector2i cursor_pos)
-	{
+	void try_click(Checkbox_event_args* args);
 
-		sf::Vector2f a, b;
-		a = ñheckbox_graphics.getPosition();
-		b = a + ñheckbox_graphics.getSize();
+	void try_click();
 
-		if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
-		{
-			unhover_cursor();
-		}
 
-	}
+	void try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args);
 
+	void try_hover(sf::Vector2i cursor_pos);
+
+
+	void try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args);
+
+	void try_unhover(sf::Vector2i cursor_pos);
 
 
 	bool is_checked()
@@ -151,55 +116,8 @@ public:
 	}
 
 
+	void add_event_handler(Checkbox_event_handler handler, Checkbox_event_args::Event_type event_type);
 
-	void add_event_handler(CheckboxEventHandler handler, CheckboxEventArgs::Event_type event_type)
-	{
-
-		switch (event_type)
-		{
-
-		case CheckboxEventArgs::CHECK:
-			ñheckbox_check.push_front(handler);
-			break;
-
-		case CheckboxEventArgs::CURSOR_HOVER:
-			ñheckbox_cursor_hovered.push_front(handler);
-			break;
-
-		case CheckboxEventArgs::CURSOR_AWAY:
-			ñheckbox_cursor_away.push_front(handler);
-			break;
-
-		default:
-			break;
-
-		}
-
-	}
-
-	void remove_event_handler(CheckboxEventHandler handler, CheckboxEventArgs::Event_type event_type)
-	{
-
-		switch (event_type)
-		{
-
-		case CheckboxEventArgs::CHECK:
-			ñheckbox_check.remove(handler);
-			break;
-
-		case CheckboxEventArgs::CURSOR_HOVER:
-			ñheckbox_cursor_hovered.remove(handler);
-			break;
-
-		case CheckboxEventArgs::CURSOR_AWAY:
-			ñheckbox_cursor_away.remove(handler);
-			break;
-
-		default:
-			break;
-
-		}
-
-	}
+	void remove_event_handler(Checkbox_event_handler handler, Checkbox_event_args::Event_type event_type);
 
 };

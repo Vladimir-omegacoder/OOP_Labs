@@ -98,9 +98,9 @@ void Button::try_click(Button_event_args* args)
 
 void Button::try_click()
 {
-	Button_event_args args(Button_event_args::Event_type::CLICK);
 	if (cursor_inside)
 	{
+		Button_event_args args(Button_event_args::Event_type::CLICK);
 		click(*this, &args);
 	}
 }
@@ -117,9 +117,9 @@ void Button::try_release(Button_event_args* args)
 
 void Button::try_release()
 {
-	Button_event_args args(Button_event_args::Event_type::RELEASE);
 	if (clicked)
 	{
+		Button_event_args args(Button_event_args::Event_type::RELEASE);
 		release(*this, &args);
 	}
 }
@@ -143,14 +143,13 @@ void Button::try_hover(sf::Vector2i cursor_pos, Button_event_args* args)
 void Button::try_hover(sf::Vector2i cursor_pos)
 {
 
-	Button_event_args args(Button_event_args::Event_type::CURSOR_HOVER);
-
 	sf::Vector2f a, b;
 	a = button_graphics.getPosition();
 	b = a + button_graphics.getSize();
 
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
+		Button_event_args args(Button_event_args::Event_type::CURSOR_HOVER);
 		hover_cursor(*this, &args);
 	}
 
@@ -175,14 +174,13 @@ void Button::try_unhover(sf::Vector2i cursor_pos, Button_event_args* args)
 void Button::try_unhover(sf::Vector2i cursor_pos)
 {
 
-	Button_event_args args(Button_event_args::Event_type::CURSOR_AWAY);
-
 	sf::Vector2f a, b;
 	a = button_graphics.getPosition();
 	b = a + button_graphics.getSize();
 
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
+		Button_event_args args(Button_event_args::Event_type::CURSOR_AWAY);
 		unhover_cursor(*this, &args);
 	}
 
