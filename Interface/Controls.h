@@ -12,7 +12,7 @@
 #include "Interface/include/Control.h"
 
 #ifndef DEFAULT_CONTROLS_FONT
-#define DEFAULT_CONTROLS_FONT "../../../resources/default/fonts/calibri.ttf"
+#define DEFAULT_CONTROLS_FONT "resources/default/fonts/calibri.ttf"
 #endif
 
 #endif
@@ -27,11 +27,11 @@
 #include "Interface/include/Button.h"
 
 #ifndef DEFAULT_BUTTON_TEXTURE
-#define DEFAULT_BUTTON_TEXTURE "../resources/default/button/button_default.png"
+#define DEFAULT_BUTTON_TEXTURE "resources/default/button/button_default.png"
 #endif
 
 #ifndef DEFAULT_BUTTON_PRESSED_TEXTURE
-#define DEFAULT_BUTTON_PRESSED_TEXTURE "../resources/default/button/button_pressed_default.png"
+#define DEFAULT_BUTTON_PRESSED_TEXTURE "resources/default/button/button_pressed_default.png"
 #endif
 
 #endif
@@ -46,11 +46,11 @@
 #include "Interface/include/Checkbox.h"
 
 #ifndef DEFAULT_CHECKBOX_TEXTURE
-#define DEFAULT_CHECKBOX_TEXTURE "../resources/default/checkbox/checkbox_default.png"
+#define DEFAULT_CHECKBOX_TEXTURE "resources/default/checkbox/checkbox_default.png"
 #endif
 
 #ifndef DEFAULT_CHECKBOX_CHECKED_TEXTURE
-#define DEFAULT_CHECKBOX_CHECKED_TEXTURE "../resources/default/checkbox/checkbox_checked_default.png"
+#define DEFAULT_CHECKBOX_CHECKED_TEXTURE "resources/default/checkbox/checkbox_checked_default.png"
 #endif
 
 #endif
@@ -65,7 +65,7 @@
 #include "Interface/include/Textbox.h"
 
 #ifndef DEFAULT_TEXTBOX_TEXTURE
-#define DEFAULT_TEXTBOX_TEXTURE "../resources/default/textbox/textbox_default.png"
+#define DEFAULT_TEXTBOX_TEXTURE "resources/default/textbox/textbox_default.png"
 #endif
 
 #endif

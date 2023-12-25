@@ -3,7 +3,7 @@
 
 
 
-class TextboxEventArgs : public EventArgs
+class TextboxEventArgs : public Event_args
 {
 
 public:
@@ -295,7 +295,7 @@ public:
 
 	}
 
-	void remove_event_handler(TextboxEventHandler handler, CheckboxEventArgs::Event_type event_type)
+	void remove_event_handler(TextboxEventHandler handler, TextboxEventArgs::Event_type event_type)
 	{
 
 		switch (event_type)

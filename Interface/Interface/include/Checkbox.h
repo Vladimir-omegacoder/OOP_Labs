@@ -3,7 +3,7 @@
 
 
 
-class CheckboxEventArgs : public EventArgs
+class CheckboxEventArgs : public Event_args
 {
 
 public:

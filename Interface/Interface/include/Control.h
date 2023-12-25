@@ -7,14 +7,14 @@
 
 
 
-class EventArgs
+class Event_args
 {
 
 public:
 
-	EventArgs() = default;
+	Event_args() = default;
 
-	virtual ~EventArgs() = default;
+	virtual ~Event_args() = default;
 
 };
 
