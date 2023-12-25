@@ -75,16 +75,7 @@ public:
 
 
 
-	static void click(Textbox& textbox, TextboxEventArgs& args)
-	{
-		textbox.active = true;
-		for (auto& handler : textbox.textbox_activate)
-		{
-			handler(&textbox, args);
-		}
-	}
-
-	static void click(Textbox& textbox, TextboxEventArgs&& args = TextboxEventArgs(TextboxEventArgs::ACTIVATE))
+	static void click(Textbox& textbox, TextboxEventArgs args = TextboxEventArgs(TextboxEventArgs::ACTIVATE))
 	{
 		textbox.active = true;
 		for (auto& handler : textbox.textbox_activate)
@@ -94,16 +85,7 @@ public:
 	}
 
 
-	static void release(Textbox& textbox, TextboxEventArgs& args)
-	{
-		textbox.active = false;
-		for (auto& handler : textbox.textbox_release)
-		{
-			handler(&textbox, args);
-		}
-	}
-
-	static void release(Textbox& textbox, TextboxEventArgs&& args = TextboxEventArgs(TextboxEventArgs::RELEASE))
+	static void release(Textbox& textbox, TextboxEventArgs args = TextboxEventArgs(TextboxEventArgs::RELEASE))
 	{
 		textbox.active = false;
 		for (auto& handler : textbox.textbox_release)
@@ -113,16 +95,7 @@ public:
 	}
 
 
-	static void hover_cursor(Textbox& textbox, TextboxEventArgs& args)
-	{
-		textbox.cursor_inside = true;
-		for (auto& handler : textbox.textbox_cursor_hovered)
-		{
-			handler(&textbox, args);
-		}
-	}
-
-	static void hover_cursor(Textbox& textbox, TextboxEventArgs&& args = TextboxEventArgs(TextboxEventArgs::CURSOR_HOVER))
+	static void hover_cursor(Textbox& textbox, TextboxEventArgs args = TextboxEventArgs(TextboxEventArgs::CURSOR_HOVER))
 	{
 		textbox.cursor_inside = true;
 		for (auto& handler : textbox.textbox_cursor_hovered)
@@ -132,16 +105,7 @@ public:
 	}
 
 
-	static void unhover_cursor(Textbox& textbox, TextboxEventArgs& args)
-	{
-		textbox.cursor_inside = false;
-		for (auto& handler : textbox.textbox_cursor_away)
-		{
-			handler(&textbox, args);
-		}
-	}
-
-	static void unhover_cursor(Textbox& textbox, TextboxEventArgs&& args = TextboxEventArgs(TextboxEventArgs::CURSOR_AWAY))
+	static void unhover_cursor(Textbox& textbox, TextboxEventArgs args = TextboxEventArgs(TextboxEventArgs::CURSOR_AWAY))
 	{
 		textbox.cursor_inside = false;
 		for (auto& handler : textbox.textbox_cursor_away)
@@ -151,16 +115,7 @@ public:
 	}
 
 
-
-	void try_click(TextboxEventArgs& args)
-	{
-		if (cursor_inside)
-		{
-			click(*this, args);
-		}
-	}
-
-	void try_click(TextboxEventArgs&& args = TextboxEventArgs(TextboxEventArgs::ACTIVATE))
+	void try_click(TextboxEventArgs args = TextboxEventArgs(TextboxEventArgs::ACTIVATE))
 	{
 		if (cursor_inside)
 		{
@@ -169,15 +124,7 @@ public:
 	}
 
 
-	void try_release(TextboxEventArgs& args)
-	{
-		if (!cursor_inside)
-		{
-			release(*this, args);
-		}
-	}
-
-	void try_release(TextboxEventArgs&& args = TextboxEventArgs(TextboxEventArgs::RELEASE))
+	void try_release(TextboxEventArgs args = TextboxEventArgs(TextboxEventArgs::RELEASE))
 	{
 		if (!cursor_inside)
 		{
@@ -186,21 +133,7 @@ public:
 	}
 
 
-	void try_hover(sf::Vector2i cursor_pos, TextboxEventArgs& args)
-	{
-
-		sf::Vector2f a, b;
-		a = textbox_graphics.getPosition();
-		b = a + textbox_graphics.getSize();
-
-		if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
-		{
-			hover_cursor(*this, args);
-		}
-
-	}
-
-	void try_hover(sf::Vector2i cursor_pos, TextboxEventArgs&& args = TextboxEventArgs(TextboxEventArgs::CURSOR_HOVER))
+	void try_hover(sf::Vector2i cursor_pos, TextboxEventArgs args = TextboxEventArgs(TextboxEventArgs::CURSOR_HOVER))
 	{
 
 		sf::Vector2f a, b;
@@ -215,21 +148,7 @@ public:
 	}
 
 
-	void try_unhover(sf::Vector2i cursor_pos, TextboxEventArgs& args)
-	{
-
-		sf::Vector2f a, b;
-		a = textbox_graphics.getPosition();
-		b = a + textbox_graphics.getSize();
-
-		if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
-		{
-			unhover_cursor(*this, args);
-		}
-
-	}
-
-	void try_unhover(sf::Vector2i cursor_pos, TextboxEventArgs&& args = TextboxEventArgs(TextboxEventArgs::CURSOR_AWAY))
+	void try_unhover(sf::Vector2i cursor_pos, TextboxEventArgs args = TextboxEventArgs(TextboxEventArgs::CURSOR_AWAY))
 	{
 
 		sf::Vector2f a, b;
