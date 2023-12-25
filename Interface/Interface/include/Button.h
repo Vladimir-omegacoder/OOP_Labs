@@ -49,7 +49,7 @@ private:
 	bool clicked;
 	bool cursor_inside;
 
-	sf::RectangleShape button_graphics;
+	sf::Sprite button_graphics;
 
 
 
@@ -63,7 +63,7 @@ public:
 
 	Button() = default;
 
-	sf::RectangleShape& get_graphics()
+	sf::Sprite& get_graphics()
 	{
 		return button_graphics;
 	}

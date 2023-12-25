@@ -91,7 +91,7 @@ void Checkbox::try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
 
 	sf::Vector2f a, b;
 	a = ñheckbox_graphics.getPosition();
-	b = a + ñheckbox_graphics.getSize();
+	b = a + ñheckbox_graphics.getLocalBounds().getSize();
 
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
@@ -105,7 +105,7 @@ void Checkbox::try_hover(sf::Vector2i cursor_pos)
 
 	sf::Vector2f a, b;
 	a = ñheckbox_graphics.getPosition();
-	b = a + ñheckbox_graphics.getSize();
+	b = a + ñheckbox_graphics.getLocalBounds().getSize();
 
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
@@ -122,7 +122,7 @@ void Checkbox::try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
 
 	sf::Vector2f a, b;
 	a = ñheckbox_graphics.getPosition();
-	b = a + ñheckbox_graphics.getSize();
+	b = a + ñheckbox_graphics.getLocalBounds().getSize();
 
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
@@ -136,7 +136,7 @@ void Checkbox::try_unhover(sf::Vector2i cursor_pos)
 
 	sf::Vector2f a, b;
 	a = ñheckbox_graphics.getPosition();
-	b = a + ñheckbox_graphics.getSize();
+	b = a + ñheckbox_graphics.getLocalBounds().getSize();
 
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{

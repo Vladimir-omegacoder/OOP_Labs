@@ -131,7 +131,7 @@ void Button::try_hover(sf::Vector2i cursor_pos, Button_event_args* args)
 
 	sf::Vector2f a, b;
 	a = button_graphics.getPosition();
-	b = a + button_graphics.getSize();
+	b = a + button_graphics.getLocalBounds().getSize();
 
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
@@ -145,7 +145,7 @@ void Button::try_hover(sf::Vector2i cursor_pos)
 
 	sf::Vector2f a, b;
 	a = button_graphics.getPosition();
-	b = a + button_graphics.getSize();
+	b = a + button_graphics.getLocalBounds().getSize();
 
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
@@ -162,7 +162,7 @@ void Button::try_unhover(sf::Vector2i cursor_pos, Button_event_args* args)
 
 	sf::Vector2f a, b;
 	a = button_graphics.getPosition();
-	b = a + button_graphics.getSize();
+	b = a + button_graphics.getLocalBounds().getSize();
 
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
@@ -176,7 +176,7 @@ void Button::try_unhover(sf::Vector2i cursor_pos)
 
 	sf::Vector2f a, b;
 	a = button_graphics.getPosition();
-	b = a + button_graphics.getSize();
+	b = a + button_graphics.getLocalBounds().getSize();
 
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{

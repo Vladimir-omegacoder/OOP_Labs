@@ -49,7 +49,7 @@ private:
 	bool active;
 	bool cursor_inside;
 
-	sf::RectangleShape textbox_graphics;
+	sf::Sprite textbox_graphics;
 	sf::Text textbox_content;
 
 
@@ -65,7 +65,7 @@ public:
 
 	Textbox() = default;
 
-	sf::RectangleShape& get_graphics()
+	sf::Sprite& get_graphics()
 	{
 		return textbox_graphics;
 	}

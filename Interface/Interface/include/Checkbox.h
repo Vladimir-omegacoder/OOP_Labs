@@ -47,7 +47,7 @@ private:
 	bool checked;
 	bool cursor_inside;
 
-	sf::RectangleShape ñheckbox_graphics;
+	sf::Sprite ñheckbox_graphics;
 	sf::Text checkbox_label;
 
 
@@ -63,7 +63,7 @@ public:
 
 	Checkbox() = default;
 
-	sf::RectangleShape& get_graphics()
+	sf::Sprite& get_graphics()
 	{
 		return ñheckbox_graphics;
 	}
