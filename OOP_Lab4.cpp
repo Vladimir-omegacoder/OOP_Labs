@@ -4,56 +4,76 @@
 
 
 
-#define CHECKBOX_TEXTURE "check_box1_unchecked.png"
-#define CHECKBOX_CHECKBOX_TEXTURE "check_box1_checked.png"
-
-sf::Texture checkbox_unchecked_texture;
-sf::Texture checkbox_checked_texture;
+#define TEXTBOX_TEXTURE "text_box1.png"
 
 
 
+void enter_symbol(Textbox& textbox, uint32_t character)
+{
+
+	if (character > 47 && character < 58)
+	{
+		sf::String temp = textbox.get_text().getString();
+		temp += character;
+		textbox.get_text().setString(temp);
+	}
+
+}
+
+class CursorChangeTextboxEventArgs : public TextboxEventArgs
+{
+
+public:
+
+	sf::Cursor& cursor;
+
+	CursorChangeTextboxEventArgs(Event_type event_type, sf::Cursor& cursor, const sf::Cursor& new_cursor)
+		: TextboxEventArgs(event_type), cursor(cursor) {}
+
+};
 
 
 int main()
 {
 
 	sf::RenderWindow main_window(sf::VideoMode(800, 600), "Graphics window");
+
+	sf::Texture textbox1_texture;
+	textbox1_texture.loadFromFile(TEXTBOX_TEXTURE);
 	sf::Font font;
-	font.loadFromFile("calibri.ttf");
-	
+	font.loadFromFile(CONTROLS_FONT);
+	sf::RectangleShape textbox_graphics(sf::Vector2f(300, 50));
+	textbox_graphics.setPosition(300, 300);
+	textbox_graphics.setTexture(&textbox1_texture);
 
-	sf::RectangleShape checkbox_graphics(sf::Vector2f(50, 50));
-	checkbox_graphics.move(300, 300);
-	checkbox_unchecked_texture.loadFromFile(CHECKBOX_TEXTURE);
-	checkbox_checked_texture.loadFromFile(CHECKBOX_CHECKBOX_TEXTURE);
-	checkbox_graphics.setTexture(&checkbox_unchecked_texture);
+	Textbox textbox;
+	textbox.get_graphics() = textbox_graphics;
+	textbox.get_text().setFont(font);
+	textbox.get_text().setCharacterSize(50);
 
-	sf::Text checkbox_label;
-	checkbox_label.setCharacterSize(50);
-	checkbox_label.move(350, 300);
-	checkbox_label.setFont(font);
-	checkbox_label.setString("I'm a label!!!");
-
-
-	Checkbox checkbox;
-	checkbox.get_graphics() = checkbox_graphics;
-	checkbox.get_text() = checkbox_label;
-	void(*check)(Checkbox*, CheckboxEventArgs) = [](Checkbox* checkbox, CheckboxEventArgs args)
+	void(*hover_cursor)(Textbox*, TextboxEventArgs) = [](Textbox* textbox, TextboxEventArgs args)
 		{
 
-			std::cout << "Checkbox checked!!!\n";
+			if (auto cursor_args = dynamic_cast<const CursorChangeTextboxEventArgs*>(&args))
+			{
+				cursor_args->cursor.loadFromSystem(sf::Cursor::Text);
+			}
 
-			if (checkbox->is_checked())
-			{
-				checkbox->get_graphics().setTexture(&checkbox_checked_texture);
-			}
-			else
-			{
-				checkbox->get_graphics().setTexture(&checkbox_unchecked_texture);
-			}
-			
 		};
-	checkbox.add_event_handler(check, CheckboxEventArgs::CHECK);
+
+	textbox.add_event_handler(hover_cursor, TextboxEventArgs::CURSOR_HOVER);
+
+	void(*unhover_cursor)(Textbox*, TextboxEventArgs) = [](Textbox* textbox, TextboxEventArgs args)
+		{
+
+			if (auto cursor_args = dynamic_cast<const CursorChangeTextboxEventArgs*>(&args))
+			{
+				cursor_args->cursor.loadFromSystem(sf::Cursor::Arrow);
+			}
+
+		};
+
+	textbox.add_event_handler(unhover_cursor, TextboxEventArgs::CURSOR_AWAY);
 
 
 
@@ -74,27 +94,46 @@ int main()
 
 			if (main_event.type == sf::Event::MouseMoved)
 			{
-				if (!checkbox.is_hovered())
+				
+				if (!textbox.is_hovered())
 				{
-					checkbox.try_hover(sf::Mouse::getPosition(main_window));
+					textbox.try_hover(sf::Mouse::getPosition(main_window));
 				}
 				else
 				{
-					checkbox.try_unhover(sf::Mouse::getPosition(main_window));
+					textbox.try_unhover(sf::Mouse::getPosition(main_window));
 				}
+
 			}
 
 			if (main_event.type == sf::Event::MouseButtonPressed)
 			{
-				checkbox.try_click();
+
+				if (main_event.mouseButton.button == sf::Mouse::Left)
+				{
+
+					textbox.try_click();
+
+				}
+
+			}
+
+			if (main_event.type == sf::Event::KeyPressed)
+			{
+				if (main_event.type == sf::Event::TextEntered)
+				{
+					if (textbox.is_active())
+					{
+						enter_symbol(textbox, main_event.text.unicode);
+					}
+				}
 			}
 
 		}
 
 
+		main_window.draw(textbox);
 
-
-		main_window.draw(checkbox);
 		
 		main_window.display();
 

@@ -16,12 +16,10 @@ public:
 	};
 
 
-private:
 
-	Event_type event_type;
+	const Event_type event_type;
 
 
-public:
 
 	CheckboxEventArgs(Event_type event_type) : event_type(event_type) {}
 

@@ -2,7 +2,7 @@
 
 
 #ifndef CONTROLS_FONT
-#define CONTROLS_FONT "Calibri.tff"
+#define CONTROLS_FONT "calibri.ttf"
 #endif
 
 
@@ -22,4 +22,9 @@
 #ifndef _CHECKBOX
 #define _CHECKBOX
 #include "Interface/include/Checkbox.h"
+#endif
+
+#ifndef _TEXTBOX
+#define _TEXTBOX
+#include "Interface/include/Textbox.h"
 #endif
