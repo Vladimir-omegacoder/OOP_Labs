@@ -37,7 +37,7 @@ class Button : public Control
 
 private:
 
-	using Button_event_handler = void(*)(Button* sender, Event_args** args, size_t args_count);
+	using Button_event_handler = void(*)(Button* sender, Event_args* args);
 
 	std::list<Button_event_handler> button_clicked;
 	std::list<Button_event_handler> button_released;

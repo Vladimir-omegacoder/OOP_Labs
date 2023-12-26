@@ -11,7 +11,7 @@ void Button::click(Button& button, Event_args** args, size_t args_count)
 	{
 		for (auto& handler : button.button_clicked)
 		{
-			handler(&button, &args[i], 1);
+			handler(&button, args[i]);
 		}
 	}
 }
@@ -23,7 +23,7 @@ void Button::click(Button& button)
 	Event_args* p_args = &args;
 	for (auto& handler : button.button_clicked)
 	{
-		handler(&button, &p_args, 1);
+		handler(&button, p_args);
 	}
 }
 
@@ -36,7 +36,7 @@ void Button::release(Button& button, Event_args** args, size_t args_count)
 	{
 		for (auto& handler : button.button_released)
 		{
-			handler(&button, &args[i], 1);
+			handler(&button, args[i]);
 		}
 	}
 }
@@ -48,7 +48,7 @@ void Button::release(Button& button)
 	Event_args* p_args = &args;
 	for (auto& handler : button.button_released)
 	{
-		handler(&button, &p_args, 1);
+		handler(&button, p_args);
 	}
 }
 
@@ -61,7 +61,7 @@ void Button::hover_cursor(Button& button, Event_args** args, size_t args_count)
 	{
 		for (auto& handler : button.button_cursor_hovered)
 		{
-			handler(&button, &args[i], 1);
+			handler(&button, args[i]);
 		}
 	}
 }
@@ -73,7 +73,7 @@ void Button::hover_cursor(Button& button)
 	Event_args* p_args = &args;
 	for (auto& handler : button.button_cursor_hovered)
 	{
-		handler(&button, &p_args, 1);
+		handler(&button, p_args);
 	}
 }
 
@@ -86,7 +86,7 @@ void Button::unhover_cursor(Button& button, Event_args** args, size_t args_count
 	{
 		for (auto& handler : button.button_cursor_away)
 		{
-			handler(&button, &args[i], 1);
+			handler(&button, args[i]);
 		}
 	}
 }
@@ -98,7 +98,7 @@ void Button::unhover_cursor(Button& button)
 	Event_args* p_args = &args;
 	for (auto& handler : button.button_cursor_away)
 	{
-		handler(&button, &p_args, 1);
+		handler(&button, p_args);
 	}
 }
 
