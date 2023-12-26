@@ -37,7 +37,7 @@ class Button : public Control
 
 private:
 
-	using Button_event_handler = void(*)(Button* sender, Button_event_args* args);
+	using Button_event_handler = void(*)(Button* sender, Event_args** args, size_t args_count);
 
 	std::list<Button_event_handler> button_clicked;
 	std::list<Button_event_handler> button_released;
@@ -70,42 +70,42 @@ public:
 
 
 
-	static void click(Button& button, Button_event_args* args);
+	static void click(Button& button, Event_args** args, size_t args_count);
 
 	static void click(Button& button);
 
 
-	static void release(Button& button, Button_event_args* args);
+	static void release(Button& button, Event_args** args, size_t args_count);
 
 	static void release(Button& button);
 
 
-	static void hover_cursor(Button& button, Button_event_args* args);
+	static void hover_cursor(Button& button, Event_args** args, size_t args_count);
 
 	static void hover_cursor(Button& button);
 
 
-	static void unhover_cursor(Button& button, Button_event_args* args);
+	static void unhover_cursor(Button& button, Event_args** args, size_t args_count);
 
 	static void unhover_cursor(Button& button);
 
 
-	bool try_click(Button_event_args* args);
+	bool try_click(Event_args** args, size_t args_count);
 
 	bool try_click();
 
 
-	bool try_release(Button_event_args* args);
+	bool try_release(Event_args** args, size_t args_count);
 
 	bool try_release();
 
 
-	bool try_hover(sf::Vector2i cursor_pos, Button_event_args* args);
+	bool try_hover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count);
 
 	bool try_hover(sf::Vector2i cursor_pos);
 
 
-	bool try_unhover(sf::Vector2i cursor_pos, Button_event_args* args);
+	bool try_unhover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count);
 
 	bool try_unhover(sf::Vector2i cursor_pos);
 

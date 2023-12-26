@@ -4,12 +4,15 @@
 
 
 
-void Button::click(Button& button, Button_event_args* args)
+void Button::click(Button& button, Event_args** args, size_t args_count)
 {
 	button.clicked = true;
-	for (auto& handler : button.button_clicked)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&button, args);
+		for (auto& handler : button.button_clicked)
+		{
+			handler(&button, &args[i], 1);
+		}
 	}
 }
 
@@ -17,20 +20,24 @@ void Button::click(Button& button)
 {
 	button.clicked = true;
 	Button_event_args args(Button_event_args::Event_type::CLICK);
+	Event_args* p_args = &args;
 	for (auto& handler : button.button_clicked)
 	{
-		handler(&button, &args);
+		handler(&button, &p_args, 1);
 	}
 }
 
 
 
-void Button::release(Button& button, Button_event_args* args)
+void Button::release(Button& button, Event_args** args, size_t args_count)
 {
 	button.clicked = false;
-	for (auto& handler : button.button_released)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&button, args);
+		for (auto& handler : button.button_released)
+		{
+			handler(&button, &args[i], 1);
+		}
 	}
 }
 
@@ -38,20 +45,24 @@ void Button::release(Button& button)
 {
 	button.clicked = false;
 	Button_event_args args(Button_event_args::Event_type::RELEASE);
+	Event_args* p_args = &args;
 	for (auto& handler : button.button_released)
 	{
-		handler(&button, &args);
+		handler(&button, &p_args, 1);
 	}
 }
 
 
 
-void Button::hover_cursor(Button& button, Button_event_args* args)
+void Button::hover_cursor(Button& button, Event_args** args, size_t args_count)
 {
 	button.cursor_inside = true;
-	for (auto& handler : button.button_cursor_hovered)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&button, args);
+		for (auto& handler : button.button_cursor_hovered)
+		{
+			handler(&button, &args[i], 1);
+		}
 	}
 }
 
@@ -59,20 +70,24 @@ void Button::hover_cursor(Button& button)
 {
 	button.cursor_inside = true;
 	Button_event_args args(Button_event_args::Event_type::CURSOR_HOVER);
+	Event_args* p_args = &args;
 	for (auto& handler : button.button_cursor_hovered)
 	{
-		handler(&button, &args);
+		handler(&button, &p_args, 1);
 	}
 }
 
 
 
-void Button::unhover_cursor(Button& button, Button_event_args* args)
+void Button::unhover_cursor(Button& button, Event_args** args, size_t args_count)
 {
 	button.cursor_inside = false;
-	for (auto& handler : button.button_cursor_away)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&button, args);
+		for (auto& handler : button.button_cursor_away)
+		{
+			handler(&button, &args[i], 1);
+		}
 	}
 }
 
@@ -80,19 +95,20 @@ void Button::unhover_cursor(Button& button)
 {
 	button.cursor_inside = false;
 	Button_event_args args(Button_event_args::Event_type::CURSOR_AWAY);
+	Event_args* p_args = &args;
 	for (auto& handler : button.button_cursor_away)
 	{
-		handler(&button, &args);
+		handler(&button, &p_args, 1);
 	}
 }
 
 
 
-bool Button::try_click(Button_event_args* args)
+bool Button::try_click(Event_args** args, size_t args_count)
 {
 	if (cursor_inside)
 	{
-		click(*this, args);
+		click(*this, args, args_count);
 		return true;
 	}
 	return false;
@@ -102,8 +118,7 @@ bool Button::try_click()
 {
 	if (cursor_inside)
 	{
-		Button_event_args args(Button_event_args::Event_type::CLICK);
-		click(*this, &args);
+		click(*this);
 		return true;
 	}
 	return false;
@@ -111,11 +126,11 @@ bool Button::try_click()
 
 
 
-bool Button::try_release(Button_event_args* args)
+bool Button::try_release(Event_args** args, size_t args_count)
 {
 	if (clicked)
 	{
-		release(*this, args);
+		release(*this, args, args_count);
 		return true;
 	}
 	return false;
@@ -125,8 +140,7 @@ bool Button::try_release()
 {
 	if (clicked)
 	{
-		Button_event_args args(Button_event_args::Event_type::RELEASE);
-		release(*this, &args);
+		release(*this);
 		return true;
 	}
 	return false;
@@ -134,7 +148,7 @@ bool Button::try_release()
 
 
 
-bool Button::try_hover(sf::Vector2i cursor_pos, Button_event_args* args)
+bool Button::try_hover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count)
 {
 
 	sf::Vector2f a, b;
@@ -143,7 +157,7 @@ bool Button::try_hover(sf::Vector2i cursor_pos, Button_event_args* args)
 
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
-		hover_cursor(*this, args);
+		hover_cursor(*this, args, args_count);
 		return true;
 	}
 
@@ -161,7 +175,7 @@ bool Button::try_hover(sf::Vector2i cursor_pos)
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
 		Button_event_args args(Button_event_args::Event_type::CURSOR_HOVER);
-		hover_cursor(*this, &args);
+		hover_cursor(*this);
 		return true;
 	}
 
@@ -171,7 +185,7 @@ bool Button::try_hover(sf::Vector2i cursor_pos)
 
 
 
-bool Button::try_unhover(sf::Vector2i cursor_pos, Button_event_args* args)
+bool Button::try_unhover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count)
 {
 
 	sf::Vector2f a, b;
@@ -180,7 +194,7 @@ bool Button::try_unhover(sf::Vector2i cursor_pos, Button_event_args* args)
 
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
-		unhover_cursor(*this, args);
+		unhover_cursor(*this, args, args_count);
 		return true;
 	}
 
@@ -198,7 +212,7 @@ bool Button::try_unhover(sf::Vector2i cursor_pos)
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
 		Button_event_args args(Button_event_args::Event_type::CURSOR_AWAY);
-		unhover_cursor(*this, &args);
+		unhover_cursor(*this);
 		return true;
 	}
 
