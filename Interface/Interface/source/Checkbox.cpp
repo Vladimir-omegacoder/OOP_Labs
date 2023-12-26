@@ -67,26 +67,30 @@ void Checkbox::unhover_cursor(Checkbox& checkbox)
 
 
 
-void Checkbox::try_click(Checkbox_event_args* args)
+bool Checkbox::try_click(Checkbox_event_args* args)
 {
 	if (cursor_inside)
 	{
 		click(*this, args);
+		return true;
 	}
+	return false;
 }
 
-void Checkbox::try_click()
+bool Checkbox::try_click()
 {
 	if (cursor_inside)
 	{
 		Checkbox_event_args args(Checkbox_event_args::Event_type::CHECK);
 		click(*this, &args);
+		return true;
 	}
+	return false;
 }
 
 
 
-void Checkbox::try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
+bool Checkbox::try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
 {
 
 	sf::Vector2f a, b;
@@ -96,11 +100,14 @@ void Checkbox::try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
 		hover_cursor(*this, args);
+		return true;
 	}
+
+	return false;
 
 }
 
-void Checkbox::try_hover(sf::Vector2i cursor_pos)
+bool Checkbox::try_hover(sf::Vector2i cursor_pos)
 {
 
 	sf::Vector2f a, b;
@@ -111,13 +118,16 @@ void Checkbox::try_hover(sf::Vector2i cursor_pos)
 	{
 		Checkbox_event_args args(Checkbox_event_args::Event_type::CURSOR_HOVER);
 		hover_cursor(*this, &args);
+		return true;
 	}
+
+	return false;
 
 }
 
 
 
-void Checkbox::try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
+bool Checkbox::try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
 {
 
 	sf::Vector2f a, b;
@@ -127,11 +137,14 @@ void Checkbox::try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
 		unhover_cursor(*this, args);
+		return true;
 	}
+
+	return false;
 
 }
 
-void Checkbox::try_unhover(sf::Vector2i cursor_pos)
+bool Checkbox::try_unhover(sf::Vector2i cursor_pos)
 {
 
 	sf::Vector2f a, b;
@@ -142,7 +155,10 @@ void Checkbox::try_unhover(sf::Vector2i cursor_pos)
 	{
 		Checkbox_event_args args(Checkbox_event_args::Event_type::CURSOR_AWAY);
 		unhover_cursor(*this, &args);
+		return true;
 	}
+
+	return false;
 
 }
 

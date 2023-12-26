@@ -88,45 +88,53 @@ void Textbox::unhover_cursor(Textbox& textbox)
 
 
 
-void Textbox::try_click(Textbox_event_args* args)
+bool Textbox::try_click(Textbox_event_args* args)
 {
 	if (cursor_inside)
 	{
 		click(*this, args);
+		return true;
 	}
+	return false;
 }
 
-void Textbox::try_click()
+bool Textbox::try_click()
 {
 	if (cursor_inside)
 	{
 		Textbox_event_args args(Textbox_event_args::ACTIVATE);
 		click(*this, &args);
+		return true;
 	}
+	return false;
 }
 
 
 
-void Textbox::try_release(Textbox_event_args* args)
+bool Textbox::try_release(Textbox_event_args* args)
 {
 	if (!cursor_inside)
 	{
 		release(*this, args);
+		return true;
 	}
+	return false;
 }
 
-void Textbox::try_release()
+bool Textbox::try_release()
 {
 	if (!cursor_inside)
 	{
 		Textbox_event_args args(Textbox_event_args::RELEASE);
 		release(*this, &args);
+		return true;
 	}
+	return false;
 }
 
 
 
-void Textbox::try_hover(sf::Vector2i cursor_pos, Textbox_event_args* args)
+bool Textbox::try_hover(sf::Vector2i cursor_pos, Textbox_event_args* args)
 {
 
 	sf::Vector2f a, b;
@@ -136,11 +144,14 @@ void Textbox::try_hover(sf::Vector2i cursor_pos, Textbox_event_args* args)
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
 		hover_cursor(*this, args);
+		return true;
 	}
+
+	return false;
 
 }
 
-void Textbox::try_hover(sf::Vector2i cursor_pos)
+bool Textbox::try_hover(sf::Vector2i cursor_pos)
 {
 
 	sf::Vector2f a, b;
@@ -151,13 +162,16 @@ void Textbox::try_hover(sf::Vector2i cursor_pos)
 	{
 		Textbox_event_args args(Textbox_event_args::CURSOR_HOVER);
 		hover_cursor(*this, &args);
+		return true;
 	}
+
+	return false;
 
 }
 
 
 
-void Textbox::try_unhover(sf::Vector2i cursor_pos, Textbox_event_args* args)
+bool Textbox::try_unhover(sf::Vector2i cursor_pos, Textbox_event_args* args)
 {
 
 	sf::Vector2f a, b;
@@ -167,11 +181,14 @@ void Textbox::try_unhover(sf::Vector2i cursor_pos, Textbox_event_args* args)
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
 		unhover_cursor(*this, args);
+		return true;
 	}
+
+	return false;
 
 }
 
-void Textbox::try_unhover(sf::Vector2i cursor_pos)
+bool Textbox::try_unhover(sf::Vector2i cursor_pos)
 {
 
 	sf::Vector2f a, b;
@@ -182,7 +199,10 @@ void Textbox::try_unhover(sf::Vector2i cursor_pos)
 	{
 		Textbox_event_args args(Textbox_event_args::CURSOR_AWAY);
 		unhover_cursor(*this, &args);
+		return true;
 	}
+
+	return false;
 
 }
 

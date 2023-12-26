@@ -90,24 +90,24 @@ public:
 	static void unhover_cursor(Button& button);
 
 
-	void try_click(Button_event_args* args);
+	bool try_click(Button_event_args* args);
 
-	void try_click();
-
-
-	void try_release(Button_event_args* args);
-
-	void try_release();
+	bool try_click();
 
 
-	void try_hover(sf::Vector2i cursor_pos, Button_event_args* args);
+	bool try_release(Button_event_args* args);
 
-	void try_hover(sf::Vector2i cursor_pos);
+	bool try_release();
 
 
-	void try_unhover(sf::Vector2i cursor_pos, Button_event_args* args);
+	bool try_hover(sf::Vector2i cursor_pos, Button_event_args* args);
 
-	void try_unhover(sf::Vector2i cursor_pos);
+	bool try_hover(sf::Vector2i cursor_pos);
+
+
+	bool try_unhover(sf::Vector2i cursor_pos, Button_event_args* args);
+
+	bool try_unhover(sf::Vector2i cursor_pos);
 
 
 	bool is_clicked()

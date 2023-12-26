@@ -88,45 +88,53 @@ void Button::unhover_cursor(Button& button)
 
 
 
-void Button::try_click(Button_event_args* args)
+bool Button::try_click(Button_event_args* args)
 {
 	if (cursor_inside)
 	{
 		click(*this, args);
+		return true;
 	}
+	return false;
 }
 
-void Button::try_click()
+bool Button::try_click()
 {
 	if (cursor_inside)
 	{
 		Button_event_args args(Button_event_args::Event_type::CLICK);
 		click(*this, &args);
+		return true;
 	}
+	return false;
 }
 
 
 
-void Button::try_release(Button_event_args* args)
+bool Button::try_release(Button_event_args* args)
 {
 	if (clicked)
 	{
 		release(*this, args);
+		return true;
 	}
+	return false;
 }
 
-void Button::try_release()
+bool Button::try_release()
 {
 	if (clicked)
 	{
 		Button_event_args args(Button_event_args::Event_type::RELEASE);
 		release(*this, &args);
+		return true;
 	}
+	return false;
 }
 
 
 
-void Button::try_hover(sf::Vector2i cursor_pos, Button_event_args* args)
+bool Button::try_hover(sf::Vector2i cursor_pos, Button_event_args* args)
 {
 
 	sf::Vector2f a, b;
@@ -136,11 +144,14 @@ void Button::try_hover(sf::Vector2i cursor_pos, Button_event_args* args)
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
 		hover_cursor(*this, args);
+		return true;
 	}
+
+	return false;
 
 }
 
-void Button::try_hover(sf::Vector2i cursor_pos)
+bool Button::try_hover(sf::Vector2i cursor_pos)
 {
 
 	sf::Vector2f a, b;
@@ -151,13 +162,16 @@ void Button::try_hover(sf::Vector2i cursor_pos)
 	{
 		Button_event_args args(Button_event_args::Event_type::CURSOR_HOVER);
 		hover_cursor(*this, &args);
+		return true;
 	}
+
+	return false;
 
 }
 
 
 
-void Button::try_unhover(sf::Vector2i cursor_pos, Button_event_args* args)
+bool Button::try_unhover(sf::Vector2i cursor_pos, Button_event_args* args)
 {
 
 	sf::Vector2f a, b;
@@ -167,11 +181,14 @@ void Button::try_unhover(sf::Vector2i cursor_pos, Button_event_args* args)
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
 		unhover_cursor(*this, args);
+		return true;
 	}
+
+	return false;
 
 }
 
-void Button::try_unhover(sf::Vector2i cursor_pos)
+bool Button::try_unhover(sf::Vector2i cursor_pos)
 {
 
 	sf::Vector2f a, b;
@@ -182,7 +199,10 @@ void Button::try_unhover(sf::Vector2i cursor_pos)
 	{
 		Button_event_args args(Button_event_args::Event_type::CURSOR_AWAY);
 		unhover_cursor(*this, &args);
+		return true;
 	}
+
+	return false;
 
 }
 

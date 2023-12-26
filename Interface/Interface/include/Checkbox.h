@@ -90,19 +90,19 @@ public:
 	static void unhover_cursor(Checkbox& checkbox);
 
 
-	void try_click(Checkbox_event_args* args);
+	bool try_click(Checkbox_event_args* args);
 
-	void try_click();
-
-
-	void try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args);
-
-	void try_hover(sf::Vector2i cursor_pos);
+	bool try_click();
 
 
-	void try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args);
+	bool try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args);
 
-	void try_unhover(sf::Vector2i cursor_pos);
+	bool try_hover(sf::Vector2i cursor_pos);
+
+
+	bool try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args);
+
+	bool try_unhover(sf::Vector2i cursor_pos);
 
 
 	bool is_checked()
