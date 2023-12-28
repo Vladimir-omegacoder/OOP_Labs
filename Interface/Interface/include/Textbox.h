@@ -37,7 +37,7 @@ class Textbox : public Control
 
 private:
 
-	using Textbox_event_handler = void(*)(Textbox* sender, Textbox_event_args* args);
+	using Textbox_event_handler = void(*)(Textbox* sender, Event_args* args);
 
 	std::list<Textbox_event_handler> textbox_activate;
 	std::list<Textbox_event_handler> textbox_release;
@@ -77,42 +77,42 @@ public:
 
 
 
-	static void click(Textbox& textbox, Textbox_event_args* args);
+	static void click(Textbox& textbox, Event_args** args, size_t args_count);
 
 	static void click(Textbox& textbox);
 
 
-	static void release(Textbox& textbox, Textbox_event_args* args);
+	static void release(Textbox& textbox, Event_args** args, size_t args_count);
 
 	static void release(Textbox& textbox);
 
 
-	static void hover_cursor(Textbox& textbox, Textbox_event_args* args);
+	static void hover_cursor(Textbox& textbox, Event_args** args, size_t args_count);
 
 	static void hover_cursor(Textbox& textbox);
 
 
-	static void unhover_cursor(Textbox& textbox, Textbox_event_args* args);
+	static void unhover_cursor(Textbox& textbox, Event_args** args, size_t args_count);
 
 	static void unhover_cursor(Textbox& textbox);
 
 
-	bool try_click(Textbox_event_args* args);
+	bool try_click(Event_args** args, size_t args_count);
 
 	bool try_click();
 
 
-	bool try_release(Textbox_event_args* args);
+	bool try_release(Event_args** args, size_t args_count);
 
 	bool try_release();
 
 
-	bool try_hover(sf::Vector2i cursor_pos, Textbox_event_args* args);
+	bool try_hover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count);
 
 	bool try_hover(sf::Vector2i cursor_pos);
 
 
-	bool try_unhover(sf::Vector2i cursor_pos, Textbox_event_args* args);
+	bool try_unhover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count);
 
 	bool try_unhover(sf::Vector2i cursor_pos);
 

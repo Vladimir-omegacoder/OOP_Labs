@@ -36,7 +36,7 @@ class Checkbox : public Control
 
 private:
 
-	using Checkbox_event_handler = void(*)(Checkbox* sender, Checkbox_event_args* args);
+	using Checkbox_event_handler = void(*)(Checkbox* sender, Event_args* args);
 
 	std::list<Checkbox_event_handler> ñheckbox_check;
 	std::list<Checkbox_event_handler> ñheckbox_cursor_hovered;
@@ -75,32 +75,32 @@ public:
 
 
 
-	static void click(Checkbox& checkbox, Checkbox_event_args* args);
+	static void click(Checkbox& checkbox, Event_args** args, size_t args_count);
 
 	static void click(Checkbox& checkbox);
 
 
-	static void hover_cursor(Checkbox& checkbox, Checkbox_event_args* args);
+	static void hover_cursor(Checkbox& checkbox, Event_args** args, size_t args_count);
 
 	static void hover_cursor(Checkbox& checkbox);
 
 
-	static void unhover_cursor(Checkbox& checkbox, Checkbox_event_args* args);
+	static void unhover_cursor(Checkbox& checkbox, Event_args** args, size_t args_count);
 
 	static void unhover_cursor(Checkbox& checkbox);
 
 
-	bool try_click(Checkbox_event_args* args);
+	bool try_click(Event_args** args, size_t args_count);
 
 	bool try_click();
 
 
-	bool try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args);
+	bool try_hover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count);
 
 	bool try_hover(sf::Vector2i cursor_pos);
 
 
-	bool try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args);
+	bool try_unhover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count);
 
 	bool try_unhover(sf::Vector2i cursor_pos);
 

@@ -4,12 +4,15 @@
 
 
 
-void Checkbox::click(Checkbox& checkbox, Checkbox_event_args* args)
+void Checkbox::click(Checkbox& checkbox, Event_args** args, size_t args_count)
 {
 	checkbox.checked = !checkbox.checked;
-	for (auto& handler : checkbox.ñheckbox_check)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&checkbox, args);
+		for (auto& handler : checkbox.ñheckbox_check)
+		{
+			handler(&checkbox, args[i]);
+		}
 	}
 }
 
@@ -25,12 +28,15 @@ void Checkbox::click(Checkbox& checkbox)
 
 
 
-void Checkbox::hover_cursor(Checkbox& checkbox, Checkbox_event_args* args)
+void Checkbox::hover_cursor(Checkbox& checkbox, Event_args** args, size_t args_count)
 {
 	checkbox.cursor_inside = true;
-	for (auto& handler : checkbox.ñheckbox_cursor_hovered)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&checkbox, args);
+		for (auto& handler : checkbox.ñheckbox_cursor_hovered)
+		{
+			handler(&checkbox, args[i]);
+		}
 	}
 }
 
@@ -46,12 +52,15 @@ void Checkbox::hover_cursor(Checkbox& checkbox)
 
 
 
-void Checkbox::unhover_cursor(Checkbox& checkbox, Checkbox_event_args* args)
+void Checkbox::unhover_cursor(Checkbox& checkbox, Event_args** args, size_t args_count)
 {
 	checkbox.cursor_inside = false;
-	for (auto& handler : checkbox.ñheckbox_cursor_away)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&checkbox, args);
+		for (auto& handler : checkbox.ñheckbox_cursor_away)
+		{
+			handler(&checkbox, args[i]);
+		}
 	}
 }
 
@@ -67,11 +76,11 @@ void Checkbox::unhover_cursor(Checkbox& checkbox)
 
 
 
-bool Checkbox::try_click(Checkbox_event_args* args)
+bool Checkbox::try_click(Event_args** args, size_t args_count)
 {
 	if (cursor_inside)
 	{
-		click(*this, args);
+		click(*this, args, args_count);
 		return true;
 	}
 	return false;
@@ -81,8 +90,7 @@ bool Checkbox::try_click()
 {
 	if (cursor_inside)
 	{
-		Checkbox_event_args args(Checkbox_event_args::Event_type::CHECK);
-		click(*this, &args);
+		click(*this);
 		return true;
 	}
 	return false;
@@ -90,7 +98,7 @@ bool Checkbox::try_click()
 
 
 
-bool Checkbox::try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
+bool Checkbox::try_hover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count)
 {
 
 	sf::Vector2f a, b;
@@ -99,7 +107,7 @@ bool Checkbox::try_hover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
 
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
-		hover_cursor(*this, args);
+		hover_cursor(*this, args, args_count);
 		return true;
 	}
 
@@ -117,7 +125,7 @@ bool Checkbox::try_hover(sf::Vector2i cursor_pos)
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
 		Checkbox_event_args args(Checkbox_event_args::Event_type::CURSOR_HOVER);
-		hover_cursor(*this, &args);
+		hover_cursor(*this);
 		return true;
 	}
 
@@ -127,7 +135,7 @@ bool Checkbox::try_hover(sf::Vector2i cursor_pos)
 
 
 
-bool Checkbox::try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
+bool Checkbox::try_unhover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count)
 {
 
 	sf::Vector2f a, b;
@@ -136,7 +144,7 @@ bool Checkbox::try_unhover(sf::Vector2i cursor_pos, Checkbox_event_args* args)
 
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
-		unhover_cursor(*this, args);
+		unhover_cursor(*this, args, args_count);
 		return true;
 	}
 
@@ -154,7 +162,7 @@ bool Checkbox::try_unhover(sf::Vector2i cursor_pos)
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
 		Checkbox_event_args args(Checkbox_event_args::Event_type::CURSOR_AWAY);
-		unhover_cursor(*this, &args);
+		unhover_cursor(*this);
 		return true;
 	}
 

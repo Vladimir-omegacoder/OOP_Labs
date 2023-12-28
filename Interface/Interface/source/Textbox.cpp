@@ -4,12 +4,15 @@
 
 
 
-void Textbox::click(Textbox& textbox, Textbox_event_args* args)
+void Textbox::click(Textbox& textbox, Event_args** args, size_t args_count)
 {
 	textbox.active = true;
-	for (auto& handler : textbox.textbox_activate)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&textbox, args);
+		for (auto& handler : textbox.textbox_activate)
+		{
+			handler(&textbox, args[i]);
+		}
 	}
 }
 
@@ -25,12 +28,15 @@ void Textbox::click(Textbox& textbox)
 
 
 
-void Textbox::release(Textbox& textbox, Textbox_event_args* args)
+void Textbox::release(Textbox& textbox, Event_args** args, size_t args_count)
 {
 	textbox.active = false;
-	for (auto& handler : textbox.textbox_release)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&textbox, args);
+		for (auto& handler : textbox.textbox_release)
+		{
+			handler(&textbox, args[i]);
+		}
 	}
 }
 
@@ -46,12 +52,15 @@ void Textbox::release(Textbox& textbox)
 
 
 
-void Textbox::hover_cursor(Textbox& textbox, Textbox_event_args* args)
+void Textbox::hover_cursor(Textbox& textbox, Event_args** args, size_t args_count)
 {
 	textbox.cursor_inside = true;
-	for (auto& handler : textbox.textbox_cursor_hovered)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&textbox, args);
+		for (auto& handler : textbox.textbox_cursor_hovered)
+		{
+			handler(&textbox, args[i]);
+		}
 	}
 }
 
@@ -67,12 +76,15 @@ void Textbox::hover_cursor(Textbox& textbox)
 
 
 
-void Textbox::unhover_cursor(Textbox& textbox, Textbox_event_args* args)
+void Textbox::unhover_cursor(Textbox& textbox, Event_args** args, size_t args_count)
 {
 	textbox.cursor_inside = false;
-	for (auto& handler : textbox.textbox_cursor_away)
+	for (size_t i = 0; i < args_count; i++)
 	{
-		handler(&textbox, args);
+		for (auto& handler : textbox.textbox_cursor_away)
+		{
+			handler(&textbox, args[i]);
+		}
 	}
 }
 
@@ -88,11 +100,11 @@ void Textbox::unhover_cursor(Textbox& textbox)
 
 
 
-bool Textbox::try_click(Textbox_event_args* args)
+bool Textbox::try_click(Event_args** args, size_t args_count)
 {
 	if (cursor_inside)
 	{
-		click(*this, args);
+		click(*this, args, args_count);
 		return true;
 	}
 	return false;
@@ -102,8 +114,7 @@ bool Textbox::try_click()
 {
 	if (cursor_inside)
 	{
-		Textbox_event_args args(Textbox_event_args::ACTIVATE);
-		click(*this, &args);
+		click(*this);
 		return true;
 	}
 	return false;
@@ -111,11 +122,11 @@ bool Textbox::try_click()
 
 
 
-bool Textbox::try_release(Textbox_event_args* args)
+bool Textbox::try_release(Event_args** args, size_t args_count)
 {
-	if (!cursor_inside)
+	if (active && !cursor_inside)
 	{
-		release(*this, args);
+		release(*this, args, args_count);
 		return true;
 	}
 	return false;
@@ -123,10 +134,9 @@ bool Textbox::try_release(Textbox_event_args* args)
 
 bool Textbox::try_release()
 {
-	if (!cursor_inside)
+	if (active && !cursor_inside)
 	{
-		Textbox_event_args args(Textbox_event_args::RELEASE);
-		release(*this, &args);
+		release(*this);
 		return true;
 	}
 	return false;
@@ -134,7 +144,7 @@ bool Textbox::try_release()
 
 
 
-bool Textbox::try_hover(sf::Vector2i cursor_pos, Textbox_event_args* args)
+bool Textbox::try_hover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count)
 {
 
 	sf::Vector2f a, b;
@@ -143,7 +153,7 @@ bool Textbox::try_hover(sf::Vector2i cursor_pos, Textbox_event_args* args)
 
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
-		hover_cursor(*this, args);
+		hover_cursor(*this, args, args_count);
 		return true;
 	}
 
@@ -161,7 +171,7 @@ bool Textbox::try_hover(sf::Vector2i cursor_pos)
 	if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 	{
 		Textbox_event_args args(Textbox_event_args::CURSOR_HOVER);
-		hover_cursor(*this, &args);
+		hover_cursor(*this);
 		return true;
 	}
 
@@ -171,7 +181,7 @@ bool Textbox::try_hover(sf::Vector2i cursor_pos)
 
 
 
-bool Textbox::try_unhover(sf::Vector2i cursor_pos, Textbox_event_args* args)
+bool Textbox::try_unhover(sf::Vector2i cursor_pos, Event_args** args, size_t args_count)
 {
 
 	sf::Vector2f a, b;
@@ -180,7 +190,7 @@ bool Textbox::try_unhover(sf::Vector2i cursor_pos, Textbox_event_args* args)
 
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
-		unhover_cursor(*this, args);
+		unhover_cursor(*this, args, args_count);
 		return true;
 	}
 
@@ -198,7 +208,7 @@ bool Textbox::try_unhover(sf::Vector2i cursor_pos)
 	if (cursor_pos.x < a.x || cursor_pos.x > b.x || cursor_pos.y < a.y || cursor_pos.y > b.y)
 	{
 		Textbox_event_args args(Textbox_event_args::CURSOR_AWAY);
-		unhover_cursor(*this, &args);
+		unhover_cursor(*this);
 		return true;
 	}
 

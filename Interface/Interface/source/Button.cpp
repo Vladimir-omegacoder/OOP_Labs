@@ -20,10 +20,9 @@ void Button::click(Button& button)
 {
 	button.clicked = true;
 	Button_event_args args(Button_event_args::Event_type::CLICK);
-	Event_args* p_args = &args;
 	for (auto& handler : button.button_clicked)
 	{
-		handler(&button, p_args);
+		handler(&button, &args);
 	}
 }
 
@@ -45,10 +44,9 @@ void Button::release(Button& button)
 {
 	button.clicked = false;
 	Button_event_args args(Button_event_args::Event_type::RELEASE);
-	Event_args* p_args = &args;
 	for (auto& handler : button.button_released)
 	{
-		handler(&button, p_args);
+		handler(&button, &args);
 	}
 }
 
@@ -70,10 +68,9 @@ void Button::hover_cursor(Button& button)
 {
 	button.cursor_inside = true;
 	Button_event_args args(Button_event_args::Event_type::CURSOR_HOVER);
-	Event_args* p_args = &args;
 	for (auto& handler : button.button_cursor_hovered)
 	{
-		handler(&button, p_args);
+		handler(&button, &args);
 	}
 }
 
@@ -95,10 +92,9 @@ void Button::unhover_cursor(Button& button)
 {
 	button.cursor_inside = false;
 	Button_event_args args(Button_event_args::Event_type::CURSOR_AWAY);
-	Event_args* p_args = &args;
 	for (auto& handler : button.button_cursor_away)
 	{
-		handler(&button, p_args);
+		handler(&button, &args);
 	}
 }
 
