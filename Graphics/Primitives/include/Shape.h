@@ -52,7 +52,7 @@ public:
 	virtual float get_outline_thickness() const = 0;
 
 	virtual size_t get_point_count() const = 0;
-	virtual sf::Vector2f get_point(std::size_t index) const = 0;
+	virtual sf::Vector2f get_point(size_t index) const = 0;
 
 	virtual const sf::Transform& get_transform() const = 0;
 	virtual const sf::Transform& get_inverse_transform() const = 0;

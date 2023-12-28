@@ -178,7 +178,7 @@ size_t Line::get_point_count() const
     return 2;
 }
 
-sf::Vector2f Line::get_point(std::size_t index) const
+sf::Vector2f Line::get_point(size_t index) const
 {
 
     if (index == 0)

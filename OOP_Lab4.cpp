@@ -9,13 +9,16 @@ int main()
 {
 
 
-	Rectangle rect(sf::Vector2f(200, 100));
-	Circle circ(50);
-	Line line(200, 5);
-	Regular triangle(100, 3);
-	Regular square(100, 4);
-	Regular pentagon(100, 5);
-	Regular hexagon(100, 6);
+	Regular circ(100, 4);
+	circ.move(400, 300);
+	circ.rotate(45);
+	circ.set_origin(50, 50);
+	std::cout << circ.get_position().x << ' ' << circ.get_position().y << '\n';
+
+	std::cout << circ.get_origin().x << ' ' << circ.get_origin().y << '\n';
+
+	
+
 
 	sf::RenderWindow main_window(sf::VideoMode(800, 600), "Graphics window");
 
@@ -38,7 +41,11 @@ int main()
 
 		}
 
-		main_window.draw(hexagon);
+		//circ.rotate(0.01);
+
+		main_window.clear();
+
+		main_window.draw(circ);
 
 
 		main_window.display();

@@ -64,7 +64,7 @@ public:
 	virtual float get_outline_thickness() const override;
 
 	virtual size_t get_point_count() const override;
-	virtual sf::Vector2f get_point(std::size_t index) const override;
+	virtual sf::Vector2f get_point(size_t index) const override;
 
 	virtual const sf::Transform& get_transform() const override;
 	virtual const sf::Transform& get_inverse_transform() const override;

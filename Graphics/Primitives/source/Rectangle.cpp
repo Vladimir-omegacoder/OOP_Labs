@@ -150,7 +150,7 @@ size_t Rectangle::get_point_count() const
     return rect.getPointCount();
 }
 
-sf::Vector2f Rectangle::get_point(std::size_t index) const
+sf::Vector2f Rectangle::get_point(size_t index) const
 {
     return rect.getPoint(index);
 }

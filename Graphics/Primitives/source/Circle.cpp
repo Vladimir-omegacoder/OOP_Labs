@@ -145,7 +145,7 @@ size_t Circle::get_point_count() const
     return circle.getPointCount();
 }
 
-sf::Vector2f Circle::get_point(std::size_t index) const
+sf::Vector2f Circle::get_point(size_t index) const
 {
     return circle.getPoint(index);
 }

@@ -179,7 +179,7 @@ size_t Regular::get_point_count() const
     return polygon.getPointCount();
 }
 
-sf::Vector2f Regular::get_point(std::size_t index) const
+sf::Vector2f Regular::get_point(size_t index) const
 {
     return polygon.getPoint(index);
 }

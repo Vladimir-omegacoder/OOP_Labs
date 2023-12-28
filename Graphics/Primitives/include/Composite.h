@@ -4,21 +4,99 @@
 
 
 
-class Regular : public Shape
+
+class Composite : public Shape
 {
 
-protected:
+private:
 
-	sf::CircleShape polygon;
+	Shape** shapes_arr;
+	size_t arr_capacity;
+	size_t arr_size;
+	sf::Transformable transformations;
 
 
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	/*sf::Vector2f calculate_origin() const
+	{
+
+		if (arr_size == 0)
+		{
+			throw std::out_of_range("Composite was empty");
+		}
+
+		sf::Vector2f new_origin;
+
+		for (size_t i = 0; i < arr_size; i++)
+		{
+			new_origin += shapes_arr[i]->get_origin();
+		}
+
+		new_origin.x /= arr_size;
+		new_origin.y /= arr_size;
+
+		return new_origin;
+
+	}*/
 
 
 public:
 
-	Regular(float side_length, size_t point_count) : polygon(side_length / 2 * tan(3.1415926535 / point_count), point_count) {}
+	Composite() : shapes_arr(nullptr), arr_capacity(0), arr_size(0) {}
+
+	Composite(const Composite& other) = delete;
+
+	~Composite()
+	{
+
+		for (size_t i = 0; i < arr_size; i++)
+		{
+			delete shapes_arr[i];
+		}
+
+		delete[] shapes_arr;
+
+	}
+
+
+
+	void add_shape(Shape*&& shape)
+	{
+
+		if (arr_size < arr_capacity)
+		{
+			shapes_arr[arr_size] = shape;
+		}
+		else
+		{
+
+			if (arr_capacity == 0)
+			{
+				arr_capacity = 1;
+			}
+
+			Shape** temp = shapes_arr;
+
+			shapes_arr = new Shape * [arr_capacity *= 2];
+
+			for (size_t i = 0; i < arr_size; i++)
+			{
+				shapes_arr[i] = temp[i];
+			}
+
+			shapes_arr[arr_size] = shape;
+
+		}
+
+		++arr_size;
+		shape = nullptr;
+
+	}
+
+	Shape*& operator[](size_t index)
+	{
+		return shapes_arr[index];
+	}
 
 
 
@@ -70,26 +148,5 @@ public:
 
 	virtual const sf::Texture* get_texture() const override;
 
-
-
-	static Regular triangle(float side_length)
-	{
-		return Regular(side_length, 3);
-	}
-
-	static Regular square(float side_length)
-	{
-		return Regular(side_length, 4);
-	}
-
-	static Regular pentagon(float side_length)
-	{
-		return Regular(side_length, 5);
-	}
-
-	static Regular hexagon(float side_length)
-	{
-		return Regular(side_length, 6);
-	}
 
 };
