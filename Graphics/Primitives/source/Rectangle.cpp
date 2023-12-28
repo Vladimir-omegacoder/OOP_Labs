@@ -47,9 +47,28 @@ void Rectangle::set_origin(const sf::Vector2f& origin)
 
 
 
-void Rectangle::set_color(const sf::Color color)
+void Rectangle::set_fill_color(const sf::Color color)
 {
     rect.setFillColor(color);
+}
+
+void Rectangle::set_outline_color(const sf::Color color)
+{
+    rect.setOutlineColor(color);
+}
+
+
+
+void Rectangle::set_outline_thickness(float thickness)
+{
+    rect.setOutlineThickness(thickness);
+}
+
+
+
+void Rectangle::set_texture(const sf::Texture* texture, bool reset_rect)
+{
+    rect.setTexture(texture, reset_rect);
 }
 
 
@@ -74,9 +93,23 @@ const sf::Vector2f& Rectangle::get_origin() const
     return rect.getOrigin();
 }
 
-const sf::Color& Rectangle::get_color() const
+
+
+const sf::Color& Rectangle::get_fill_color() const
 {
     return rect.getFillColor();
+}
+
+const sf::Color& Rectangle::get_outline_color() const
+{
+    return rect.getOutlineColor();
+}
+
+
+
+float Rectangle::get_outline_thickness() const
+{
+    return rect.getOutlineThickness();
 }
 
 
@@ -112,12 +145,12 @@ void Rectangle::scale(const sf::Vector2f& factor)
 
 
 
-size_t Rectangle::getPointCount() const
+size_t Rectangle::get_point_count() const
 {
     return rect.getPointCount();
 }
 
-sf::Vector2f Rectangle::getPoint(std::size_t index) const
+sf::Vector2f Rectangle::get_point(std::size_t index) const
 {
     return rect.getPoint(index);
 }
@@ -132,6 +165,25 @@ const sf::Transform& Rectangle::get_transform() const
 const sf::Transform& Rectangle::get_inverse_transform() const 
 {
     return rect.getInverseTransform();
+}
+
+
+
+sf::FloatRect Rectangle::get_local_bounds() const
+{
+    return rect.getLocalBounds();
+}
+
+sf::FloatRect Rectangle::get_global_bounds() const
+{
+    return rect.getGlobalBounds();
+}
+
+
+
+const sf::Texture* Rectangle::get_texture() const
+{
+    return rect.getTexture();
 }
 
 

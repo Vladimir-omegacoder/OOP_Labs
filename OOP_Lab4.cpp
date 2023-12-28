@@ -1,22 +1,26 @@
 ﻿#include <iostream>
 #include "SFML/Graphics.hpp"
 #include "Graphics/Primitives.h"
-#include "Geometric.h"
+
 
 
 
 int main()
 {
 
+
+	Rectangle rect(sf::Vector2f(200, 100));
+	Circle circ(50);
+	Line line(200, 5);
+	Regular triangle(100, 3);
+	Regular square(100, 4);
+	Regular pentagon(100, 5);
+	Regular hexagon(100, 6);
+
 	sf::RenderWindow main_window(sf::VideoMode(800, 600), "Graphics window");
 
 
 
-	Geometric geom(Geometric::line);
-
-	geom.get_shape()->move(300, 300);
-
-	geom.select();
 
 
 	while (main_window.isOpen())
@@ -34,14 +38,9 @@ int main()
 
 		}
 
+		main_window.draw(hexagon);
 
-		geom.get_shape()->rotate(0.01f);
-		geom.get_shape()->move(0.01, 0.01);
 
-		
-
-		main_window.clear(sf::Color::Black);
-		main_window.draw(geom);
 		main_window.display();
 
 	}

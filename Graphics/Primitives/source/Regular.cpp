@@ -47,9 +47,28 @@ void Regular::set_origin(const sf::Vector2f& origin)
 
 
 
-void Regular::set_color(const sf::Color color)
+void Regular::set_fill_color(const sf::Color color)
 {
     polygon.setFillColor(color);
+}
+
+void Regular::set_outline_color(const sf::Color color)
+{
+    polygon.setOutlineColor(color);
+}
+
+
+
+void Regular::set_outline_thickness(float thickness)
+{
+    polygon.setOutlineThickness(thickness);
+}
+
+
+
+void Regular::set_texture(const sf::Texture* texture, bool reset_rect)
+{
+    polygon.setTexture(texture, reset_rect);
 }
 
 
@@ -74,9 +93,21 @@ const sf::Vector2f& Regular::get_origin() const
     return polygon.getOrigin();
 }
 
-const sf::Color& Regular::get_color() const
+const sf::Color& Regular::get_fill_color() const
 {
     return polygon.getFillColor();
+}
+
+const sf::Color& Regular::get_outline_color() const
+{
+    return polygon.getOutlineColor();
+}
+
+
+
+float Regular::get_outline_thickness() const
+{
+    return polygon.getOutlineThickness();
 }
 
 
@@ -124,12 +155,31 @@ const sf::Transform& Regular::get_inverse_transform() const
 
 
 
-size_t Regular::getPointCount() const
+sf::FloatRect Regular::get_local_bounds() const
+{
+    return polygon.getLocalBounds();
+}
+
+sf::FloatRect Regular::get_global_bounds() const
+{
+    return polygon.getGlobalBounds();
+}
+
+
+
+const sf::Texture* Regular::get_texture() const
+{
+    return polygon.getTexture();
+}
+
+
+
+size_t Regular::get_point_count() const
 {
     return polygon.getPointCount();
 }
 
-sf::Vector2f Regular::getPoint(std::size_t index) const
+sf::Vector2f Regular::get_point(std::size_t index) const
 {
     return polygon.getPoint(index);
 }

@@ -46,10 +46,28 @@ void Circle::set_origin(const sf::Vector2f& origin)
 }
 
 
-
-void Circle::set_color(const sf::Color color)
+void Circle::set_fill_color(const sf::Color color)
 {
     circle.setFillColor(color);
+}
+
+void Circle::set_outline_color(const sf::Color color)
+{
+    circle.setOutlineColor(color);
+}
+
+
+
+void Circle::set_outline_thickness(float thickness)
+{
+    circle.setOutlineThickness(thickness);
+}
+
+
+
+void Circle::set_texture(const sf::Texture* texture, bool reset_rect)
+{
+    circle.setTexture(texture, reset_rect);
 }
 
 
@@ -74,9 +92,19 @@ const sf::Vector2f& Circle::get_origin() const
     return circle.getOrigin();
 }
 
-const sf::Color& Circle::get_color() const
+const sf::Color& Circle::get_fill_color() const
 {
     return circle.getFillColor();
+}
+
+const sf::Color& Circle::get_outline_color() const
+{
+    return circle.getOutlineColor();
+}
+
+float Circle::get_outline_thickness() const
+{
+    return circle.getOutlineThickness();
 }
 
 
@@ -112,12 +140,12 @@ void Circle::scale(const sf::Vector2f& factor)
 
 
 
-size_t Circle::getPointCount() const
+size_t Circle::get_point_count() const
 {
     return circle.getPointCount();
 }
 
-sf::Vector2f Circle::getPoint(std::size_t index) const
+sf::Vector2f Circle::get_point(std::size_t index) const
 {
     return circle.getPoint(index);
 }
@@ -132,6 +160,25 @@ const sf::Transform& Circle::get_transform() const
 const sf::Transform& Circle::get_inverse_transform() const
 {
     return circle.getInverseTransform();
+}
+
+
+
+sf::FloatRect Circle::get_local_bounds() const
+{
+    return circle.getLocalBounds();
+}
+
+sf::FloatRect Circle::get_global_bounds() const
+{
+    return circle.getGlobalBounds();
+}
+
+
+
+const sf::Texture* Circle::get_texture() const
+{
+    return circle.getTexture();
 }
 
 
