@@ -30,7 +30,11 @@ public:
 
 	Composite() : shapes_arr(nullptr), arr_capacity(0), arr_size(0) {}
 
-	Composite(const Composite& other) = delete;
+	Composite(const Composite& other) :
+		arr_capacity(other.arr_capacity), arr_size(other.arr_size), shapes_arr(new Shape* [other.arr_capacity] {}),
+		transformations(other.transformations), fill_color(other.fill_color), outline_color(other.outline_color),
+		outline_thickness(other.outline_thickness), texture(other.texture), reset_rect(other.reset_rect)
+	{}
 
 	~Composite();
 
@@ -41,6 +45,16 @@ public:
 	Shape*& operator[](size_t index)
 	{
 		return shapes_arr[index];
+	}
+
+	size_t capacity()
+	{
+		return arr_capacity;
+	}
+
+	size_t size()
+	{
+		return arr_size;
 	}
 
 
