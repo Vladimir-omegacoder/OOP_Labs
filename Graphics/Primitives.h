@@ -26,3 +26,8 @@
 #define REGULAR
 #include "Primitives/include/Regular.h"
 #endif
+
+#ifndef COMPOSITE
+#define COMPOSITE
+#include "Primitives/include/Composite.h"
+#endif

@@ -13,31 +13,17 @@ private:
 	Shape** shapes_arr;
 	size_t arr_capacity;
 	size_t arr_size;
+
 	sf::Transformable transformations;
+	sf::Color fill_color;
+	sf::Color outline_color;
+	float outline_thickness;
+	const sf::Texture* texture;
+	bool reset_rect;
 
 
 
-	/*sf::Vector2f calculate_origin() const
-	{
-
-		if (arr_size == 0)
-		{
-			throw std::out_of_range("Composite was empty");
-		}
-
-		sf::Vector2f new_origin;
-
-		for (size_t i = 0; i < arr_size; i++)
-		{
-			new_origin += shapes_arr[i]->get_origin();
-		}
-
-		new_origin.x /= arr_size;
-		new_origin.y /= arr_size;
-
-		return new_origin;
-
-	}*/
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 
 public:
@@ -46,52 +32,11 @@ public:
 
 	Composite(const Composite& other) = delete;
 
-	~Composite()
-	{
-
-		for (size_t i = 0; i < arr_size; i++)
-		{
-			delete shapes_arr[i];
-		}
-
-		delete[] shapes_arr;
-
-	}
+	~Composite();
 
 
 
-	void add_shape(Shape*&& shape)
-	{
-
-		if (arr_size < arr_capacity)
-		{
-			shapes_arr[arr_size] = shape;
-		}
-		else
-		{
-
-			if (arr_capacity == 0)
-			{
-				arr_capacity = 1;
-			}
-
-			Shape** temp = shapes_arr;
-
-			shapes_arr = new Shape * [arr_capacity *= 2];
-
-			for (size_t i = 0; i < arr_size; i++)
-			{
-				shapes_arr[i] = temp[i];
-			}
-
-			shapes_arr[arr_size] = shape;
-
-		}
-
-		++arr_size;
-		shape = nullptr;
-
-	}
+	void add_shape(Shape*&& shape);
 
 	Shape*& operator[](size_t index)
 	{
@@ -147,6 +92,5 @@ public:
 	virtual sf::FloatRect get_global_bounds() const override;
 
 	virtual const sf::Texture* get_texture() const override;
-
 
 };

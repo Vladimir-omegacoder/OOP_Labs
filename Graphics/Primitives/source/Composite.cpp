@@ -2,47 +2,42 @@
 
 
 
+
+
 void Composite::set_position(float x, float y)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->set_position(x, y);
-	}
+	transformations.setPosition(x, y);
 }
 
 void Composite::set_position(const sf::Vector2f& position)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->set_position(position);
-	}
+	transformations.setPosition(position);
 }
 
 void Composite::set_rotation(float angle)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->set_rotation(angle);
-	}
+	transformations.setRotation(angle);
 }
 
 void Composite::set_scale(float factor_x, float factor_y)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->set_scale(factor_x, factor_y);
-	}
+	transformations.setScale(factor_x, factor_y);
 }
 
 void Composite::set_scale(const sf::Vector2f& factors)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->set_scale(factors);
-	}
+	transformations.setScale(factors);
 }
 
+void Composite::set_origin(float x, float y)
+{
+	transformations.setOrigin(x, y);
+}
 
+void Composite::set_origin(const sf::Vector2f& origin)
+{
+	transformations.setOrigin(origin);
+}
 
 
 
@@ -50,172 +45,101 @@ void Composite::set_scale(const sf::Vector2f& factors)
 
 void Composite::set_fill_color(const sf::Color color)
 {
+	fill_color = color;
 	for (size_t i = 0; i < arr_size; i++)
 	{
-		shapes_arr[i]->set_fill_color(color);
+		shapes_arr[i]->set_fill_color(fill_color);
 	}
 }
 
 void Composite::set_outline_color(const sf::Color color)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->set_outline_color(color);
-	}
+	outline_color = color;
 }
 
 
 
 void Composite::set_outline_thickness(float thickness)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->set_outline_thickness(thickness);
-	}
+	outline_thickness = thickness;
 }
 
 
 
 void Composite::set_texture(const sf::Texture* texture, bool reset_rect)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->set_texture(texture, reset_rect);
-	}
+	this->texture = texture;
+	this->reset_rect = reset_rect;
 }
 
 
 
 void Composite::move(float offset_x, float offset_y)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->move(offset_x, offset_y);
-	}
+	transformations.move(offset_x, offset_y);
 }
 
 void Composite::move(const sf::Vector2f& offset)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->move(offset);
-	}
+	transformations.move(offset);
 }
 
 void Composite::rotate(float angle)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->rotate(angle);
-	}
+	transformations.rotate(angle);
 }
 
 void Composite::scale(float factor_x, float factor_y)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->scale(factor_x, factor_y);
-	}
+	transformations.scale(factor_x, factor_y);
 }
 
 void Composite::scale(const sf::Vector2f& factor)
 {
-	for (size_t i = 0; i < arr_size; i++)
-	{
-		shapes_arr[i]->scale(factor);
-	}
+	transformations.scale(factor);
 }
 
 
 
 const sf::Vector2f& Composite::get_position() const
 {
-
-	if (arr_size == 0)
-	{
-		throw std::out_of_range("Composite was empty");
-	}
-
-	return shapes_arr[0]->get_position();
-
+	return transformations.getPosition();
 }
 
 float Composite::get_rotation() const
 {
-
-	if (arr_size == 0)
-	{
-		throw std::out_of_range("Composite was empty");
-	}
-
-	return shapes_arr[0]->get_rotation();
-
+	return transformations.getRotation();
 }
 
 const sf::Vector2f& Composite::get_scale() const
 {
-	
-	if (arr_size == 0)
-	{
-		throw std::out_of_range("Composite was empty");
-	}
-
-	return shapes_arr[0]->get_scale();
-
+	return transformations.getScale();
 }
 
 
 
 const sf::Vector2f& Composite::get_origin() const
 {
-
-	if (arr_size == 0)
-	{
-		throw std::out_of_range("Composite was empty");
-	}
-
-	return shapes_arr[0]->get_origin();
-
+	return transformations.getOrigin();
 }
 
 
 
 const sf::Color& Composite::get_fill_color() const
 {
-	
-	if (arr_size == 0)
-	{
-		throw std::out_of_range("Composite was empty");
-	}
-
-	return shapes_arr[0]->get_fill_color();
-
+	return fill_color;
 }
 
 const sf::Color& Composite::get_outline_color() const
 {
-	
-	if (arr_size == 0)
-	{
-		throw std::out_of_range("Composite was empty");
-	}
-
-	return shapes_arr[0]->get_fill_color();
-
+	return outline_color;
 }
 
 
 
 float Composite::get_outline_thickness() const
 {
-
-	if (arr_size == 0)
-	{
-		throw std::out_of_range("Composite was empty");
-	}
-
-	return shapes_arr[0]->get_outline_thickness();
-
+	return outline_thickness;
 }
 
 
@@ -264,29 +188,91 @@ sf::Vector2f Composite::get_point(size_t index) const
 
 const sf::Transform& Composite::get_transform() const
 {
-
-	if (arr_size == 0)
-	{
-		throw std::out_of_range("Composite was empty");
-	}
-
-	return shapes_arr[0]->get_transform();
-
+	return transformations.getTransform();
 }
 
 const sf::Transform& Composite::get_inverse_transform() const
 {
-	
+	return transformations.getInverseTransform();
+}
+
+
+
+sf::FloatRect Composite::get_local_bounds() const
+{
+
 	if (arr_size == 0)
 	{
 		throw std::out_of_range("Composite was empty");
 	}
 
-	return shapes_arr[0]->get_inverse_transform();
+	sf::FloatRect local_bounds = shapes_arr[0]->get_global_bounds();
+
+	for (size_t i = 1; i < arr_size; i++)
+	{
+
+		sf::FloatRect shape_local_bounds = shapes_arr[i]->get_global_bounds();
+
+		if (shape_local_bounds.left < local_bounds.left)
+		{
+			local_bounds.left = shape_local_bounds.left;
+		}
+		if (shape_local_bounds.left + shape_local_bounds.width > local_bounds.left + local_bounds.width)
+		{
+			local_bounds.width = shape_local_bounds.left + shape_local_bounds.width - local_bounds.left;
+		}
+		if (shape_local_bounds.top < local_bounds.top)
+		{
+			local_bounds.top = shape_local_bounds.top;
+		}
+		if (shape_local_bounds.top + shape_local_bounds.height > local_bounds.top + local_bounds.height)
+		{
+			local_bounds.height = shape_local_bounds.top + shape_local_bounds.height - local_bounds.top;
+		}
+
+	}
+
+	return sf::FloatRect(0, 0, local_bounds.width, local_bounds.height);
 
 }
 
+sf::FloatRect Composite::get_global_bounds() const
+{
 
+	if (arr_size == 0)
+	{
+		throw std::out_of_range("Composite was empty");
+	}
+
+	sf::FloatRect local_bounds = shapes_arr[0]->get_global_bounds();
+
+	for (size_t i = 1; i < arr_size; i++)
+	{
+
+		sf::FloatRect shape_local_bounds = shapes_arr[i]->get_global_bounds();
+
+		if (shape_local_bounds.left < local_bounds.left)
+		{
+			local_bounds.left = shape_local_bounds.left;
+		}
+		if (shape_local_bounds.left + shape_local_bounds.width > local_bounds.left + local_bounds.width)
+		{
+			local_bounds.width = shape_local_bounds.left + shape_local_bounds.width - local_bounds.left;
+		}
+		if (shape_local_bounds.top < local_bounds.top)
+		{
+			local_bounds.top = shape_local_bounds.top;
+		}
+		if (shape_local_bounds.top + shape_local_bounds.height > local_bounds.top + local_bounds.height)
+		{
+			local_bounds.height = shape_local_bounds.top + shape_local_bounds.height - local_bounds.top;
+		}
+
+	}
+
+	return local_bounds;
+
+}
 
 
 
@@ -294,11 +280,86 @@ const sf::Transform& Composite::get_inverse_transform() const
 
 const sf::Texture* Composite::get_texture() const
 {
-	if (arr_size == 0)
+	return texture;
+}
+
+
+
+void Composite::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+
+	sf::RenderStates object_states;
+
+	object_states.texture = texture;
+	object_states.transform = transformations.getTransform();
+
+	sf::FloatRect global_bounds = get_global_bounds();
+	sf::RectangleShape outline(sf::Vector2f(global_bounds.width, global_bounds.height));
+
+	outline.setOrigin(shapes_arr[0]->get_origin());
+	outline.setPosition(transformations.getOrigin());
+
+	outline.rotate(transformations.getRotation());
+	outline.scale(transformations.getScale());
+	outline.setFillColor(sf::Color::Transparent);
+	outline.setOutlineThickness(outline_thickness);
+	outline.setOutlineColor(outline_color);
+	target.draw(outline);
+
+	for (size_t i = 0; i < arr_size; i++)
 	{
-		throw std::out_of_range("Composite was empty");
+		target.draw(*shapes_arr[i], object_states);
 	}
 
-	return shapes_arr[0]->get_texture();
+}
+
+
+
+Composite::~Composite()
+{
+
+	for (size_t i = 0; i < arr_size; i++)
+	{
+		delete shapes_arr[i];
+	}
+
+	delete[] shapes_arr;
+
+}
+
+
+
+void Composite::add_shape(Shape*&& shape)
+{
+
+	if (arr_size < arr_capacity)
+	{
+		shapes_arr[arr_size] = shape;
+	}
+	else
+	{
+
+		if (arr_capacity == 0)
+		{
+			transformations.setOrigin(shape->get_position());
+			transformations.move(shape->get_position());
+			arr_capacity = 1;
+		}
+
+		Shape** temp = shapes_arr;
+
+		shapes_arr = new Shape * [arr_capacity *= 2];
+
+		for (size_t i = 0; i < arr_size; i++)
+		{
+			shapes_arr[i] = temp[i];
+		}
+
+		shapes_arr[arr_size] = shape;
+
+	}
+
+	++arr_size;
+	shape = nullptr;
 
 }

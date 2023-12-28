@@ -5,19 +5,58 @@
 
 
 
+/*sf::Vector2f calculate_origin() const
+	{
+
+		if (arr_size == 0)
+		{
+			throw std::out_of_range("Composite was empty");
+		}
+
+		sf::Vector2f new_origin;
+
+		for (size_t i = 0; i < arr_size; i++)
+		{
+			new_origin += shapes_arr[i]->get_origin();
+		}
+
+		new_origin.x /= arr_size;
+		new_origin.y /= arr_size;
+
+		return new_origin;
+
+	}*/
+
+
+
+
+
 int main()
 {
 
 
-	Regular circ(100, 4);
-	circ.move(400, 300);
-	circ.rotate(45);
-	circ.set_origin(50, 50);
-	std::cout << circ.get_position().x << ' ' << circ.get_position().y << '\n';
+	Regular* square = new Regular(100, 4);
+	//square->set_origin(50, 50);
+	square->move(200, 100);
 
-	std::cout << circ.get_origin().x << ' ' << circ.get_origin().y << '\n';
-
+	Rectangle* rect = new Rectangle(sf::Vector2f(200, 100));
+	rect->move(400, 300);
 	
+	Composite compost;
+	compost.add_shape(std::move(square));
+	compost.add_shape(std::move(rect));
+
+	sf::FloatRect bounds = compost.get_local_bounds();
+
+	std::cout << "X1: " << bounds.left << "    " << "X2: " << bounds.width << '\n';
+	std::cout << "Y1: " << bounds.top << "    " << "Y2: " << bounds.height << '\n';
+
+
+	compost.set_outline_thickness(10);
+	compost.set_outline_color(sf::Color::Yellow);
+
+	compost.set_fill_color(sf::Color::Blue);
+
 
 
 	sf::RenderWindow main_window(sf::VideoMode(800, 600), "Graphics window");
@@ -41,12 +80,13 @@ int main()
 
 		}
 
-		//circ.rotate(0.01);
+		compost.rotate(0.01);
+		compost.scale(1.0001, 1.0001);
 
 		main_window.clear();
 
-		main_window.draw(circ);
-
+		
+		main_window.draw(compost);
 
 		main_window.display();
 
