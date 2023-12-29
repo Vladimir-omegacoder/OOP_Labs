@@ -617,7 +617,7 @@ int main()
 
 				sf::FloatRect shape_bounds = action_args->scene.get_selected_actor()->operator->()->get_global_bounds();
 				if (shape_bounds.left + action_args->offset.x < 0 || shape_bounds.left + shape_bounds.width + action_args->offset.x > SCENE_SIZE.x 
-					|| shape_bounds.top + action_args->offset.y < 0 || shape_bounds.top + shape_bounds.height + action_args->offset.y > SCENE_SIZE.y)
+					|| shape_bounds.top + action_args->offset.y < 0 || shape_bounds.top + shape_bounds.height + action_args->offset.y > SCENE_SIZE.y + 80)
 				{
 					return;
 				}

@@ -253,17 +253,19 @@ sf::FloatRect Composite::get_global_bounds() const
 
 		if (shape_local_bounds.left < local_bounds.left)
 		{
+			local_bounds.width += (local_bounds.left - shape_local_bounds.left);
 			local_bounds.left = shape_local_bounds.left;
 		}
-		if (local_bounds.left + shape_local_bounds.width > local_bounds.left + local_bounds.width)
+		if (local_bounds.left + local_bounds.width < shape_local_bounds.left + shape_local_bounds.width)
 		{
 			local_bounds.width = shape_local_bounds.left + shape_local_bounds.width - local_bounds.left;
 		}
 		if (shape_local_bounds.top < local_bounds.top)
 		{
+			local_bounds.height += (local_bounds.top - shape_local_bounds.top);
 			local_bounds.top = shape_local_bounds.top;
 		}
-		if (local_bounds.top + shape_local_bounds.height > local_bounds.top + local_bounds.height)
+		if (local_bounds.top + local_bounds.height < shape_local_bounds.top + shape_local_bounds.height)
 		{
 			local_bounds.height = shape_local_bounds.top + shape_local_bounds.height - local_bounds.top;
 		}
