@@ -30,7 +30,7 @@ public:
 
 				if (selected)
 				{
-					//shape_actor->set_outline_color(Scene::selection_color);
+					shape_actor->set_outline_color(Scene::selection_color);
 				}
 				else
 				{
@@ -50,6 +50,13 @@ public:
 
 		Actor(Shape* shape, bool selected = false, bool visible = true)
 			: shape_actor(shape), selected(selected), visible(visible) {}
+
+		Actor(const Actor& other) = delete;
+
+		Actor(Actor&& other) : shape_actor(other.shape_actor), selected(other.selected), visible(other.visible)
+		{
+			other.shape_actor = nullptr;
+		}
 
 		~Actor()
 		{
@@ -119,7 +126,7 @@ private:
 
 		Controller(const Controller& other) = delete;
 
-		void select_actor(Actor& actor)
+		void select_actor(Actor* actor)
 		{
 
 			if (selected_actor != nullptr)
@@ -127,24 +134,37 @@ private:
 				selected_actor->diselect();
 			}
 
-			selected_actor = &actor;
-			actor.select();
+			selected_actor = actor;
+			actor->select();
 
 		}
 
-		Actor& get_selected_actor()
+		void diselect()
 		{
-			return *selected_actor;
+
+			if (selected_actor != nullptr)
+			{
+				selected_actor->diselect();
+			}
+
+			selected_actor = nullptr;
+
+		}
+
+		Actor* get_selected_actor()
+		{
+			return selected_actor;
 		}
 
 	};
 
 
 
-	std::list<Actor> actors;
-	std::list<Actor*const> selection;
+	static sf::Color selection_color;
 	sf::Sprite background;
-	sf::Color selection_color;
+
+	std::list<Actor> actors;
+	std::list<Actor*> selection;
 	Controller controller;
 
 
@@ -172,28 +192,63 @@ public:
 
 
 
-	bool try_select_actor(sf::Vector2i mouse_pos)
+	void add_to_selection(Actor* actor)
 	{
-		// TODO
+		selection.push_back(actor);
 	}
 
+	void clear_selection()
+	{
+		selection.clear();
+	}
 
-
-	void add_actor(const Actor& actor)
+	void add_actor(Actor&& actor)
 	{
 		actors.push_back(actor);
-		controller.select_actor(actors.back());
 	}
 
-	Actor& get_selected_actor()
+
+
+	void select_actor(Actor* actor)
+	{
+		controller.select_actor(actor);
+	}
+
+	Actor* get_selected_actor()
 	{
 		return controller.get_selected_actor();
 	}
 
-	std::list<Actor*const>::iterator get_selection()
+	Actor* try_select_actor(sf::Vector2i mouse_pos)
 	{
-		return selection.begin();
+
+		for (auto& i : actors)
+		{
+
+			sf::FloatRect shape_bounds = i->get_global_bounds();
+
+			if (mouse_pos.x < shape_bounds.left || mouse_pos.x > shape_bounds.left + shape_bounds.width
+				|| mouse_pos.y < shape_bounds.top || mouse_pos.y > shape_bounds.top + shape_bounds.height)
+			{
+				continue;
+			}
+
+			i.select();
+
+			return controller.get_selected_actor();
+
+		}
+
+		controller.diselect();
+
+		return nullptr;
+
 	}
+
+
+
+
+
 
 
 
