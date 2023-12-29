@@ -255,7 +255,7 @@ sf::FloatRect Composite::get_global_bounds() const
 		{
 			local_bounds.left = shape_local_bounds.left;
 		}
-		if (shape_local_bounds.left + shape_local_bounds.width > local_bounds.left + local_bounds.width)
+		if (local_bounds.left + shape_local_bounds.width > local_bounds.left + local_bounds.width)
 		{
 			local_bounds.width = shape_local_bounds.left + shape_local_bounds.width - local_bounds.left;
 		}
@@ -263,14 +263,18 @@ sf::FloatRect Composite::get_global_bounds() const
 		{
 			local_bounds.top = shape_local_bounds.top;
 		}
-		if (shape_local_bounds.top + shape_local_bounds.height > local_bounds.top + local_bounds.height)
+		if (local_bounds.top + shape_local_bounds.height > local_bounds.top + local_bounds.height)
 		{
 			local_bounds.height = shape_local_bounds.top + shape_local_bounds.height - local_bounds.top;
 		}
 
 	}
 
-	return local_bounds;
+	sf::Transform tr = transformations.getTransform();
+
+	sf::FloatRect global_bounds = tr.transformRect(local_bounds);
+
+	return global_bounds;
 
 }
 
@@ -291,16 +295,11 @@ void Composite::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	sf::RenderStates object_states;
 
 	object_states.texture = texture;
-	object_states.transform = transformations.getTransform();
+	object_states.transform = transformations.getTransform() * states.transform;
 
 	sf::FloatRect global_bounds = get_global_bounds();
 	sf::RectangleShape outline(sf::Vector2f(global_bounds.width, global_bounds.height));
-
-	outline.setOrigin(shapes_arr[0]->get_origin());
-	outline.setPosition(transformations.getOrigin());
-
-	outline.rotate(transformations.getRotation());
-	outline.scale(transformations.getScale());
+	outline.setPosition(global_bounds.left, global_bounds.top);
 	outline.setFillColor(sf::Color::Transparent);
 	outline.setOutlineThickness(outline_thickness);
 	outline.setOutlineColor(outline_color);

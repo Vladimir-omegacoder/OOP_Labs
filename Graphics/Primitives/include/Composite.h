@@ -1,5 +1,6 @@
 #pragma once
 #include "Shape.h"
+#include "../../Primitives.h"
 
 
 
@@ -34,7 +35,31 @@ public:
 		arr_capacity(other.arr_capacity), arr_size(other.arr_size), shapes_arr(new Shape* [other.arr_capacity] {}),
 		transformations(other.transformations), fill_color(other.fill_color), outline_color(other.outline_color),
 		outline_thickness(other.outline_thickness), texture(other.texture), reset_rect(other.reset_rect)
-	{}
+	{
+		for (size_t i = 0; i < arr_size; i++)
+		{
+			if (const Line* line = dynamic_cast<const Line*>(other.shapes_arr[i]))
+			{
+				shapes_arr[i] = new Line(*line);
+			}
+			if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(other.shapes_arr[i]))
+			{
+				shapes_arr[i] = new Rectangle(*rectangle);
+			}
+			if (const Circle* circle = dynamic_cast<const Circle*>(other.shapes_arr[i]))
+			{
+				shapes_arr[i] = new Circle(*circle);
+			}
+			if (const Regular* regular = dynamic_cast<const Regular*>(other.shapes_arr[i]))
+			{
+				shapes_arr[i] = new Regular(*regular);
+			}
+			if (const Composite* composite = dynamic_cast<const Composite*>(other.shapes_arr[i]))
+			{
+				shapes_arr[i] = new Composite(*composite);
+			}
+		}
+	}
 
 	~Composite();
 

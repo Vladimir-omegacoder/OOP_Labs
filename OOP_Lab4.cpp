@@ -92,6 +92,16 @@ void enter_symbol(Textbox& textbox, uint32_t character)
 		}
 	}
 
+	if (character == 56)
+	{
+		if (textbox.get_text().getString().getSize() == 0)
+		{
+			sf::String temp = textbox.get_text().getString();
+			temp += (char)45;
+			textbox.get_text().setString(temp);
+		}
+	}
+
 	if (character == 59)
 	{
 		if (textbox.get_text().getString().getSize() > 0)
@@ -486,18 +496,202 @@ int main()
 	Scene main_scene;
 	main_scene.get_backgruond().setTexture(main_scene_texture);
 
-	class Scene_action_event_args : public Event_args
+	class Scene_create_actor_event_args : public Button_event_args 
+	{
+
+	public:
+
+		Scene& scene;
+		Scene::Actor&& actor;
+
+		Scene_create_actor_event_args(Event_type event_type, Scene& scene, Scene::Actor&& actor) :
+			Button_event_args(event_type), scene(scene), actor(std::move(actor)) {}
+
+	};
+
+	void(*create_actor)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Scene_create_actor_event_args*>(args))
+			{
+				action_args->scene.add_actor(std::move(action_args->actor));
+			}
+
+		};
+
+	button_line.add_event_handler(create_actor, Button_event_args::CLICK);
+	button_rectangle.add_event_handler(create_actor, Button_event_args::CLICK);
+	button_circle.add_event_handler(create_actor, Button_event_args::CLICK);
+	button_triangle.add_event_handler(create_actor, Button_event_args::CLICK);
+	button_square.add_event_handler(create_actor, Button_event_args::CLICK);
+	button_pentagon.add_event_handler(create_actor, Button_event_args::CLICK);
+	button_hexagon.add_event_handler(create_actor, Button_event_args::CLICK);
+
+
+	class Scene_action_actor_event_args : public Button_event_args
 	{
 
 	public:
 
 		Scene& scene;
 
-		Scene_action_event_args(Scene& scene) : scene(scene) {}
+		Scene_action_actor_event_args(Event_type event_type, Scene& scene) :
+			Button_event_args(event_type), scene(scene) {}
+
+	};
+
+	void(*delete_actor)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
+			{
+				while (action_args->scene.get_selected_actor() != nullptr)
+				{
+					action_args->scene.remove_selected_actor();
+				}
+			}
+
+		};
+
+	button_delete.add_event_handler(delete_actor, Button_event_args::CLICK);
+
+
+	class Move_actor_event_args : public Scene_action_actor_event_args
+	{
+
+	public:
+
+		const sf::Vector2f offset;
+
+		Move_actor_event_args(Event_type event_type, Scene& scene, const sf::Vector2f offset) :
+			Scene_action_actor_event_args(event_type, scene), offset(offset) {}
+
+	};
+
+	class Rotate_actor_event_args : public Scene_action_actor_event_args
+	{
+
+	public:
+
+		const float angle;
+
+		Rotate_actor_event_args(Event_type event_type, Scene& scene, float angle) :
+			Scene_action_actor_event_args(event_type, scene), angle(angle) {}
+
+	};
+
+	class Scale_actor_event_args : public Scene_action_actor_event_args
+	{
+
+	public:
+
+		const sf::Vector2f factor;
+
+		Scale_actor_event_args(Event_type event_type, Scene& scene, sf::Vector2f factor) :
+			Scene_action_actor_event_args(event_type, scene), factor(factor) {}
+
+	};
+
+	class Color_actor_event_args : public Scene_action_actor_event_args
+	{
+
+	public:
+
+		const sf::Color color;
+
+		Color_actor_event_args(Event_type event_type, Scene& scene, sf::Color color) :
+			Scene_action_actor_event_args(event_type, scene), color(color) {}
 
 	};
 
 
+	void(*move_actor)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Move_actor_event_args*>(args))
+			{
+				if (action_args->offset == sf::Vector2f(0, 0) || action_args->scene.get_selected_actor() == nullptr)
+				{
+					return;
+				}
+
+				sf::FloatRect shape_bounds = action_args->scene.get_selected_actor()->operator->()->get_global_bounds();
+				if (shape_bounds.left + action_args->offset.x < 0 || shape_bounds.left + shape_bounds.width + action_args->offset.x > SCENE_SIZE.x 
+					|| shape_bounds.top + action_args->offset.y < 0 || shape_bounds.top + shape_bounds.height + action_args->offset.y > SCENE_SIZE.y)
+				{
+					return;
+				}
+				
+				action_args->scene.get_selected_actor()->operator->()->move(action_args->offset);
+			}
+
+		};
+
+	button_move.add_event_handler(move_actor, Button_event_args::CLICK);
+
+	void(*rotate_actor)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Rotate_actor_event_args*>(args))
+			{
+				if (action_args->angle == 0 || action_args->scene.get_selected_actor() == nullptr)
+				{
+					return;
+				}
+
+				action_args->scene.get_selected_actor()->operator->()->rotate(action_args->angle);
+			}
+
+		};
+
+	button_rotate.add_event_handler(rotate_actor, Button_event_args::CLICK);
+
+	void(*scale_actor)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Scale_actor_event_args*>(args))
+			{
+				if (action_args->factor == sf::Vector2f(0, 0) || action_args->scene.get_selected_actor() == nullptr)
+				{
+					return;
+				}
+
+				action_args->scene.get_selected_actor()->operator->()->scale(action_args->factor);
+			}
+
+		};
+
+	button_scale.add_event_handler(scale_actor, Button_event_args::CLICK);
+
+	void(*color_actor)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Color_actor_event_args*>(args))
+			{
+				if (action_args->scene.get_selected_actor() == nullptr)
+				{
+					return;
+				}
+
+				action_args->scene.get_selected_actor()->operator->()->set_fill_color(action_args->color);
+			}
+
+		};
+
+	button_color.add_event_handler(color_actor, Button_event_args::CLICK);
+
+
+	void(*aggregate_selected)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
+			{
+				action_args->scene.aggregate_selected();
+			}
+
+		};
+
+	button_aggregate.add_event_handler(aggregate_selected, Button_event_args::CLICK);
 
 
 
@@ -621,7 +815,9 @@ int main()
 
 
 						Button_texture_change_event_args button_delete_args(Button_event_args::CLICK, texture_button_delete_pressed);
+						Scene_action_actor_event_args delete_action_args(Button_event_args::CLICK, main_scene);
 						args_arr[0] = &button_delete_args;
+						args_arr[1] = &delete_action_args;
 						if (button_delete.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -637,7 +833,9 @@ int main()
 
 
 						Button_texture_change_event_args button_aggregate_args(Button_event_args::CLICK, texture_button_aggregate_pressed);
+						Scene_action_actor_event_args aggregate_action_args(Button_event_args::CLICK, main_scene);
 						args_arr[0] = &button_aggregate_args;
+						args_arr[1] = &aggregate_action_args;
 						if (button_aggregate.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -646,7 +844,14 @@ int main()
 
 
 						Button_texture_change_event_args button_line_args(Button_event_args::CLICK, texture_button_line_pressed);
+						Shape* line = new Line(100, 5);
+						line->set_origin(50, 2.5);
+						line->move(400, 360);
+						line->set_fill_color(sf::Color::Black);
+						Scene::Actor line_actor(line);
+						Scene_create_actor_event_args line_create_args(Button_event_args::CLICK, main_scene, std::move(line_actor));
 						args_arr[0] = &button_line_args;
+						args_arr[1] = &line_create_args;
 						if (button_line.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -654,7 +859,14 @@ int main()
 
 
 						Button_texture_change_event_args button_rectangle_args(Button_event_args::CLICK, texture_button_rectangle_pressed);
+						Shape* rectangle = new Rectangle(sf::Vector2f(200, 100));
+						rectangle->set_origin(100, 50);
+						rectangle->move(400, 360);
+						rectangle->set_fill_color(sf::Color::Black);
+						Scene::Actor rectangle_actor(rectangle);
+						Scene_create_actor_event_args rectangle_create_args(Button_event_args::CLICK, main_scene, std::move(rectangle_actor));
 						args_arr[0] = &button_rectangle_args;
+						args_arr[1] = &rectangle_create_args;
 						if (button_rectangle.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -662,7 +874,14 @@ int main()
 
 
 						Button_texture_change_event_args button_circle_args(Button_event_args::CLICK, texture_button_circle_pressed);
+						Shape* circle = new Circle(50);
+						circle->set_origin(50, 50);
+						circle->move(400, 360);
+						circle->set_fill_color(sf::Color::Black);
+						Scene::Actor circle_actor(circle);
+						Scene_create_actor_event_args circle_create_args(Button_event_args::CLICK, main_scene, std::move(circle_actor));
 						args_arr[0] = &button_circle_args;
+						args_arr[1] = &circle_create_args;
 						if (button_circle.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -670,7 +889,14 @@ int main()
 
 
 						Button_texture_change_event_args button_triangle_args(Button_event_args::CLICK, texture_button_triangle_pressed);
+						Shape* triangle = new Regular(50, 3);
+						triangle->set_origin(50, 50);
+						triangle->move(400, 360);
+						triangle->set_fill_color(sf::Color::Black);
+						Scene::Actor triangle_actor(triangle);
+						Scene_create_actor_event_args triangle_create_args(Button_event_args::CLICK, main_scene, std::move(triangle_actor));
 						args_arr[0] = &button_triangle_args;
+						args_arr[1] = &triangle_create_args;
 						if (button_triangle.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -678,7 +904,15 @@ int main()
 
 
 						Button_texture_change_event_args button_square_args(Button_event_args::CLICK, texture_button_square_pressed);
+						Shape* square = new Regular(50, 4);
+						square->set_origin(50, 50);
+						square->move(400, 360);
+						square->rotate(45);
+						square->set_fill_color(sf::Color::Black);
+						Scene::Actor square_actor(square);
+						Scene_create_actor_event_args square_create_args(Button_event_args::CLICK, main_scene, std::move(square_actor));
 						args_arr[0] = &button_square_args;
+						args_arr[1] = &square_create_args;
 						if (button_square.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -686,7 +920,14 @@ int main()
 
 
 						Button_texture_change_event_args button_pentagon_args(Button_event_args::CLICK, texture_button_pentagon_pressed);
+						Shape* pentagon = new Regular(50, 5);
+						pentagon->set_origin(50, 50);
+						pentagon->move(400, 360);
+						pentagon->set_fill_color(sf::Color::Black);
+						Scene::Actor pentagon_actor(pentagon);
+						Scene_create_actor_event_args pentagon_create_args(Button_event_args::CLICK, main_scene, std::move(pentagon_actor));
 						args_arr[0] = &button_pentagon_args;
+						args_arr[1] = &pentagon_create_args;
 						if (button_pentagon.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -694,7 +935,14 @@ int main()
 
 
 						Button_texture_change_event_args button_hexagon_args(Button_event_args::CLICK, texture_button_hexagon_pressed);
+						Shape* hexagon = new Regular(50, 6);
+						hexagon->set_origin(50, 50);
+						hexagon->move(400, 360);
+						hexagon->set_fill_color(sf::Color::Black);
+						Scene::Actor hexagon_actor(hexagon);
+						Scene_create_actor_event_args hexagon_create_args(Button_event_args::CLICK, main_scene, std::move(hexagon_actor));
 						args_arr[0] = &button_hexagon_args;
+						args_arr[1] = &hexagon_create_args;
 						if (button_hexagon.try_click(args_arr, PARAM_COUNT))
 							break;
 						else
@@ -704,7 +952,7 @@ int main()
 
 					}
 
-
+					main_scene.try_select_actor(sf::Mouse::getPosition(main_window), sf::Keyboard::isKeyPressed(sf::Keyboard::LControl));
 
 				}
 
@@ -887,9 +1135,27 @@ int main()
 
 					const size_t PARAM_COUNT = 3;
 					Event_args* args_arr[PARAM_COUNT]{};
+					sf::Vector3f input;
+					std::string input_x = (std::string)textbox_X.get_text().getString();
+					std::string input_y = (std::string)textbox_Y.get_text().getString();
+					std::string input_z = (std::string)textbox_Z.get_text().getString();
+					if (input_x != "" && input_x != "-")
+					{
+						input.x = std::stof(input_x);
+					}
+					if (input_y != "" && input_x != "-")
+					{
+						input.y = std::stof(input_y);
+					}
+					if (input_z != "" && input_x != "-")
+					{
+						input.z = std::stof(input_z);
+					}
 
 					Button_texture_change_event_args button_move_args(Button_event_args::CLICK, texture_button_move_pressed);
+					Move_actor_event_args action_move_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y));
 					args_arr[0] = &button_move_args;
+					args_arr[1] = &action_move_args;
 					if (button_move.try_click(args_arr, PARAM_COUNT))
 						break;
 					else
@@ -897,7 +1163,9 @@ int main()
 
 
 					Button_texture_change_event_args button_rotate_args(Button_event_args::CLICK, texture_button_rotate_pressed);
+					Rotate_actor_event_args action_rotate_args(Button_event_args::CLICK, main_scene, input.x);
 					args_arr[0] = &button_rotate_args;
+					args_arr[1] = &action_rotate_args;
 					if (button_rotate.try_click(args_arr, PARAM_COUNT))
 						break;
 					else
@@ -905,7 +1173,9 @@ int main()
 
 
 					Button_texture_change_event_args button_scale_args(Button_event_args::CLICK, texture_button_scale_pressed);
+					Scale_actor_event_args action_scale_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y));
 					args_arr[0] = &button_scale_args;
+					args_arr[1] = &action_scale_args;
 					if (button_scale.try_click(args_arr, PARAM_COUNT))
 						break;
 					else
@@ -913,7 +1183,12 @@ int main()
 
 
 					Button_texture_change_event_args button_color_args(Button_event_args::CLICK, texture_button_color_pressed);
+					input.x = (int)abs(input.x) % 256;
+					input.y = (int)abs(input.y) % 256;
+					input.z = (int)abs(input.z) % 256;
+					Color_actor_event_args action_color_args(Button_event_args::CLICK, main_scene, sf::Color(input.x, input.y, input.z));
 					args_arr[0] = &button_color_args;
+					args_arr[1] = &action_color_args;
 					if (button_color.try_click(args_arr, PARAM_COUNT))
 						break;
 					else
@@ -1045,6 +1320,19 @@ int main()
 
 			}
 
+
+			if (checkbox_enable_move_by_law.is_checked())
+			{
+				if (main_scene.get_selected_actor() != nullptr)
+				{
+					sf::FloatRect bounds = (*main_scene.get_selected_actor())->get_global_bounds();
+
+					if(bounds.left + bounds.width < SCENE_SIZE.x)
+					{
+						(*main_scene.get_selected_actor())->move(10, 0);
+					}
+				}
+			}
 
 
 			properties_window.clear(sf::Color(153, 153, 153));

@@ -18,7 +18,7 @@ protected:
 
 public:
 
-	Regular(float side_length, size_t point_count) : polygon(side_length / 2 * tan(3.1415926535 / point_count), point_count) {}
+	Regular(float radius, size_t point_count) : polygon(radius, point_count) {}
 
 
 

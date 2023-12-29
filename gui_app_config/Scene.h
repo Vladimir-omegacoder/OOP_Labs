@@ -77,6 +77,11 @@ public:
 			return shape_actor;
 		}
 
+		void set_ptr(Shape* shape)
+		{
+			shape_actor = shape;
+		}
+
 
 
 		bool is_selected()
@@ -111,8 +116,9 @@ public:
 			visible = false;
 		}
 
-	};
+		friend bool operator==(const Actor& left, const Actor& right);
 
+	};
 
 private:
 
@@ -121,7 +127,7 @@ private:
 
 	private:
 
-		Actor* selected_actor = nullptr;
+		Actor* selected_actor;
 
 
 	public:
@@ -155,7 +161,7 @@ private:
 
 		}
 
-		Actor* get_selected_actor()
+		Actor*& get_selected_actor()
 		{
 			return selected_actor;
 		}
@@ -202,14 +208,9 @@ public:
 		selection.push_back(actor);
 	}
 
-	void clear_selection()
-	{
-		selection.clear();
-	}
-
 	void add_actor(Actor&& actor)
 	{
-		actors.push_back(std::move(actor));
+		actors.push_front(std::move(actor));
 	}
 
 
@@ -239,7 +240,7 @@ public:
 		return controller.get_selected_actor();
 	}
 
-	Actor* try_select_actor(sf::Vector2i mouse_pos)
+	Actor* try_select_actor(sf::Vector2i mouse_pos, bool add_to_selection = false)
 	{
 
 		for (auto& i : actors)
@@ -256,14 +257,40 @@ public:
 				continue;
 			}
 
+
 			if (!i.is_selected())
 			{
+				if (add_to_selection && controller.get_selected_actor() != nullptr)
+				{
+					selection.push_front(controller.get_selected_actor());
+				}
 				controller.select_actor(&i);
+				if (add_to_selection && !selection.empty())
+				{
+					selection.front()->select();
+				}
+			}
+
+			if (!add_to_selection)
+			{
+				for (auto& i : selection)
+				{
+					i->diselect();
+				}
+
+				selection.clear();
 			}
 
 			return controller.get_selected_actor();
 
 		}
+
+		for (auto& i : selection)
+		{
+			i->diselect();
+		}
+
+		selection.clear();
 
 		controller.diselect();
 
@@ -271,11 +298,61 @@ public:
 
 	}
 
+	void remove_selected_actor()
+	{
+		if (controller.get_selected_actor() != nullptr)
+		{
+			actors.remove(*controller.get_selected_actor());
+			controller.diselect();
+		}
+		if (!selection.empty())
+		{
+			controller.select_actor(selection.front());
+			selection.pop_front();
+		}
+	}
+
+	void aggregate_selected()
+	{
+
+		if (get_selected_actor() == nullptr || selection.empty())
+		{
+			return;
+		}
+
+		std::list<Actor> composing;
+		composing.push_front(std::move(*controller.get_selected_actor()));
+		for (auto& i : selection)
+		{
+			composing.push_back(std::move(*i));
+		}
+
+		Actor temp;
+		actors.remove(temp);
+
+		for (auto& i : composing)
+		{
+			i.diselect();
+			i->set_outline_color(sf::Color::Transparent);
+		}
 
 
+		Composite* composite = new Composite();
+		for (auto& i : composing)
+		{
+			composite->add_shape(&(*i));
+			i.set_ptr(nullptr);
+		}
 
+		selection.clear();
 
+		actors.push_front(std::move(Actor(composite)));
 
+		controller.select_actor(&actors.front());
 
+	}
 
 };
+
+
+
