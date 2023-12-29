@@ -31,7 +31,7 @@ public:
 
 				if (selected)
 				{
-					shape_actor->set_outline_color(sf::Color::Yellow);
+					shape_actor->set_outline_color(SELECTION_COLOR);
 				}
 				else
 				{

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "SFML/Graphics.hpp"
 #include "Interface/Controls.h"
+#include "gui_app_config/Scene.h"
 
 
 
@@ -14,6 +15,7 @@
 #define FONT_GENERAL DEFAULT_CONTROLS_FONT
 
 
+#define SCENE_TEXTURE	  "resources/background/scene_texture.png"
 #define TOP_PANEL_TEXTURE "resources/background/top_panel_texture.png"
 
 
@@ -471,6 +473,30 @@ int main()
 
 	checkbox_enable_trace.add_event_handler(check, Checkbox_event_args::CHECK);
 	checkbox_enable_move_by_law.add_event_handler(check, Checkbox_event_args::CHECK);
+
+
+
+
+
+
+	// Creating main scene
+	sf::Texture main_scene_texture;
+	main_scene_texture.loadFromFile(SCENE_TEXTURE);
+
+	Scene main_scene;
+	main_scene.get_backgruond().setTexture(main_scene_texture);
+
+	class Scene_action_event_args : public Event_args
+	{
+
+	public:
+
+		Scene& scene;
+
+		Scene_action_event_args(Scene& scene) : scene(scene) {}
+
+	};
+
 
 
 
@@ -1042,7 +1068,8 @@ int main()
 
 
 
-
+			main_window.clear();
+			main_window.draw(main_scene);
 
 			main_window.draw(top_panel);
 			main_window.draw(button_line);
