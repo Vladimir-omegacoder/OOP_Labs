@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿#pragma once
+#include <iostream>
 #include "SFML/Graphics.hpp"
 #include "Interface/Controls.h"
 
@@ -158,7 +159,7 @@ int main()
 	texture_top_panel.loadFromFile(TOP_PANEL_TEXTURE);
 	Control_panel top_panel;
 	top_panel.background.setTexture(texture_top_panel, true);
-	
+
 
 
 	// Setting button size(optional)
@@ -225,30 +226,30 @@ int main()
 		button_properties;
 
 	// Applying loaded textures to the buttons
-	button_line.		get_graphics().setTexture(texture_button_line);
-	button_rectangle.	get_graphics().setTexture(texture_button_rectangle);
-	button_circle.		get_graphics().setTexture(texture_button_circle);
-	button_triangle.	get_graphics().setTexture(texture_button_triangle);
-	button_square.		get_graphics().setTexture(texture_button_square);
-	button_pentagon.	get_graphics().setTexture(texture_button_pentagon);
-	button_hexagon.		get_graphics().setTexture(texture_button_hexagon);
-	button_delete.		get_graphics().setTexture(texture_button_delete);
-	button_reset.		get_graphics().setTexture(texture_button_reset);
-	button_aggregate.	get_graphics().setTexture(texture_button_aggregate);
-	button_properties.	get_graphics().setTexture(texture_button_properties);
+	button_line.get_graphics().setTexture(texture_button_line);
+	button_rectangle.get_graphics().setTexture(texture_button_rectangle);
+	button_circle.get_graphics().setTexture(texture_button_circle);
+	button_triangle.get_graphics().setTexture(texture_button_triangle);
+	button_square.get_graphics().setTexture(texture_button_square);
+	button_pentagon.get_graphics().setTexture(texture_button_pentagon);
+	button_hexagon.get_graphics().setTexture(texture_button_hexagon);
+	button_delete.get_graphics().setTexture(texture_button_delete);
+	button_reset.get_graphics().setTexture(texture_button_reset);
+	button_aggregate.get_graphics().setTexture(texture_button_aggregate);
+	button_properties.get_graphics().setTexture(texture_button_properties);
 
 	// Aligning buttons on the panel
-	button_line.		get_graphics().setPosition(60 * 0 + 10, 10);
-	button_rectangle.	get_graphics().setPosition(10 + 60 * 1 + 10, 10);
-	button_circle.		get_graphics().setPosition(20 + 60 * 2 + 10, 10);
-	button_triangle.	get_graphics().setPosition(30 + 60 * 3 + 10, 10);
-	button_square.		get_graphics().setPosition(40 + 60 * 4 + 10, 10);
-	button_pentagon.	get_graphics().setPosition(50 + 60 * 5 + 10, 10);
-	button_hexagon.		get_graphics().setPosition(60 + 60 * 6 + 10, 10);
-	button_properties.	get_graphics().setPosition(90 + 60 * 7 + 10, 10);
-	button_reset.		get_graphics().setPosition(100 + 60 * 8 + 10, 10);
-	button_aggregate.	get_graphics().setPosition(110 + 60 * 9 + 10, 10);
-	button_delete.		get_graphics().setPosition(120 + 60 * 10 + 10, 10);
+	button_line.get_graphics().setPosition(60 * 0 + 10, 10);
+	button_rectangle.get_graphics().setPosition(10 + 60 * 1 + 10, 10);
+	button_circle.get_graphics().setPosition(20 + 60 * 2 + 10, 10);
+	button_triangle.get_graphics().setPosition(30 + 60 * 3 + 10, 10);
+	button_square.get_graphics().setPosition(40 + 60 * 4 + 10, 10);
+	button_pentagon.get_graphics().setPosition(50 + 60 * 5 + 10, 10);
+	button_hexagon.get_graphics().setPosition(60 + 60 * 6 + 10, 10);
+	button_properties.get_graphics().setPosition(90 + 60 * 7 + 10, 10);
+	button_reset.get_graphics().setPosition(100 + 60 * 8 + 10, 10);
+	button_aggregate.get_graphics().setPosition(110 + 60 * 9 + 10, 10);
+	button_delete.get_graphics().setPosition(120 + 60 * 10 + 10, 10);
 
 
 	// Adding animation for top panel buttons
@@ -280,29 +281,29 @@ int main()
 			}
 		};
 
-	button_line.		add_event_handler(press, Button_event_args::CLICK);
-	button_rectangle.	add_event_handler(press, Button_event_args::CLICK);
-	button_circle.		add_event_handler(press, Button_event_args::CLICK);
-	button_triangle.	add_event_handler(press, Button_event_args::CLICK);
-	button_square.		add_event_handler(press, Button_event_args::CLICK);
-	button_pentagon.	add_event_handler(press, Button_event_args::CLICK);
-	button_hexagon.		add_event_handler(press, Button_event_args::CLICK);
-	button_properties.	add_event_handler(press, Button_event_args::CLICK);
-	button_reset.		add_event_handler(press, Button_event_args::CLICK);
-	button_aggregate.	add_event_handler(press, Button_event_args::CLICK);
-	button_delete.		add_event_handler(press, Button_event_args::CLICK);
+	button_line.add_event_handler(press, Button_event_args::CLICK);
+	button_rectangle.add_event_handler(press, Button_event_args::CLICK);
+	button_circle.add_event_handler(press, Button_event_args::CLICK);
+	button_triangle.add_event_handler(press, Button_event_args::CLICK);
+	button_square.add_event_handler(press, Button_event_args::CLICK);
+	button_pentagon.add_event_handler(press, Button_event_args::CLICK);
+	button_hexagon.add_event_handler(press, Button_event_args::CLICK);
+	button_properties.add_event_handler(press, Button_event_args::CLICK);
+	button_reset.add_event_handler(press, Button_event_args::CLICK);
+	button_aggregate.add_event_handler(press, Button_event_args::CLICK);
+	button_delete.add_event_handler(press, Button_event_args::CLICK);
 
-	button_line.		add_event_handler(release, Button_event_args::RELEASE);
-	button_rectangle.	add_event_handler(release, Button_event_args::RELEASE);
-	button_circle.		add_event_handler(release, Button_event_args::RELEASE);
-	button_triangle.	add_event_handler(release, Button_event_args::RELEASE);
-	button_square.		add_event_handler(release, Button_event_args::RELEASE);
-	button_pentagon.	add_event_handler(release, Button_event_args::RELEASE);
-	button_hexagon.		add_event_handler(release, Button_event_args::RELEASE);
-	button_properties.	add_event_handler(release, Button_event_args::RELEASE);
-	button_reset.		add_event_handler(release, Button_event_args::RELEASE);
-	button_aggregate.	add_event_handler(release, Button_event_args::RELEASE);
-	button_delete.		add_event_handler(release, Button_event_args::RELEASE);
+	button_line.add_event_handler(release, Button_event_args::RELEASE);
+	button_rectangle.add_event_handler(release, Button_event_args::RELEASE);
+	button_circle.add_event_handler(release, Button_event_args::RELEASE);
+	button_triangle.add_event_handler(release, Button_event_args::RELEASE);
+	button_square.add_event_handler(release, Button_event_args::RELEASE);
+	button_pentagon.add_event_handler(release, Button_event_args::RELEASE);
+	button_hexagon.add_event_handler(release, Button_event_args::RELEASE);
+	button_properties.add_event_handler(release, Button_event_args::RELEASE);
+	button_reset.add_event_handler(release, Button_event_args::RELEASE);
+	button_aggregate.add_event_handler(release, Button_event_args::RELEASE);
+	button_delete.add_event_handler(release, Button_event_args::RELEASE);
 
 
 
@@ -335,7 +336,7 @@ int main()
 	button_properties.add_event_handler(open_properties_window, Button_event_args::CLICK);
 
 	// Creating Labels
-	sf::Text 
+	sf::Text
 		label_X("X: ", general_font, 50),
 		label_Y("Y: ", general_font, 50),
 		label_Z("Z: ", general_font, 50);
@@ -343,7 +344,7 @@ int main()
 	label_X.setPosition(30, 30);
 	label_Y.setPosition(30, 80);
 	label_Z.setPosition(30, 130);
-	
+
 
 	// Creating textboxes
 	sf::Texture texture_textbox;
@@ -397,27 +398,27 @@ int main()
 	// Creating buttons for properties window
 	Button button_move, button_rotate, button_scale, button_color;
 
-	button_move.	get_graphics().setTexture(texture_button_move);
-	button_rotate.	get_graphics().setTexture(texture_button_rotate);
-	button_scale.	get_graphics().setTexture(texture_button_scale);
-	button_color.	get_graphics().setTexture(texture_button_color);
+	button_move.get_graphics().setTexture(texture_button_move);
+	button_rotate.get_graphics().setTexture(texture_button_rotate);
+	button_scale.get_graphics().setTexture(texture_button_scale);
+	button_color.get_graphics().setTexture(texture_button_color);
 
-	button_move.	get_graphics().setPosition(20, 220);
-	button_rotate.	get_graphics().setPosition(180, 220);
-	button_scale.	get_graphics().setPosition(20, 330);
-	button_color.	get_graphics().setPosition(180, 330);
+	button_move.get_graphics().setPosition(20, 220);
+	button_rotate.get_graphics().setPosition(180, 220);
+	button_scale.get_graphics().setPosition(20, 330);
+	button_color.get_graphics().setPosition(180, 330);
 
 
 	// Adding animation for properties window buttons
-	button_move.	add_event_handler(press, Button_event_args::CLICK);
-	button_rotate.	add_event_handler(press, Button_event_args::CLICK);
-	button_scale.	add_event_handler(press, Button_event_args::CLICK);
-	button_color.	add_event_handler(press, Button_event_args::CLICK);
+	button_move.add_event_handler(press, Button_event_args::CLICK);
+	button_rotate.add_event_handler(press, Button_event_args::CLICK);
+	button_scale.add_event_handler(press, Button_event_args::CLICK);
+	button_color.add_event_handler(press, Button_event_args::CLICK);
 
-	button_move.	add_event_handler(release, Button_event_args::RELEASE);
-	button_rotate.	add_event_handler(release, Button_event_args::RELEASE);
-	button_scale.	add_event_handler(release, Button_event_args::RELEASE);
-	button_color.	add_event_handler(release, Button_event_args::RELEASE);
+	button_move.add_event_handler(release, Button_event_args::RELEASE);
+	button_rotate.add_event_handler(release, Button_event_args::RELEASE);
+	button_scale.add_event_handler(release, Button_event_args::RELEASE);
+	button_color.add_event_handler(release, Button_event_args::RELEASE);
 
 
 
@@ -480,7 +481,7 @@ int main()
 	while (main_window.isOpen())
 	{
 
-		if (clock.getElapsedTime().asMilliseconds() > 50) 
+		if (clock.getElapsedTime().asMilliseconds() > 50)
 		{
 
 			clock.restart();

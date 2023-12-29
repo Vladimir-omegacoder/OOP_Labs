@@ -3,3 +3,6 @@
 x64
 bin
 *.config
+
+# main
+OOP_Lab4.cpp
