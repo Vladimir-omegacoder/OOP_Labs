@@ -30,6 +30,7 @@
 
 
 
+#define SCENE_BACKGROUND "scene_background.png"
 
 
 int main()
@@ -38,8 +39,16 @@ int main()
 
 	Scene scene;
 
-	
+	sf::Texture scene_texture;
+	scene_texture.loadFromFile(SCENE_BACKGROUND);
+	scene.get_backgruond().setTexture(scene_texture);
+	scene.get_backgruond().setPosition(0, 80);
 
+	Shape* circ = new Circle(50);
+	circ->move(300, 300);
+
+	scene.add_actor(std::move(Scene::Actor(new Rectangle(sf::Vector2f(200, 100)))));
+	scene.add_actor(std::move(Scene::Actor(circ)));
 
 
 	sf::RenderWindow main_window(sf::VideoMode(800, 600), "Graphics window");
@@ -61,11 +70,21 @@ int main()
 				main_window.close();
 			}
 
+			if (main_event.type == sf::Event::MouseButtonPressed)
+			{
+				scene.try_select_actor(sf::Mouse::getPosition(main_window));
+			}
+
+		}
+
+		if (scene.get_selected_actor() != nullptr)
+		{
+			scene.get_selected_actor()->operator*().rotate(0.01);
 		}
 
 		main_window.clear();
 
-		
+		main_window.draw(scene);
 
 		main_window.display();
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "../graphics/Primitives.h"
 #include <list>
 
@@ -8,12 +9,12 @@
 #define SELECTION_COLOR sf::Color::Yellow
 
 
-class Scene : sf::Drawable
+class Scene : public sf::Drawable
 {
 
 public:
 
-	class Actor : sf::Drawable
+	class Actor : public sf::Drawable
 	{
 
 		Shape* shape_actor;
@@ -30,7 +31,7 @@ public:
 
 				if (selected)
 				{
-					shape_actor->set_outline_color(Scene::selection_color);
+					shape_actor->set_outline_color(sf::Color::Yellow);
 				}
 				else
 				{
@@ -49,7 +50,10 @@ public:
 		Actor() : shape_actor(nullptr), selected(false), visible(true) {}
 
 		Actor(Shape* shape, bool selected = false, bool visible = true)
-			: shape_actor(shape), selected(selected), visible(visible) {}
+			: shape_actor(shape), selected(selected), visible(visible) 
+		{
+			shape->set_outline_thickness(3);
+		}
 
 		Actor(const Actor& other) = delete;
 
@@ -160,7 +164,6 @@ private:
 
 
 
-	static sf::Color selection_color;
 	sf::Sprite background;
 
 	std::list<Actor> actors;
@@ -169,7 +172,14 @@ private:
 
 
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override {}
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override 
+	{
+		target.draw(background, states);
+		for (auto& i : actors)
+		{
+			target.draw(i, background.getTransform());
+		}
+	}
 
 
 public:
@@ -183,11 +193,6 @@ public:
 	sf::Sprite& get_backgruond() 
 	{
 		return background;
-	}
-
-	sf::Color& get_selection_color()
-	{
-		return selection_color;
 	}
 
 
@@ -204,7 +209,7 @@ public:
 
 	void add_actor(Actor&& actor)
 	{
-		actors.push_back(actor);
+		actors.push_back(std::move(actor));
 	}
 
 
@@ -212,6 +217,21 @@ public:
 	void select_actor(Actor* actor)
 	{
 		controller.select_actor(actor);
+	}
+	
+	bool cursor_inside(sf::Vector2i mouse_pos)
+	{
+		sf::FloatRect bounds = background.getGlobalBounds();
+
+		if (mouse_pos.x < bounds.left || mouse_pos.x > bounds.left + bounds.width
+			|| mouse_pos.y < bounds.top || mouse_pos.y > bounds.top + bounds.height)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	Actor* get_selected_actor()
@@ -226,6 +246,9 @@ public:
 		{
 
 			sf::FloatRect shape_bounds = i->get_global_bounds();
+			sf::FloatRect scene_bounds = background.getGlobalBounds();
+			shape_bounds.left += scene_bounds.left;
+			shape_bounds.top += scene_bounds.top;
 
 			if (mouse_pos.x < shape_bounds.left || mouse_pos.x > shape_bounds.left + shape_bounds.width
 				|| mouse_pos.y < shape_bounds.top || mouse_pos.y > shape_bounds.top + shape_bounds.height)
@@ -233,7 +256,10 @@ public:
 				continue;
 			}
 
-			i.select();
+			if (!i.is_selected())
+			{
+				controller.select_actor(&i);
+			}
 
 			return controller.get_selected_actor();
 
