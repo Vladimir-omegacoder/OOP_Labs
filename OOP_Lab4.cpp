@@ -8,8 +8,8 @@
 
 
 
-#define MAIN_WINDOW_SIZE sf::Vector2u(800, 600)
-#define PROPERTIES_WINDOW_SIZE sf::Vector2u(350, 500)
+//#define MAIN_WINDOW_SIZE sf::Vector2u(1000, 600)
+//#define PROPERTIES_WINDOW_SIZE sf::Vector2u(350, 500)
 
 
 #define FONT_GENERAL DEFAULT_CONTROLS_FONT
@@ -123,6 +123,9 @@ void enter_symbol(Textbox& textbox, uint32_t character)
 int main()
 {
 
+	sf::Vector2u MAIN_WINDOW_SIZE = sf::Vector2u(1920, 1080);
+	sf::Vector2u PROPERTIES_WINDOW_SIZE = sf::Vector2u(350, 500);
+
 	sf::RenderWindow main_window(sf::VideoMode(MAIN_WINDOW_SIZE.x, MAIN_WINDOW_SIZE.y), "Main window");
 
 	class Control_panel : public sf::Drawable
@@ -147,7 +150,8 @@ int main()
 
 			sf::Vector2f a, b;
 			a = background.getPosition();
-			b = a + background.getLocalBounds().getSize();
+			b = a + sf::Vector2f(background.getLocalBounds().getSize().x * background.getScale().x,
+				background.getLocalBounds().getSize().y * background.getScale().y);
 
 			if (cursor_pos.x >= a.x && cursor_pos.x <= b.x && cursor_pos.y >= a.y && cursor_pos.y <= b.y)
 			{
@@ -163,19 +167,20 @@ int main()
 	};
 
 
+
+	sf::Vector2f GLOBAL_SCALE{ MAIN_WINDOW_SIZE.x / 800.f, MAIN_WINDOW_SIZE.y / 600.f };
+
 	sf::Font general_font;
 	general_font.loadFromFile(FONT_GENERAL);
 
-	// Creating background
+	// Creating top panel
 	sf::Texture texture_top_panel;
 	texture_top_panel.loadFromFile(TOP_PANEL_TEXTURE);
 	Control_panel top_panel;
 	top_panel.background.setTexture(texture_top_panel, true);
+	top_panel.background.setScale(GLOBAL_SCALE);
 
 
-
-	// Setting button size(optional)
-	const sf::Vector2i BUTTON_SIZE(50, 50);
 
 	// Loading textures for top panel buttons
 	sf::Texture
@@ -191,38 +196,42 @@ int main()
 		texture_button_aggregate, texture_button_aggregate_pressed,
 		texture_button_properties, texture_button_properties_pressed;
 
-	texture_button_line.loadFromFile(BUTTON_LINE);
-	texture_button_line_pressed.loadFromFile(BUTTON_LINE_PRESSED);
+	{
+		texture_button_line.loadFromFile(BUTTON_LINE);
+		texture_button_line_pressed.loadFromFile(BUTTON_LINE_PRESSED);
 
-	texture_button_rectangle.loadFromFile(BUTTON_RECTANGLE);
-	texture_button_rectangle_pressed.loadFromFile(BUTTON_RECTANGLE_PRESSED);
+		texture_button_rectangle.loadFromFile(BUTTON_RECTANGLE);
+		texture_button_rectangle_pressed.loadFromFile(BUTTON_RECTANGLE_PRESSED);
 
-	texture_button_circle.loadFromFile(BUTTON_CIRCLE);
-	texture_button_circle_pressed.loadFromFile(BUTTON_CIRCLE_PRESSED);
+		texture_button_circle.loadFromFile(BUTTON_CIRCLE);
+		texture_button_circle_pressed.loadFromFile(BUTTON_CIRCLE_PRESSED);
 
-	texture_button_triangle.loadFromFile(BUTTON_TRIANGLE);
-	texture_button_triangle_pressed.loadFromFile(BUTTON_TRIANGLE_PRESSED);
+		texture_button_triangle.loadFromFile(BUTTON_TRIANGLE);
+		texture_button_triangle_pressed.loadFromFile(BUTTON_TRIANGLE_PRESSED);
 
-	texture_button_square.loadFromFile(BUTTON_SQUARE);
-	texture_button_square_pressed.loadFromFile(BUTTON_SQUARE_PRESSED);
+		texture_button_square.loadFromFile(BUTTON_SQUARE);
+		texture_button_square_pressed.loadFromFile(BUTTON_SQUARE_PRESSED);
 
-	texture_button_pentagon.loadFromFile(BUTTON_PENTAGON);
-	texture_button_pentagon_pressed.loadFromFile(BUTTON_PENTAGON_PRESSED);
+		texture_button_pentagon.loadFromFile(BUTTON_PENTAGON);
+		texture_button_pentagon_pressed.loadFromFile(BUTTON_PENTAGON_PRESSED);
 
-	texture_button_hexagon.loadFromFile(BUTTON_HEXAGON);
-	texture_button_hexagon_pressed.loadFromFile(BUTTON_HEXAGON_PRESSED);
+		texture_button_hexagon.loadFromFile(BUTTON_HEXAGON);
+		texture_button_hexagon_pressed.loadFromFile(BUTTON_HEXAGON_PRESSED);
 
-	texture_button_delete.loadFromFile(BUTTON_DELETE);
-	texture_button_delete_pressed.loadFromFile(BUTTON_DELETE_PRESSED);
+		texture_button_delete.loadFromFile(BUTTON_DELETE);
+		texture_button_delete_pressed.loadFromFile(BUTTON_DELETE_PRESSED);
 
-	texture_button_reset.loadFromFile(BUTTON_RESET);
-	texture_button_reset_pressed.loadFromFile(BUTTON_RESET_PRESSED);
+		texture_button_reset.loadFromFile(BUTTON_RESET);
+		texture_button_reset_pressed.loadFromFile(BUTTON_RESET_PRESSED);
 
-	texture_button_aggregate.loadFromFile(BUTTON_AGGREGATE);
-	texture_button_aggregate_pressed.loadFromFile(BUTTON_AGGREGATE_PRESSED);
+		texture_button_aggregate.loadFromFile(BUTTON_AGGREGATE);
+		texture_button_aggregate_pressed.loadFromFile(BUTTON_AGGREGATE_PRESSED);
 
-	texture_button_properties.loadFromFile(BUTTON_PROPERTIES);
-	texture_button_properties_pressed.loadFromFile(BUTTON_PROPERTIES_PRESSED);
+		texture_button_properties.loadFromFile(BUTTON_PROPERTIES);
+		texture_button_properties_pressed.loadFromFile(BUTTON_PROPERTIES_PRESSED);
+	}
+
+
 
 	// Creating buttons for top panel
 	Button button_line,
@@ -238,30 +247,45 @@ int main()
 		button_properties;
 
 	// Applying loaded textures to the buttons
-	button_line.get_graphics().setTexture(texture_button_line);
-	button_rectangle.get_graphics().setTexture(texture_button_rectangle);
-	button_circle.get_graphics().setTexture(texture_button_circle);
-	button_triangle.get_graphics().setTexture(texture_button_triangle);
-	button_square.get_graphics().setTexture(texture_button_square);
-	button_pentagon.get_graphics().setTexture(texture_button_pentagon);
-	button_hexagon.get_graphics().setTexture(texture_button_hexagon);
-	button_delete.get_graphics().setTexture(texture_button_delete);
-	button_reset.get_graphics().setTexture(texture_button_reset);
-	button_aggregate.get_graphics().setTexture(texture_button_aggregate);
-	button_properties.get_graphics().setTexture(texture_button_properties);
+	{
+		button_line.get_graphics().setTexture(texture_button_line);
+		button_line.get_graphics().setScale(GLOBAL_SCALE);
+		button_rectangle.get_graphics().setTexture(texture_button_rectangle);
+		button_rectangle.get_graphics().setScale(GLOBAL_SCALE);
+		button_circle.get_graphics().setTexture(texture_button_circle);
+		button_circle.get_graphics().setScale(GLOBAL_SCALE);
+		button_triangle.get_graphics().setTexture(texture_button_triangle);
+		button_triangle.get_graphics().setScale(GLOBAL_SCALE);
+		button_square.get_graphics().setTexture(texture_button_square);
+		button_square.get_graphics().setScale(GLOBAL_SCALE);
+		button_pentagon.get_graphics().setTexture(texture_button_pentagon);
+		button_pentagon.get_graphics().setScale(GLOBAL_SCALE);
+		button_hexagon.get_graphics().setTexture(texture_button_hexagon);
+		button_hexagon.get_graphics().setScale(GLOBAL_SCALE);
+		button_delete.get_graphics().setTexture(texture_button_delete);
+		button_delete.get_graphics().setScale(GLOBAL_SCALE);
+		button_reset.get_graphics().setTexture(texture_button_reset);
+		button_reset.get_graphics().setScale(GLOBAL_SCALE);
+		button_aggregate.get_graphics().setTexture(texture_button_aggregate);
+		button_aggregate.get_graphics().setScale(GLOBAL_SCALE);
+		button_properties.get_graphics().setTexture(texture_button_properties);
+		button_properties.get_graphics().setScale(GLOBAL_SCALE);
+	}
 
 	// Aligning buttons on the panel
-	button_line.get_graphics().setPosition(60 * 0 + 10, 10);
-	button_rectangle.get_graphics().setPosition(10 + 60 * 1 + 10, 10);
-	button_circle.get_graphics().setPosition(20 + 60 * 2 + 10, 10);
-	button_triangle.get_graphics().setPosition(30 + 60 * 3 + 10, 10);
-	button_square.get_graphics().setPosition(40 + 60 * 4 + 10, 10);
-	button_pentagon.get_graphics().setPosition(50 + 60 * 5 + 10, 10);
-	button_hexagon.get_graphics().setPosition(60 + 60 * 6 + 10, 10);
-	button_properties.get_graphics().setPosition(90 + 60 * 7 + 10, 10);
-	button_reset.get_graphics().setPosition(100 + 60 * 8 + 10, 10);
-	button_aggregate.get_graphics().setPosition(110 + 60 * 9 + 10, 10);
-	button_delete.get_graphics().setPosition(120 + 60 * 10 + 10, 10);
+	{
+		button_line.get_graphics().setPosition((60 * 0 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_rectangle.get_graphics().setPosition((10 + 60 * 1 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_circle.get_graphics().setPosition((20 + 60 * 2 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_triangle.get_graphics().setPosition((30 + 60 * 3 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_square.get_graphics().setPosition((40 + 60 * 4 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_pentagon.get_graphics().setPosition((50 + 60 * 5 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_hexagon.get_graphics().setPosition((60 + 60 * 6 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_properties.get_graphics().setPosition((90 + 60 * 7 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_reset.get_graphics().setPosition((100 + 60 * 8 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_aggregate.get_graphics().setPosition((110 + 60 * 9 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+		button_delete.get_graphics().setPosition((120 + 60 * 10 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+	}
 
 
 	// Adding animation for top panel buttons
@@ -293,29 +317,31 @@ int main()
 			}
 		};
 
-	button_line.add_event_handler(press, Button_event_args::CLICK);
-	button_rectangle.add_event_handler(press, Button_event_args::CLICK);
-	button_circle.add_event_handler(press, Button_event_args::CLICK);
-	button_triangle.add_event_handler(press, Button_event_args::CLICK);
-	button_square.add_event_handler(press, Button_event_args::CLICK);
-	button_pentagon.add_event_handler(press, Button_event_args::CLICK);
-	button_hexagon.add_event_handler(press, Button_event_args::CLICK);
-	button_properties.add_event_handler(press, Button_event_args::CLICK);
-	button_reset.add_event_handler(press, Button_event_args::CLICK);
-	button_aggregate.add_event_handler(press, Button_event_args::CLICK);
-	button_delete.add_event_handler(press, Button_event_args::CLICK);
+	{
+		button_line.add_event_handler(press, Button_event_args::CLICK);
+		button_rectangle.add_event_handler(press, Button_event_args::CLICK);
+		button_circle.add_event_handler(press, Button_event_args::CLICK);
+		button_triangle.add_event_handler(press, Button_event_args::CLICK);
+		button_square.add_event_handler(press, Button_event_args::CLICK);
+		button_pentagon.add_event_handler(press, Button_event_args::CLICK);
+		button_hexagon.add_event_handler(press, Button_event_args::CLICK);
+		button_properties.add_event_handler(press, Button_event_args::CLICK);
+		button_reset.add_event_handler(press, Button_event_args::CLICK);
+		button_aggregate.add_event_handler(press, Button_event_args::CLICK);
+		button_delete.add_event_handler(press, Button_event_args::CLICK);
 
-	button_line.add_event_handler(release, Button_event_args::RELEASE);
-	button_rectangle.add_event_handler(release, Button_event_args::RELEASE);
-	button_circle.add_event_handler(release, Button_event_args::RELEASE);
-	button_triangle.add_event_handler(release, Button_event_args::RELEASE);
-	button_square.add_event_handler(release, Button_event_args::RELEASE);
-	button_pentagon.add_event_handler(release, Button_event_args::RELEASE);
-	button_hexagon.add_event_handler(release, Button_event_args::RELEASE);
-	button_properties.add_event_handler(release, Button_event_args::RELEASE);
-	button_reset.add_event_handler(release, Button_event_args::RELEASE);
-	button_aggregate.add_event_handler(release, Button_event_args::RELEASE);
-	button_delete.add_event_handler(release, Button_event_args::RELEASE);
+		button_line.add_event_handler(release, Button_event_args::RELEASE);
+		button_rectangle.add_event_handler(release, Button_event_args::RELEASE);
+		button_circle.add_event_handler(release, Button_event_args::RELEASE);
+		button_triangle.add_event_handler(release, Button_event_args::RELEASE);
+		button_square.add_event_handler(release, Button_event_args::RELEASE);
+		button_pentagon.add_event_handler(release, Button_event_args::RELEASE);
+		button_hexagon.add_event_handler(release, Button_event_args::RELEASE);
+		button_properties.add_event_handler(release, Button_event_args::RELEASE);
+		button_reset.add_event_handler(release, Button_event_args::RELEASE);
+		button_aggregate.add_event_handler(release, Button_event_args::RELEASE);
+		button_delete.add_event_handler(release, Button_event_args::RELEASE);
+	}
 
 
 
@@ -332,9 +358,10 @@ int main()
 	public:
 
 		sf::RenderWindow& window;
+		sf::Vector2u window_size;
 
-		Button_open_properties_window_event_args(Event_type event_type, sf::RenderWindow& window) :
-			Button_event_args(event_type), window(window) {}
+		Button_open_properties_window_event_args(Event_type event_type, sf::RenderWindow& window, const sf::Vector2u& size) :
+			Button_event_args(event_type), window(window), window_size(size) {}
 
 	};
 
@@ -342,7 +369,7 @@ int main()
 		{
 			if (auto open_window_args = dynamic_cast<Button_open_properties_window_event_args*>(args))
 			{
-				open_window_args->window.create(sf::VideoMode(PROPERTIES_WINDOW_SIZE.x, PROPERTIES_WINDOW_SIZE.y), "Properties");
+				open_window_args->window.create(sf::VideoMode(open_window_args->window_size.x, open_window_args->window_size.y), "Properties");
 			}
 		};
 	button_properties.add_event_handler(open_properties_window, Button_event_args::CLICK);
@@ -363,27 +390,29 @@ int main()
 	texture_textbox.loadFromFile(TEXTBOX_GENERAL);
 
 	Textbox textbox_X, textbox_Y, textbox_Z;
-	textbox_X.get_graphics().setTexture(texture_textbox);
-	textbox_Y.get_graphics().setTexture(texture_textbox);
-	textbox_Z.get_graphics().setTexture(texture_textbox);
-	textbox_X.get_text().setFont(general_font);
-	textbox_Y.get_text().setFont(general_font);
-	textbox_Z.get_text().setFont(general_font);
+	{
+		textbox_X.get_graphics().setTexture(texture_textbox);
+		textbox_Y.get_graphics().setTexture(texture_textbox);
+		textbox_Z.get_graphics().setTexture(texture_textbox);
+		textbox_X.get_text().setFont(general_font);
+		textbox_Y.get_text().setFont(general_font);
+		textbox_Z.get_text().setFont(general_font);
 
-	textbox_X.get_graphics().setPosition(80, 34);
-	textbox_Y.get_graphics().setPosition(80, 88);
-	textbox_Z.get_graphics().setPosition(80, 141);
-	textbox_X.get_text().setPosition(80, 30);
-	textbox_Y.get_text().setPosition(80, 80);
-	textbox_Z.get_text().setPosition(80, 130);
+		textbox_X.get_graphics().setPosition(80, 34);
+		textbox_Y.get_graphics().setPosition(80, 88);
+		textbox_Z.get_graphics().setPosition(80, 141);
+		textbox_X.get_text().setPosition(80, 30);
+		textbox_Y.get_text().setPosition(80, 80);
+		textbox_Z.get_text().setPosition(80, 130);
 
-	textbox_X.get_text().setFillColor(sf::Color::Black);
-	textbox_Y.get_text().setFillColor(sf::Color::Black);
-	textbox_Z.get_text().setFillColor(sf::Color::Black);
+		textbox_X.get_text().setFillColor(sf::Color::Black);
+		textbox_Y.get_text().setFillColor(sf::Color::Black);
+		textbox_Z.get_text().setFillColor(sf::Color::Black);
 
-	textbox_X.get_text().setCharacterSize(45);
-	textbox_Y.get_text().setCharacterSize(45);
-	textbox_Z.get_text().setCharacterSize(45);
+		textbox_X.get_text().setCharacterSize(45);
+		textbox_Y.get_text().setCharacterSize(45);
+		textbox_Z.get_text().setCharacterSize(45);
+	}
 
 
 
@@ -393,44 +422,50 @@ int main()
 		texture_button_scale, texture_button_scale_pressed,
 		texture_button_color, texture_button_color_pressed;
 
-	texture_button_move.loadFromFile(BUTTON_MOVE);
-	texture_button_move_pressed.loadFromFile(BUTTON_MOVE_PRESSED);
+	{
+		texture_button_move.loadFromFile(BUTTON_MOVE);
+		texture_button_move_pressed.loadFromFile(BUTTON_MOVE_PRESSED);
 
-	texture_button_rotate.loadFromFile(BUTTON_ROTATE);
-	texture_button_rotate_pressed.loadFromFile(BUTTON_ROTATE_PRESSED);
+		texture_button_rotate.loadFromFile(BUTTON_ROTATE);
+		texture_button_rotate_pressed.loadFromFile(BUTTON_ROTATE_PRESSED);
 
-	texture_button_scale.loadFromFile(BUTTON_SCALE);
-	texture_button_scale_pressed.loadFromFile(BUTTON_SCALE_PRESSED);
+		texture_button_scale.loadFromFile(BUTTON_SCALE);
+		texture_button_scale_pressed.loadFromFile(BUTTON_SCALE_PRESSED);
 
-	texture_button_color.loadFromFile(BUTTON_COLOR);
-	texture_button_color_pressed.loadFromFile(BUTTON_COLOR_PRESSED);
+		texture_button_color.loadFromFile(BUTTON_COLOR);
+		texture_button_color_pressed.loadFromFile(BUTTON_COLOR_PRESSED);
+	}
 
 
 
 	// Creating buttons for properties window
 	Button button_move, button_rotate, button_scale, button_color;
 
-	button_move.get_graphics().setTexture(texture_button_move);
-	button_rotate.get_graphics().setTexture(texture_button_rotate);
-	button_scale.get_graphics().setTexture(texture_button_scale);
-	button_color.get_graphics().setTexture(texture_button_color);
+	{
+		button_move.get_graphics().setTexture(texture_button_move);
+		button_rotate.get_graphics().setTexture(texture_button_rotate);
+		button_scale.get_graphics().setTexture(texture_button_scale);
+		button_color.get_graphics().setTexture(texture_button_color);
 
-	button_move.get_graphics().setPosition(20, 220);
-	button_rotate.get_graphics().setPosition(180, 220);
-	button_scale.get_graphics().setPosition(20, 330);
-	button_color.get_graphics().setPosition(180, 330);
+		button_move.get_graphics().setPosition(20, 220);
+		button_rotate.get_graphics().setPosition(180, 220);
+		button_scale.get_graphics().setPosition(20, 330);
+		button_color.get_graphics().setPosition(180, 330);
+	}
 
 
 	// Adding animation for properties window buttons
-	button_move.add_event_handler(press, Button_event_args::CLICK);
-	button_rotate.add_event_handler(press, Button_event_args::CLICK);
-	button_scale.add_event_handler(press, Button_event_args::CLICK);
-	button_color.add_event_handler(press, Button_event_args::CLICK);
+	{
+		button_move.add_event_handler(press, Button_event_args::CLICK);
+		button_rotate.add_event_handler(press, Button_event_args::CLICK);
+		button_scale.add_event_handler(press, Button_event_args::CLICK);
+		button_color.add_event_handler(press, Button_event_args::CLICK);
 
-	button_move.add_event_handler(release, Button_event_args::RELEASE);
-	button_rotate.add_event_handler(release, Button_event_args::RELEASE);
-	button_scale.add_event_handler(release, Button_event_args::RELEASE);
-	button_color.add_event_handler(release, Button_event_args::RELEASE);
+		button_move.add_event_handler(release, Button_event_args::RELEASE);
+		button_rotate.add_event_handler(release, Button_event_args::RELEASE);
+		button_scale.add_event_handler(release, Button_event_args::RELEASE);
+		button_color.add_event_handler(release, Button_event_args::RELEASE);
+	}
 
 
 
@@ -441,21 +476,23 @@ int main()
 	texture_checkbox_general.loadFromFile(CHECKBOX_GENERAL);
 	texture_checkbox_checked_general.loadFromFile(CHECKBOX_CHECKED_GENERAL);
 
-	checkbox_enable_trace.get_graphics().setTexture(texture_checkbox_general);
-	checkbox_enable_move_by_law.get_graphics().setTexture(texture_checkbox_general);
-	checkbox_enable_trace.get_text().setFont(general_font);
-	checkbox_enable_move_by_law.get_text().setFont(general_font);
-	checkbox_enable_trace.get_text().setCharacterSize(30);
-	checkbox_enable_move_by_law.get_text().setCharacterSize(30);
+	{
+		checkbox_enable_trace.get_graphics().setTexture(texture_checkbox_general);
+		checkbox_enable_move_by_law.get_graphics().setTexture(texture_checkbox_general);
+		checkbox_enable_trace.get_text().setFont(general_font);
+		checkbox_enable_move_by_law.get_text().setFont(general_font);
+		checkbox_enable_trace.get_text().setCharacterSize(30);
+		checkbox_enable_move_by_law.get_text().setCharacterSize(30);
 
-	checkbox_enable_trace.get_text().setString("trace");
-	checkbox_enable_move_by_law.get_text().setString("move by law");
+		checkbox_enable_trace.get_text().setString("trace");
+		checkbox_enable_move_by_law.get_text().setString("move by law");
 
-	checkbox_enable_trace.get_graphics().setPosition(20, 440);
-	checkbox_enable_trace.get_text().setPosition(50, 430);
+		checkbox_enable_trace.get_graphics().setPosition(20, 440);
+		checkbox_enable_trace.get_text().setPosition(50, 430);
 
-	checkbox_enable_move_by_law.get_graphics().setPosition(150, 440);
-	checkbox_enable_move_by_law.get_text().setPosition(180, 430);
+		checkbox_enable_move_by_law.get_graphics().setPosition(150, 440);
+		checkbox_enable_move_by_law.get_text().setPosition(180, 430);
+	}
 
 
 	// Adding animation for properties window buttons
@@ -493,8 +530,9 @@ int main()
 	sf::Texture main_scene_texture;
 	main_scene_texture.loadFromFile(SCENE_TEXTURE);
 
-	Scene main_scene;
+	Scene main_scene(sf::Vector2u(MAIN_WINDOW_SIZE.x, MAIN_WINDOW_SIZE.y * 0.8667));
 	main_scene.get_backgruond().setTexture(main_scene_texture);
+	main_scene.get_backgruond().setScale(GLOBAL_SCALE);
 
 	class Scene_create_actor_event_args : public Button_event_args 
 	{
@@ -562,9 +600,10 @@ int main()
 	public:
 
 		const sf::Vector2f offset;
+		const sf::Vector2u scene_size;
 
-		Move_actor_event_args(Event_type event_type, Scene& scene, const sf::Vector2f offset) :
-			Scene_action_actor_event_args(event_type, scene), offset(offset) {}
+		Move_actor_event_args(Event_type event_type, Scene& scene, const sf::Vector2f offset, const sf::Vector2u scene_size) :
+			Scene_action_actor_event_args(event_type, scene), offset(offset), scene_size(scene_size) {}
 
 	};
 
@@ -616,8 +655,10 @@ int main()
 				}
 
 				sf::FloatRect shape_bounds = action_args->scene.get_selected_actor()->operator->()->get_global_bounds();
-				if (shape_bounds.left + action_args->offset.x < 0 || shape_bounds.left + shape_bounds.width + action_args->offset.x > SCENE_SIZE.x 
-					|| shape_bounds.top + action_args->offset.y < 0 || shape_bounds.top + shape_bounds.height + action_args->offset.y > SCENE_SIZE.y + 80)
+				if (shape_bounds.left + action_args->offset.x < 0 
+					|| shape_bounds.left + shape_bounds.width + action_args->offset.x > action_args->scene_size.x
+					|| shape_bounds.top + action_args->offset.y < 0 
+					|| shape_bounds.top + shape_bounds.height + action_args->offset.y > action_args->scene_size.y + 80)
 				{
 					return;
 				}
@@ -805,7 +846,7 @@ int main()
 						Event_args* args_arr[PARAM_COUNT]{};
 
 						Button_texture_change_event_args button_propeties_args0(Button_event_args::CLICK, texture_button_properties_pressed);
-						Button_open_properties_window_event_args button_propeties_args1(Button_event_args::CLICK, properties_window);
+						Button_open_properties_window_event_args button_propeties_args1(Button_event_args::CLICK, properties_window, PROPERTIES_WINDOW_SIZE);
 						args_arr[0] = &button_propeties_args0;
 						args_arr[1] = &button_propeties_args1;
 						if (button_properties.try_click(args_arr, PARAM_COUNT))
@@ -1153,7 +1194,7 @@ int main()
 					}
 
 					Button_texture_change_event_args button_move_args(Button_event_args::CLICK, texture_button_move_pressed);
-					Move_actor_event_args action_move_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y));
+					Move_actor_event_args action_move_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y), main_scene.SCENE_SIZE);
 					args_arr[0] = &button_move_args;
 					args_arr[1] = &action_move_args;
 					if (button_move.try_click(args_arr, PARAM_COUNT))
@@ -1327,7 +1368,7 @@ int main()
 				{
 					sf::FloatRect bounds = (*main_scene.get_selected_actor())->get_global_bounds();
 
-					if(bounds.left + bounds.width < SCENE_SIZE.x)
+					if(bounds.left + bounds.width < main_scene.SCENE_SIZE.x)
 					{
 						(*main_scene.get_selected_actor())->move(10, 0);
 					}

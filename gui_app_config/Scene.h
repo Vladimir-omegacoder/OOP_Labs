@@ -5,14 +5,13 @@
 
 
 
-#define SCENE_SIZE sf::Vector2u(800, 520)
-#define SELECTION_COLOR sf::Color::Yellow
-
 
 class Scene : public sf::Drawable
 {
 
 public:
+
+	sf::Vector2u SCENE_SIZE;
 
 	class Actor : public sf::Drawable
 	{
@@ -31,7 +30,7 @@ public:
 
 				if (selected)
 				{
-					shape_actor->set_outline_color(SELECTION_COLOR);
+					shape_actor->set_outline_color(sf::Color::Yellow);
 				}
 				else
 				{
@@ -120,6 +119,7 @@ public:
 
 	};
 
+
 private:
 
 	class Controller
@@ -190,7 +190,7 @@ private:
 
 public:
 
-	Scene() = default;
+	Scene(const sf::Vector2u& size) : SCENE_SIZE(size) {}
 
 	Scene(const Scene& other) = delete;
 
@@ -247,6 +247,10 @@ public:
 		{
 
 			sf::FloatRect shape_bounds = i->get_global_bounds();
+			shape_bounds.left *= background.getScale().x;
+			shape_bounds.top *= background.getScale().y;
+			shape_bounds.width *= background.getScale().x;
+			shape_bounds.height *= background.getScale().y;
 			sf::FloatRect scene_bounds = background.getGlobalBounds();
 			shape_bounds.left += scene_bounds.left;
 			shape_bounds.top += scene_bounds.top;
