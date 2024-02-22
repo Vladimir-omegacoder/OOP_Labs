@@ -42,19 +42,19 @@ public:
 			{
 				shapes_arr[i] = new Line(*line);
 			}
-			if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(other.shapes_arr[i]))
+			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(other.shapes_arr[i]))
 			{
 				shapes_arr[i] = new Rectangle(*rectangle);
 			}
-			if (const Circle* circle = dynamic_cast<const Circle*>(other.shapes_arr[i]))
+			else if (const Circle* circle = dynamic_cast<const Circle*>(other.shapes_arr[i]))
 			{
 				shapes_arr[i] = new Circle(*circle);
 			}
-			if (const Regular* regular = dynamic_cast<const Regular*>(other.shapes_arr[i]))
+			else if (const Regular* regular = dynamic_cast<const Regular*>(other.shapes_arr[i]))
 			{
 				shapes_arr[i] = new Regular(*regular);
 			}
-			if (const Composite* composite = dynamic_cast<const Composite*>(other.shapes_arr[i]))
+			else if (const Composite* composite = dynamic_cast<const Composite*>(other.shapes_arr[i]))
 			{
 				shapes_arr[i] = new Composite(*composite);
 			}

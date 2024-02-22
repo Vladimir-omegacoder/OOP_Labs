@@ -81,9 +81,19 @@ public:
 			shape_actor = shape;
 		}
 
+		const Shape* get_ptr() const
+		{
+			return shape_actor;
+		}
+
+		Shape* get_ptr()
+		{
+			return shape_actor;
+		}
 
 
-		bool is_selected()
+
+		bool is_selected() const
 		{
 			return selected;
 		}
@@ -100,7 +110,7 @@ public:
 
 
 
-		bool is_visible()
+		bool is_visible() const
 		{
 			return visible;
 		}
@@ -174,6 +184,7 @@ private:
 
 	std::list<Actor> actors;
 	std::list<Actor*> selection;
+	std::list<Actor> buffer;
 	Controller controller;
 
 
@@ -238,6 +249,12 @@ public:
 	Actor* get_selected_actor()
 	{
 		return controller.get_selected_actor();
+	}
+
+	// Add transformations with selection
+	std::list<Actor*>& get_selection()
+	{
+		return selection;
 	}
 
 	Actor* try_select_actor(sf::Vector2i mouse_pos, bool add_to_selection = false)
@@ -319,7 +336,7 @@ public:
 	void aggregate_selected()
 	{
 
-		if (get_selected_actor() == nullptr || selection.empty())
+		if (get_selected_actor() == nullptr || selection.size() < 1)
 		{
 			return;
 		}
@@ -353,6 +370,96 @@ public:
 		actors.push_front(std::move(Actor(composite)));
 
 		controller.select_actor(&actors.front());
+
+	}
+
+	void selection_to_buffer()
+	{
+
+		buffer.clear();
+
+		if (get_selected_actor() != nullptr)
+		{
+
+			if (const Line* line = dynamic_cast<const Line*>(get_selected_actor()->get_ptr()))
+			{
+				buffer.push_back(new Line(*line));
+			}
+			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(get_selected_actor()->get_ptr()))
+			{
+				buffer.push_back(new Rectangle(*rectangle));
+			}
+			else if (const Circle* circle = dynamic_cast<const Circle*>(get_selected_actor()->get_ptr()))
+			{
+				buffer.push_back(new Circle(*circle));
+			}
+			else if (const Regular* regular = dynamic_cast<const Regular*>(get_selected_actor()->get_ptr()))
+			{
+				buffer.push_back(new Regular(*regular));
+			}
+			else if (const Composite* composite = dynamic_cast<const Composite*>(get_selected_actor()->get_ptr()))
+			{
+				buffer.push_back(new Composite(*composite));
+			}
+
+		}
+
+		for (auto& i : selection)
+		{
+
+			if (const Line* line = dynamic_cast<const Line*>(i->get_ptr()))
+			{
+				buffer.push_back(new Line(*line));
+			}
+			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i->get_ptr()))
+			{
+				buffer.push_back(new Rectangle(*rectangle));
+			}
+			else if (const Circle* circle = dynamic_cast<const Circle*>(i->get_ptr()))
+			{
+				buffer.push_back(new Circle(*circle));
+			}
+			else if (const Regular* regular = dynamic_cast<const Regular*>(i->get_ptr()))
+			{
+				buffer.push_back(new Regular(*regular));
+			}
+			else if (const Composite* composite = dynamic_cast<const Composite*>(i->get_ptr()))
+			{
+				buffer.push_back(new Composite(*composite));
+			}
+
+		}
+
+	}
+
+	void buffer_to_scene()
+	{
+
+		for (auto& i : buffer)
+		{
+
+			if (const Line* line = dynamic_cast<const Line*>(i.get_ptr()))
+			{
+				actors.push_back(new Line(*line));
+			}
+			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i.get_ptr()))
+			{
+				actors.push_back(new Rectangle(*rectangle));
+			}
+			else if (const Circle* circle = dynamic_cast<const Circle*>(i.get_ptr()))
+			{
+				actors.push_back(new Circle(*circle));
+			}
+			else if (const Regular* regular = dynamic_cast<const Regular*>(i.get_ptr()))
+			{
+				actors.push_back(new Regular(*regular));
+			}
+			else if (const Composite* composite = dynamic_cast<const Composite*>(i.get_ptr()))
+			{
+				actors.push_back(new Composite(*composite));
+			}
+
+		}
 
 	}
 

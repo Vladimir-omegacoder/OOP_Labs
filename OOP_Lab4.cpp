@@ -123,7 +123,7 @@ void enter_symbol(Textbox& textbox, uint32_t character)
 int main()
 {
 
-	sf::Vector2u MAIN_WINDOW_SIZE = sf::Vector2u(1920, 1080);
+	sf::Vector2u MAIN_WINDOW_SIZE = sf::Vector2u(800, 600);
 	sf::Vector2u PROPERTIES_WINDOW_SIZE = sf::Vector2u(350, 500);
 
 	sf::RenderWindow main_window(sf::VideoMode(MAIN_WINDOW_SIZE.x, MAIN_WINDOW_SIZE.y), "Main window");
@@ -655,6 +655,10 @@ int main()
 				}
 
 				sf::FloatRect shape_bounds = action_args->scene.get_selected_actor()->operator->()->get_global_bounds();
+				shape_bounds.left *= action_args->scene.get_backgruond().getScale().x;
+				shape_bounds.top *= action_args->scene.get_backgruond().getScale().y;
+				shape_bounds.width *= action_args->scene.get_backgruond().getScale().x;
+				shape_bounds.height *= action_args->scene.get_backgruond().getScale().y;
 				if (shape_bounds.left + action_args->offset.x < 0 
 					|| shape_bounds.left + shape_bounds.width + action_args->offset.x > action_args->scene_size.x
 					|| shape_bounds.top + action_args->offset.y < 0 
@@ -1092,6 +1096,27 @@ int main()
 						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 
 
+
+				}
+
+				if (main_event.type == sf::Event::KeyPressed)
+				{
+
+					if (main_event.key.code == sf::Keyboard::C && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+					{
+
+						main_scene.selection_to_buffer();
+						std::cout << "Copied.\n";
+
+					}
+
+					if (main_event.key.code == sf::Keyboard::V && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+					{
+
+						main_scene.buffer_to_scene();
+						std::cout << "Pasted.\n";
+
+					}
 
 				}
 
