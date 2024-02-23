@@ -583,10 +583,7 @@ int main()
 
 			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
 			{
-				while (action_args->scene.get_selected_actor() != nullptr)
-				{
-					action_args->scene.remove_selected_actor();
-				}
+				action_args->scene.remove_selected_actors();
 			}
 
 		};
@@ -649,25 +646,29 @@ int main()
 
 			if (auto action_args = dynamic_cast<Move_actor_event_args*>(args))
 			{
-				if (action_args->offset == sf::Vector2f(0, 0) || action_args->scene.get_selected_actor() == nullptr)
+
+				for (auto& i : action_args->scene.get_selection())
 				{
-					return;
+
+					//sf::FloatRect shape_bounds = action_args->scene.get_selected_actor()->operator->()->get_global_bounds();
+					sf::FloatRect shape_bounds = (*i)->get_global_bounds();
+					shape_bounds.left *= action_args->scene.get_backgruond().getScale().x;
+					shape_bounds.top *= action_args->scene.get_backgruond().getScale().y;
+					shape_bounds.width *= action_args->scene.get_backgruond().getScale().x;
+					shape_bounds.height *= action_args->scene.get_backgruond().getScale().y;
+					if (shape_bounds.left + action_args->offset.x < 0
+						|| shape_bounds.left + shape_bounds.width + action_args->offset.x > action_args->scene_size.x
+						|| shape_bounds.top + action_args->offset.y < 0
+						|| shape_bounds.top + shape_bounds.height + action_args->offset.y > action_args->scene_size.y + 80)
+					{
+						return;
+					}
+
+					//action_args->scene.get_selected_actor()->operator->()->move(action_args->offset);
+					(*i)->move(action_args->offset);
+
 				}
 
-				sf::FloatRect shape_bounds = action_args->scene.get_selected_actor()->operator->()->get_global_bounds();
-				shape_bounds.left *= action_args->scene.get_backgruond().getScale().x;
-				shape_bounds.top *= action_args->scene.get_backgruond().getScale().y;
-				shape_bounds.width *= action_args->scene.get_backgruond().getScale().x;
-				shape_bounds.height *= action_args->scene.get_backgruond().getScale().y;
-				if (shape_bounds.left + action_args->offset.x < 0 
-					|| shape_bounds.left + shape_bounds.width + action_args->offset.x > action_args->scene_size.x
-					|| shape_bounds.top + action_args->offset.y < 0 
-					|| shape_bounds.top + shape_bounds.height + action_args->offset.y > action_args->scene_size.y + 80)
-				{
-					return;
-				}
-				
-				action_args->scene.get_selected_actor()->operator->()->move(action_args->offset);
 			}
 
 		};
@@ -679,12 +680,17 @@ int main()
 
 			if (auto action_args = dynamic_cast<Rotate_actor_event_args*>(args))
 			{
-				if (action_args->angle == 0 || action_args->scene.get_selected_actor() == nullptr)
+				if (action_args->angle == 0)
 				{
 					return;
 				}
 
-				action_args->scene.get_selected_actor()->operator->()->rotate(action_args->angle);
+				for (auto& i : action_args->scene.get_selection())
+				{
+					(*i)->rotate(action_args->angle);
+				}
+
+				//action_args->scene.get_selected_actor()->operator->()->rotate(action_args->angle);
 			}
 
 		};
@@ -696,12 +702,17 @@ int main()
 
 			if (auto action_args = dynamic_cast<Scale_actor_event_args*>(args))
 			{
-				if (action_args->factor == sf::Vector2f(0, 0) || action_args->scene.get_selected_actor() == nullptr)
+				if (action_args->factor == sf::Vector2f(0, 0))
 				{
 					return;
 				}
 
-				action_args->scene.get_selected_actor()->operator->()->scale(action_args->factor);
+				for (auto& i : action_args->scene.get_selection())
+				{
+					(*i)->scale(action_args->factor);
+				}
+
+				//action_args->scene.get_selected_actor()->operator->()->scale(action_args->factor);
 			}
 
 		};
@@ -713,12 +724,12 @@ int main()
 
 			if (auto action_args = dynamic_cast<Color_actor_event_args*>(args))
 			{
-				if (action_args->scene.get_selected_actor() == nullptr)
+				for (auto& i : action_args->scene.get_selection())
 				{
-					return;
+					(*i)->set_fill_color(action_args->color);
 				}
 
-				action_args->scene.get_selected_actor()->operator->()->set_fill_color(action_args->color);
+				//action_args->scene.get_selected_actor()->operator->()->set_fill_color(action_args->color);
 			}
 
 		};
@@ -1389,15 +1400,17 @@ int main()
 
 			if (checkbox_enable_move_by_law.is_checked())
 			{
-				if (main_scene.get_selected_actor() != nullptr)
-				{
-					sf::FloatRect bounds = (*main_scene.get_selected_actor())->get_global_bounds();
 
-					if(bounds.left + bounds.width < main_scene.SCENE_SIZE.x)
+				for (auto& i : main_scene.get_selection())
+				{
+					sf::FloatRect bounds = (*i)->get_global_bounds();
+
+					if (bounds.top + bounds.height < main_scene.SCENE_SIZE.y + top_panel.background.getGlobalBounds().height)
 					{
-						(*main_scene.get_selected_actor())->move(10, 0);
+						(*i)->move(0, 10);
 					}
 				}
+
 			}
 
 

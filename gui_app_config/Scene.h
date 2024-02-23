@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../graphics/Primitives.h"
 #include <list>
+#include <algorithm>
 
 
 
@@ -137,7 +138,7 @@ private:
 
 	private:
 
-		Actor* selected_actor;
+		std::list<Actor*> selection;
 
 
 	public:
@@ -149,31 +150,46 @@ private:
 		void select_actor(Actor* actor)
 		{
 
-			if (selected_actor != nullptr)
+			for (auto& i : selection)
 			{
-				selected_actor->diselect();
+				i->diselect();
 			}
+			selection.clear();
 
-			selected_actor = actor;
-			actor->select();
+			if (actor != nullptr)
+			{
+				actor->select();
+				selection.push_back(actor);
+			}
 
 		}
 
-		void diselect()
+		void add_to_selection(Actor* actor)
 		{
 
-			if (selected_actor != nullptr)
+			if (actor == nullptr)
 			{
-				selected_actor->diselect();
+				return;
 			}
 
-			selected_actor = nullptr;
+			auto it = std::find(selection.begin(), selection.end(), actor);
+
+			if (it != selection.end())
+			{
+				(*it)->diselect();
+				selection.erase(it);
+			}
+			else
+			{
+				actor->select();
+				selection.push_back(actor);
+			}
 
 		}
 
-		Actor*& get_selected_actor()
+		std::list<Actor*>& get_selection()
 		{
-			return selected_actor;
+			return selection;
 		}
 
 	};
@@ -183,7 +199,6 @@ private:
 	sf::Sprite background;
 
 	std::list<Actor> actors;
-	std::list<Actor*> selection;
 	std::list<Actor> buffer;
 	Controller controller;
 
@@ -214,11 +229,6 @@ public:
 
 
 
-	void add_to_selection(Actor* actor)
-	{
-		selection.push_back(actor);
-	}
-
 	void add_actor(Actor&& actor)
 	{
 		actors.push_front(std::move(actor));
@@ -226,9 +236,23 @@ public:
 
 
 
-	void select_actor(Actor* actor)
+	void select_actor(Actor* actor, bool add_to_selection = false)
 	{
-		controller.select_actor(actor);
+
+		if (actor == nullptr)
+		{
+			return;
+		}
+
+		if (!add_to_selection)
+		{
+			controller.select_actor(actor);
+		}
+		else
+		{
+			controller.add_to_selection(actor);
+		}
+
 	}
 	
 	bool cursor_inside(sf::Vector2i mouse_pos)
@@ -246,15 +270,10 @@ public:
 		}
 	}
 
-	Actor* get_selected_actor()
-	{
-		return controller.get_selected_actor();
-	}
-
 	// Add transformations with selection
 	std::list<Actor*>& get_selection()
 	{
-		return selection;
+		return controller.get_selection();
 	}
 
 	Actor* try_select_actor(sf::Vector2i mouse_pos, bool add_to_selection = false)
@@ -279,97 +298,73 @@ public:
 			}
 
 
-			if (!i.is_selected())
+			if (add_to_selection)
 			{
-				if (add_to_selection && controller.get_selected_actor() != nullptr)
-				{
-					selection.push_front(controller.get_selected_actor());
-				}
+				controller.add_to_selection(&i);
+			}
+			else
+			{
 				controller.select_actor(&i);
-				if (add_to_selection && !selection.empty())
-				{
-					selection.front()->select();
-				}
 			}
 
-			if (!add_to_selection)
-			{
-				for (auto& i : selection)
-				{
-					i->diselect();
-				}
-
-				selection.clear();
-			}
-
-			return controller.get_selected_actor();
+			return &i;
 
 		}
 
-		for (auto& i : selection)
+		for (auto& i : controller.get_selection())
 		{
 			i->diselect();
 		}
 
-		selection.clear();
-
-		controller.diselect();
+		controller.get_selection().clear();
 
 		return nullptr;
 
 	}
 
-	void remove_selected_actor()
+	void remove_selected_actors()
 	{
-		if (controller.get_selected_actor() != nullptr)
+		for (auto& i : controller.get_selection())
 		{
-			actors.remove(*controller.get_selected_actor());
-			controller.diselect();
+			actors.remove(*i);
 		}
-		if (!selection.empty())
-		{
-			controller.select_actor(selection.front());
-			selection.pop_front();
-		}
+		controller.get_selection().clear();
 	}
 
 	void aggregate_selected()
 	{
 
-		if (get_selected_actor() == nullptr || selection.size() < 1)
+		if (controller.get_selection().size() < 2)
 		{
 			return;
 		}
 
-		std::list<Actor> composing;
-		composing.push_front(std::move(*controller.get_selected_actor()));
-		for (auto& i : selection)
-		{
-			composing.push_back(std::move(*i));
-		}
-
-		Actor temp;
-		actors.remove(temp);
-
-		for (auto& i : composing)
-		{
-			i.diselect();
-			i->set_outline_color(sf::Color::Transparent);
-		}
-
-
 		Composite* composite = new Composite();
-		for (auto& i : composing)
+		for (auto& i : controller.get_selection())
 		{
-			composite->add_shape(&(*i));
-			i.set_ptr(nullptr);
+			i->diselect();
+			i->get_ptr()->set_outline_color(sf::Color::Transparent);
+			Shape* temp = i->get_ptr();
+			i->set_ptr(nullptr);
+			composite->add_shape(std::move(temp));
 		}
 
-		selection.clear();
+		for (auto it = actors.begin(); it != actors.end();)
+		{
+			if (it->get_ptr() == nullptr)
+			{
+				actors.erase(it);
+				it = actors.begin();
+				continue;
+			}
+			++it;
+		}
 
-		actors.push_front(std::move(Actor(composite)));
+		controller.get_selection().clear();	
 
-		controller.select_actor(&actors.front());
+		actors.push_back(std::move(Actor(composite)));
+
+		controller.select_actor(&actors.back());
 
 	}
 
@@ -378,33 +373,7 @@ public:
 
 		buffer.clear();
 
-		if (get_selected_actor() != nullptr)
-		{
-
-			if (const Line* line = dynamic_cast<const Line*>(get_selected_actor()->get_ptr()))
-			{
-				buffer.push_back(new Line(*line));
-			}
-			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(get_selected_actor()->get_ptr()))
-			{
-				buffer.push_back(new Rectangle(*rectangle));
-			}
-			else if (const Circle* circle = dynamic_cast<const Circle*>(get_selected_actor()->get_ptr()))
-			{
-				buffer.push_back(new Circle(*circle));
-			}
-			else if (const Regular* regular = dynamic_cast<const Regular*>(get_selected_actor()->get_ptr()))
-			{
-				buffer.push_back(new Regular(*regular));
-			}
-			else if (const Composite* composite = dynamic_cast<const Composite*>(get_selected_actor()->get_ptr()))
-			{
-				buffer.push_back(new Composite(*composite));
-			}
-
-		}
-
-		for (auto& i : selection)
+		for (auto& i : controller.get_selection())
 		{
 
 			if (const Line* line = dynamic_cast<const Line*>(i->get_ptr()))
