@@ -44,14 +44,23 @@
 #define BUTTON_DELETE				"resources/button/button_delete/button_delete.png"
 #define BUTTON_DELETE_PRESSED		"resources/button/button_delete/button_delete_pressed.png"
 
-#define BUTTON_RESET				"resources/button/button_reset/button_reset.png"
-#define BUTTON_RESET_PRESSED		"resources/button/button_reset/button_reset_pressed.png"
-
 #define BUTTON_AGGREGATE			"resources/button/button_aggregate/button_aggregate.png"
 #define BUTTON_AGGREGATE_PRESSED	"resources/button/button_aggregate/button_aggregate_pressed.png"
 
 #define BUTTON_PROPERTIES			"resources/button/button_properties/button_properties.png"
 #define BUTTON_PROPERTIES_PRESSED	"resources/button/button_properties/button_properties_pressed.png"
+
+#define BUTTON_COPY					"resources/button/button_copy/button_copy.png"
+#define BUTTON_COPY_PRESSED			"resources/button/button_copy/button_copy_pressed.png"
+
+#define BUTTON_PASTE				"resources/button/button_paste/button_paste.png"
+#define BUTTON_PASTE_PRESSED		"resources/button/button_paste/button_paste_pressed.png"
+
+#define BUTTON_SAVE					"resources/button/button_save/button_save.png"
+#define BUTTON_SAVE_PRESSED			"resources/button/button_save/button_save_pressed.png"
+
+#define BUTTON_LOAD					"resources/button/button_load/button_load.png"
+#define BUTTON_LOAD_PRESSED			"resources/button/button_load/button_load_pressed.png"
 
 
 
@@ -178,7 +187,7 @@ int main()
 	texture_top_panel.loadFromFile(TOP_PANEL_TEXTURE);
 	Control_panel top_panel;
 	top_panel.background.setTexture(texture_top_panel, true);
-	top_panel.background.setScale(GLOBAL_SCALE);
+	top_panel.background.setScale(1 * GLOBAL_SCALE.x, 60 / 80.f * GLOBAL_SCALE.y);
 
 
 
@@ -192,9 +201,12 @@ int main()
 		texture_button_pentagon, texture_button_pentagon_pressed,
 		texture_button_hexagon, texture_button_hexagon_pressed,
 		texture_button_delete, texture_button_delete_pressed,
-		texture_button_reset, texture_button_reset_pressed,
 		texture_button_aggregate, texture_button_aggregate_pressed,
-		texture_button_properties, texture_button_properties_pressed;
+		texture_button_properties, texture_button_properties_pressed,
+		texture_button_copy, texture_button_copy_pressed,
+		texture_button_paste, texture_button_paste_pressed,
+		texture_button_save, texture_button_save_pressed,
+		texture_button_load, texture_button_load_pressed;
 
 	{
 		texture_button_line.loadFromFile(BUTTON_LINE);
@@ -221,14 +233,24 @@ int main()
 		texture_button_delete.loadFromFile(BUTTON_DELETE);
 		texture_button_delete_pressed.loadFromFile(BUTTON_DELETE_PRESSED);
 
-		texture_button_reset.loadFromFile(BUTTON_RESET);
-		texture_button_reset_pressed.loadFromFile(BUTTON_RESET_PRESSED);
-
 		texture_button_aggregate.loadFromFile(BUTTON_AGGREGATE);
 		texture_button_aggregate_pressed.loadFromFile(BUTTON_AGGREGATE_PRESSED);
 
 		texture_button_properties.loadFromFile(BUTTON_PROPERTIES);
 		texture_button_properties_pressed.loadFromFile(BUTTON_PROPERTIES_PRESSED);
+
+		texture_button_copy.loadFromFile(BUTTON_COPY);
+		texture_button_copy_pressed.loadFromFile(BUTTON_COPY_PRESSED);
+
+		texture_button_paste.loadFromFile(BUTTON_PASTE);
+		texture_button_paste_pressed.loadFromFile(BUTTON_PASTE_PRESSED);
+
+		texture_button_save.loadFromFile(BUTTON_SAVE);
+		texture_button_save_pressed.loadFromFile(BUTTON_SAVE_PRESSED);
+
+		texture_button_load.loadFromFile(BUTTON_LOAD);
+		texture_button_load_pressed.loadFromFile(BUTTON_LOAD_PRESSED);
+
 	}
 
 
@@ -242,49 +264,98 @@ int main()
 		button_pentagon,
 		button_hexagon,
 		button_delete,
-		button_reset,
 		button_aggregate,
-		button_properties;
+		button_properties,
+		button_copy,
+		button_paste,
+		button_save,
+		button_load;
+
+	const sf::Vector2f b_size = sf::Vector2f(45, 45);
+	const sf::Vector2f b_spacing = sf::Vector2f(8, 8);
 
 	// Applying loaded textures to the buttons
 	{
+
 		button_line.get_graphics().setTexture(texture_button_line);
-		button_line.get_graphics().setScale(GLOBAL_SCALE);
+		button_line.get_graphics().setScale(b_size.x / texture_button_line.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_line.getSize().y * GLOBAL_SCALE.y);
+
 		button_rectangle.get_graphics().setTexture(texture_button_rectangle);
-		button_rectangle.get_graphics().setScale(GLOBAL_SCALE);
+		button_rectangle.get_graphics().setScale(b_size.x / texture_button_rectangle.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_rectangle.getSize().y * GLOBAL_SCALE.y);
+
 		button_circle.get_graphics().setTexture(texture_button_circle);
-		button_circle.get_graphics().setScale(GLOBAL_SCALE);
+		button_circle.get_graphics().setScale(b_size.x / texture_button_circle.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_circle.getSize().y * GLOBAL_SCALE.y);
+
 		button_triangle.get_graphics().setTexture(texture_button_triangle);
-		button_triangle.get_graphics().setScale(GLOBAL_SCALE);
+		button_triangle.get_graphics().setScale(b_size.x / texture_button_triangle.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_triangle.getSize().y * GLOBAL_SCALE.y);
+
 		button_square.get_graphics().setTexture(texture_button_square);
-		button_square.get_graphics().setScale(GLOBAL_SCALE);
+		button_square.get_graphics().setScale(b_size.x / texture_button_square.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_square.getSize().y * GLOBAL_SCALE.y);
+
 		button_pentagon.get_graphics().setTexture(texture_button_pentagon);
-		button_pentagon.get_graphics().setScale(GLOBAL_SCALE);
+		button_pentagon.get_graphics().setScale(b_size.x / texture_button_pentagon.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_pentagon.getSize().y * GLOBAL_SCALE.y);
+
 		button_hexagon.get_graphics().setTexture(texture_button_hexagon);
-		button_hexagon.get_graphics().setScale(GLOBAL_SCALE);
+		button_hexagon.get_graphics().setScale(b_size.x / texture_button_hexagon.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_hexagon.getSize().y * GLOBAL_SCALE.y);
+
 		button_delete.get_graphics().setTexture(texture_button_delete);
-		button_delete.get_graphics().setScale(GLOBAL_SCALE);
-		button_reset.get_graphics().setTexture(texture_button_reset);
-		button_reset.get_graphics().setScale(GLOBAL_SCALE);
+		button_delete.get_graphics().setScale(b_size.x / texture_button_delete.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_delete.getSize().y * GLOBAL_SCALE.y);
+
 		button_aggregate.get_graphics().setTexture(texture_button_aggregate);
-		button_aggregate.get_graphics().setScale(GLOBAL_SCALE);
+		button_aggregate.get_graphics().setScale(b_size.x / texture_button_aggregate.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_aggregate.getSize().y * GLOBAL_SCALE.y);
+
 		button_properties.get_graphics().setTexture(texture_button_properties);
-		button_properties.get_graphics().setScale(GLOBAL_SCALE);
+		button_properties.get_graphics().setScale(b_size.x / texture_button_properties.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_properties.getSize().y * GLOBAL_SCALE.y);
+
+		button_copy.get_graphics().setTexture(texture_button_copy);
+		button_copy.get_graphics().setScale(b_size.x / texture_button_copy.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_copy.getSize().y * GLOBAL_SCALE.y);
+
+		button_paste.get_graphics().setTexture(texture_button_paste);
+		button_paste.get_graphics().setScale(b_size.x / texture_button_paste.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_paste.getSize().y * GLOBAL_SCALE.y);
+
+		button_save.get_graphics().setTexture(texture_button_save);
+		button_save.get_graphics().setScale(b_size.x / texture_button_save.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_save.getSize().y * GLOBAL_SCALE.y);
+
+		button_load.get_graphics().setTexture(texture_button_load);
+		button_load.get_graphics().setScale(b_size.x / texture_button_load.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_load.getSize().y * GLOBAL_SCALE.y);
+
 	}
 
 	// Aligning buttons on the panel
 	{
-		button_line.get_graphics().setPosition((60 * 0 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_rectangle.get_graphics().setPosition((10 + 60 * 1 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_circle.get_graphics().setPosition((20 + 60 * 2 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_triangle.get_graphics().setPosition((30 + 60 * 3 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_square.get_graphics().setPosition((40 + 60 * 4 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_pentagon.get_graphics().setPosition((50 + 60 * 5 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_hexagon.get_graphics().setPosition((60 + 60 * 6 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_properties.get_graphics().setPosition((90 + 60 * 7 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_reset.get_graphics().setPosition((100 + 60 * 8 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_aggregate.get_graphics().setPosition((110 + 60 * 9 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
-		button_delete.get_graphics().setPosition((120 + 60 * 10 + 10) * GLOBAL_SCALE.x, 10 * GLOBAL_SCALE.y);
+
+		float padding1 = 25;
+		float padding2 = padding1 + 25;
+
+		button_line.get_graphics().setPosition((4 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_rectangle.get_graphics().setPosition((5 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_circle.get_graphics().setPosition((6 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_triangle.get_graphics().setPosition((7 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_square.get_graphics().setPosition((8 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_pentagon.get_graphics().setPosition((9 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_hexagon.get_graphics().setPosition((10 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing .y* GLOBAL_SCALE.y);
+		button_properties.get_graphics().setPosition((11 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_aggregate.get_graphics().setPosition((12 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_delete.get_graphics().setPosition((13 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_copy.get_graphics().setPosition((2 * (b_spacing.x + b_size.x) + b_spacing.x) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_paste.get_graphics().setPosition((3 * (b_spacing.x + b_size.x) + b_spacing.x) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_save.get_graphics().setPosition((0 * (b_spacing.x + b_size.x) + b_spacing.x) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_load.get_graphics().setPosition((1 * (b_spacing.x + b_size.x) + b_spacing.x) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+
 	}
 
 
@@ -318,6 +389,7 @@ int main()
 		};
 
 	{
+
 		button_line.add_event_handler(press, Button_event_args::CLICK);
 		button_rectangle.add_event_handler(press, Button_event_args::CLICK);
 		button_circle.add_event_handler(press, Button_event_args::CLICK);
@@ -326,9 +398,12 @@ int main()
 		button_pentagon.add_event_handler(press, Button_event_args::CLICK);
 		button_hexagon.add_event_handler(press, Button_event_args::CLICK);
 		button_properties.add_event_handler(press, Button_event_args::CLICK);
-		button_reset.add_event_handler(press, Button_event_args::CLICK);
 		button_aggregate.add_event_handler(press, Button_event_args::CLICK);
 		button_delete.add_event_handler(press, Button_event_args::CLICK);
+		button_copy.add_event_handler(press, Button_event_args::CLICK);
+		button_paste.add_event_handler(press, Button_event_args::CLICK);
+		button_save.add_event_handler(press, Button_event_args::CLICK);
+		button_load.add_event_handler(press, Button_event_args::CLICK);
 
 		button_line.add_event_handler(release, Button_event_args::RELEASE);
 		button_rectangle.add_event_handler(release, Button_event_args::RELEASE);
@@ -338,9 +413,13 @@ int main()
 		button_pentagon.add_event_handler(release, Button_event_args::RELEASE);
 		button_hexagon.add_event_handler(release, Button_event_args::RELEASE);
 		button_properties.add_event_handler(release, Button_event_args::RELEASE);
-		button_reset.add_event_handler(release, Button_event_args::RELEASE);
 		button_aggregate.add_event_handler(release, Button_event_args::RELEASE);
 		button_delete.add_event_handler(release, Button_event_args::RELEASE);
+		button_copy.add_event_handler(release, Button_event_args::RELEASE);
+		button_paste.add_event_handler(release, Button_event_args::RELEASE);
+		button_save.add_event_handler(release, Button_event_args::RELEASE);
+		button_load.add_event_handler(release, Button_event_args::RELEASE);
+
 	}
 
 
@@ -750,6 +829,58 @@ int main()
 	button_aggregate.add_event_handler(aggregate_selected, Button_event_args::CLICK);
 
 
+	void(*copy_selected)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
+			{
+				action_args->scene.selection_to_buffer();
+			}
+
+		};
+
+	button_copy.add_event_handler(copy_selected, Button_event_args::CLICK);
+
+
+	void(*paste_selected)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
+			{
+				action_args->scene.buffer_to_scene();
+			}
+
+		};
+
+	button_paste.add_event_handler(paste_selected, Button_event_args::CLICK);
+
+	
+	void(*save_scene)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
+			{
+				std::cout << "SAVED.\n";
+			}
+
+		};
+
+	button_save.add_event_handler(save_scene, Button_event_args::CLICK);
+
+
+	void(*load_scene)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
+			{
+				std::cout << "LOADED.\n";
+			}
+
+		};
+
+	button_load.add_event_handler(load_scene, Button_event_args::CLICK);
+
+
 
 
 	sf::Clock clock;
@@ -791,17 +922,30 @@ int main()
 						else
 							button_delete.try_unhover(sf::Mouse::getPosition(main_window));
 
-
-						if (!button_reset.is_hovered())
-							button_reset.try_hover(sf::Mouse::getPosition(main_window));
-						else
-							button_reset.try_unhover(sf::Mouse::getPosition(main_window));
-
-
 						if (!button_aggregate.is_hovered())
 							button_aggregate.try_hover(sf::Mouse::getPosition(main_window));
 						else
 							button_aggregate.try_unhover(sf::Mouse::getPosition(main_window));
+
+						if (!button_copy.is_hovered())
+							button_copy.try_hover(sf::Mouse::getPosition(main_window));
+						else
+							button_copy.try_unhover(sf::Mouse::getPosition(main_window));
+
+						if (!button_paste.is_hovered())
+							button_paste.try_hover(sf::Mouse::getPosition(main_window));
+						else
+							button_paste.try_unhover(sf::Mouse::getPosition(main_window));
+
+						if (!button_save.is_hovered())
+							button_save.try_hover(sf::Mouse::getPosition(main_window));
+						else
+							button_save.try_unhover(sf::Mouse::getPosition(main_window));
+
+						if (!button_load.is_hovered())
+							button_load.try_hover(sf::Mouse::getPosition(main_window));
+						else
+							button_load.try_unhover(sf::Mouse::getPosition(main_window));
 
 
 						if (!button_line.is_hovered())
@@ -860,149 +1004,206 @@ int main()
 						const size_t PARAM_COUNT = 3;
 						Event_args* args_arr[PARAM_COUNT]{};
 
-						Button_texture_change_event_args button_propeties_args0(Button_event_args::CLICK, texture_button_properties_pressed);
-						Button_open_properties_window_event_args button_propeties_args1(Button_event_args::CLICK, properties_window, PROPERTIES_WINDOW_SIZE);
-						args_arr[0] = &button_propeties_args0;
-						args_arr[1] = &button_propeties_args1;
-						if (button_properties.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_propeties_args0(Button_event_args::CLICK, texture_button_properties_pressed);
+							Button_open_properties_window_event_args button_propeties_args1(Button_event_args::CLICK, properties_window, PROPERTIES_WINDOW_SIZE);
+							args_arr[0] = &button_propeties_args0;
+							args_arr[1] = &button_propeties_args1;
+							if (button_properties.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_delete_args(Button_event_args::CLICK, texture_button_delete_pressed);
-						Scene_action_actor_event_args delete_action_args(Button_event_args::CLICK, main_scene);
-						args_arr[0] = &button_delete_args;
-						args_arr[1] = &delete_action_args;
-						if (button_delete.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_delete_args(Button_event_args::CLICK, texture_button_delete_pressed);
+							Scene_action_actor_event_args delete_action_args(Button_event_args::CLICK, main_scene);
+							args_arr[0] = &button_delete_args;
+							args_arr[1] = &delete_action_args;
+							if (button_delete.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_reset_args(Button_event_args::CLICK, texture_button_reset_pressed);
-						args_arr[0] = &button_reset_args;
-						if (button_reset.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_aggregate_args(Button_event_args::CLICK, texture_button_aggregate_pressed);
+							Scene_action_actor_event_args aggregate_action_args(Button_event_args::CLICK, main_scene);
+							args_arr[0] = &button_aggregate_args;
+							args_arr[1] = &aggregate_action_args;
+							if (button_aggregate.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_aggregate_args(Button_event_args::CLICK, texture_button_aggregate_pressed);
-						Scene_action_actor_event_args aggregate_action_args(Button_event_args::CLICK, main_scene);
-						args_arr[0] = &button_aggregate_args;
-						args_arr[1] = &aggregate_action_args;
-						if (button_aggregate.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_copy_args(Button_event_args::CLICK, texture_button_copy_pressed);
+							Scene_action_actor_event_args copy_action_args(Button_event_args::CLICK, main_scene);
+							args_arr[0] = &button_copy_args;
+							args_arr[1] = &copy_action_args;
+							if (button_copy.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
+
+						{
+							Button_texture_change_event_args button_paste_args(Button_event_args::CLICK, texture_button_paste_pressed);
+							Scene_action_actor_event_args paste_action_args(Button_event_args::CLICK, main_scene);
+							args_arr[0] = &button_paste_args;
+							args_arr[1] = &paste_action_args;
+							if (button_paste.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
+
+						{
+							Button_texture_change_event_args button_save_args(Button_event_args::CLICK, texture_button_save_pressed);
+							Scene_action_actor_event_args save_action_args(Button_event_args::CLICK, main_scene);
+							args_arr[0] = &button_save_args;
+							args_arr[1] = &save_action_args;
+							if (button_save.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
+
+						{
+							Button_texture_change_event_args button_load_args(Button_event_args::CLICK, texture_button_load_pressed);
+							Scene_action_actor_event_args load_action_args(Button_event_args::CLICK, main_scene);
+							args_arr[0] = &button_load_args;
+							args_arr[1] = &load_action_args;
+							if (button_load.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
 
-						Button_texture_change_event_args button_line_args(Button_event_args::CLICK, texture_button_line_pressed);
-						Shape* line = new Line(100, 5);
-						line->set_origin(50, 2.5);
-						line->move(400, 360);
-						line->set_fill_color(sf::Color::Black);
-						Scene::Actor line_actor(line);
-						Scene_create_actor_event_args line_create_args(Button_event_args::CLICK, main_scene, std::move(line_actor));
-						args_arr[0] = &button_line_args;
-						args_arr[1] = &line_create_args;
-						if (button_line.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_line_args(Button_event_args::CLICK, texture_button_line_pressed);
+							Shape* line = new Line(100, 5);
+							line->set_origin(50, 2.5);
+							line->move(400, 360);
+							line->set_fill_color(sf::Color::Black);
+							Scene::Actor line_actor(line);
+							Scene_create_actor_event_args line_create_args(Button_event_args::CLICK, main_scene, std::move(line_actor));
+							args_arr[0] = &button_line_args;
+							args_arr[1] = &line_create_args;
+							if (button_line.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_rectangle_args(Button_event_args::CLICK, texture_button_rectangle_pressed);
-						Shape* rectangle = new Rectangle(sf::Vector2f(200, 100));
-						rectangle->set_origin(100, 50);
-						rectangle->move(400, 360);
-						rectangle->set_fill_color(sf::Color::Black);
-						Scene::Actor rectangle_actor(rectangle);
-						Scene_create_actor_event_args rectangle_create_args(Button_event_args::CLICK, main_scene, std::move(rectangle_actor));
-						args_arr[0] = &button_rectangle_args;
-						args_arr[1] = &rectangle_create_args;
-						if (button_rectangle.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_rectangle_args(Button_event_args::CLICK, texture_button_rectangle_pressed);
+							Shape* rectangle = new Rectangle(sf::Vector2f(200, 100));
+							rectangle->set_origin(100, 50);
+							rectangle->move(400, 360);
+							rectangle->set_fill_color(sf::Color::Black);
+							Scene::Actor rectangle_actor(rectangle);
+							Scene_create_actor_event_args rectangle_create_args(Button_event_args::CLICK, main_scene, std::move(rectangle_actor));
+							args_arr[0] = &button_rectangle_args;
+							args_arr[1] = &rectangle_create_args;
+							if (button_rectangle.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_circle_args(Button_event_args::CLICK, texture_button_circle_pressed);
-						Shape* circle = new Circle(50);
-						circle->set_origin(50, 50);
-						circle->move(400, 360);
-						circle->set_fill_color(sf::Color::Black);
-						Scene::Actor circle_actor(circle);
-						Scene_create_actor_event_args circle_create_args(Button_event_args::CLICK, main_scene, std::move(circle_actor));
-						args_arr[0] = &button_circle_args;
-						args_arr[1] = &circle_create_args;
-						if (button_circle.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_circle_args(Button_event_args::CLICK, texture_button_circle_pressed);
+							Shape* circle = new Circle(50);
+							circle->set_origin(50, 50);
+							circle->move(400, 360);
+							circle->set_fill_color(sf::Color::Black);
+							Scene::Actor circle_actor(circle);
+							Scene_create_actor_event_args circle_create_args(Button_event_args::CLICK, main_scene, std::move(circle_actor));
+							args_arr[0] = &button_circle_args;
+							args_arr[1] = &circle_create_args;
+							if (button_circle.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_triangle_args(Button_event_args::CLICK, texture_button_triangle_pressed);
-						Shape* triangle = new Regular(50, 3);
-						triangle->set_origin(50, 50);
-						triangle->move(400, 360);
-						triangle->set_fill_color(sf::Color::Black);
-						Scene::Actor triangle_actor(triangle);
-						Scene_create_actor_event_args triangle_create_args(Button_event_args::CLICK, main_scene, std::move(triangle_actor));
-						args_arr[0] = &button_triangle_args;
-						args_arr[1] = &triangle_create_args;
-						if (button_triangle.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_triangle_args(Button_event_args::CLICK, texture_button_triangle_pressed);
+							Shape* triangle = new Regular(50, 3);
+							triangle->set_origin(50, 50);
+							triangle->move(400, 360);
+							triangle->set_fill_color(sf::Color::Black);
+							Scene::Actor triangle_actor(triangle);
+							Scene_create_actor_event_args triangle_create_args(Button_event_args::CLICK, main_scene, std::move(triangle_actor));
+							args_arr[0] = &button_triangle_args;
+							args_arr[1] = &triangle_create_args;
+							if (button_triangle.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_square_args(Button_event_args::CLICK, texture_button_square_pressed);
-						Shape* square = new Regular(50, 4);
-						square->set_origin(50, 50);
-						square->move(400, 360);
-						square->rotate(45);
-						square->set_fill_color(sf::Color::Black);
-						Scene::Actor square_actor(square);
-						Scene_create_actor_event_args square_create_args(Button_event_args::CLICK, main_scene, std::move(square_actor));
-						args_arr[0] = &button_square_args;
-						args_arr[1] = &square_create_args;
-						if (button_square.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_square_args(Button_event_args::CLICK, texture_button_square_pressed);
+							Shape* square = new Regular(50, 4);
+							square->set_origin(50, 50);
+							square->move(400, 360);
+							square->rotate(45);
+							square->set_fill_color(sf::Color::Black);
+							Scene::Actor square_actor(square);
+							Scene_create_actor_event_args square_create_args(Button_event_args::CLICK, main_scene, std::move(square_actor));
+							args_arr[0] = &button_square_args;
+							args_arr[1] = &square_create_args;
+							if (button_square.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_pentagon_args(Button_event_args::CLICK, texture_button_pentagon_pressed);
-						Shape* pentagon = new Regular(50, 5);
-						pentagon->set_origin(50, 50);
-						pentagon->move(400, 360);
-						pentagon->set_fill_color(sf::Color::Black);
-						Scene::Actor pentagon_actor(pentagon);
-						Scene_create_actor_event_args pentagon_create_args(Button_event_args::CLICK, main_scene, std::move(pentagon_actor));
-						args_arr[0] = &button_pentagon_args;
-						args_arr[1] = &pentagon_create_args;
-						if (button_pentagon.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_pentagon_args(Button_event_args::CLICK, texture_button_pentagon_pressed);
+							Shape* pentagon = new Regular(50, 5);
+							pentagon->set_origin(50, 50);
+							pentagon->move(400, 360);
+							pentagon->set_fill_color(sf::Color::Black);
+							Scene::Actor pentagon_actor(pentagon);
+							Scene_create_actor_event_args pentagon_create_args(Button_event_args::CLICK, main_scene, std::move(pentagon_actor));
+							args_arr[0] = &button_pentagon_args;
+							args_arr[1] = &pentagon_create_args;
+							if (button_pentagon.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
-						Button_texture_change_event_args button_hexagon_args(Button_event_args::CLICK, texture_button_hexagon_pressed);
-						Shape* hexagon = new Regular(50, 6);
-						hexagon->set_origin(50, 50);
-						hexagon->move(400, 360);
-						hexagon->set_fill_color(sf::Color::Black);
-						Scene::Actor hexagon_actor(hexagon);
-						Scene_create_actor_event_args hexagon_create_args(Button_event_args::CLICK, main_scene, std::move(hexagon_actor));
-						args_arr[0] = &button_hexagon_args;
-						args_arr[1] = &hexagon_create_args;
-						if (button_hexagon.try_click(args_arr, PARAM_COUNT))
-							break;
-						else
-							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						{
+							Button_texture_change_event_args button_hexagon_args(Button_event_args::CLICK, texture_button_hexagon_pressed);
+							Shape* hexagon = new Regular(50, 6);
+							hexagon->set_origin(50, 50);
+							hexagon->move(400, 360);
+							hexagon->set_fill_color(sf::Color::Black);
+							Scene::Actor hexagon_actor(hexagon);
+							Scene_create_actor_event_args hexagon_create_args(Button_event_args::CLICK, main_scene, std::move(hexagon_actor));
+							args_arr[0] = &button_hexagon_args;
+							args_arr[1] = &hexagon_create_args;
+							if (button_hexagon.try_click(args_arr, PARAM_COUNT))
+								break;
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
 
 
 
@@ -1018,93 +1219,142 @@ int main()
 					const size_t PARAM_COUNT = 3;
 					Event_args* args_arr[PARAM_COUNT]{};
 
-					Button_texture_change_event_args button_properties_args(Button_event_args::RELEASE, texture_button_properties);
-					args_arr[0] = &button_properties_args;
-					if (button_properties.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_properties_args(Button_event_args::RELEASE, texture_button_properties);
+						args_arr[0] = &button_properties_args;
+						if (button_properties.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_delete_args(Button_event_args::RELEASE, texture_button_delete);
-					args_arr[0] = &button_delete_args;
-					if (button_delete.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_delete_args(Button_event_args::RELEASE, texture_button_delete);
+						args_arr[0] = &button_delete_args;
+						if (button_delete.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_reset_args(Button_event_args::RELEASE, texture_button_reset);
-					args_arr[0] = &button_reset_args;
-					if (button_reset.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_aggregate_args(Button_event_args::RELEASE, texture_button_aggregate);
+						args_arr[0] = &button_aggregate_args;
+						if (button_aggregate.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_aggregate_args(Button_event_args::RELEASE, texture_button_aggregate);
-					args_arr[0] = &button_aggregate_args;
-					if (button_aggregate.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_copy_args(Button_event_args::RELEASE, texture_button_copy);
+						args_arr[0] = &button_copy_args;
+						if (button_copy.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
+
+					{
+						Button_texture_change_event_args button_paste_args(Button_event_args::RELEASE, texture_button_paste);
+						args_arr[0] = &button_paste_args;
+						if (button_paste.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
+
+					{
+						Button_texture_change_event_args button_save_args(Button_event_args::RELEASE, texture_button_save);
+						args_arr[0] = &button_save_args;
+						if (button_save.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
+
+					{
+						Button_texture_change_event_args button_load_args(Button_event_args::RELEASE, texture_button_load);
+						args_arr[0] = &button_load_args;
+						if (button_load.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
 
-					Button_texture_change_event_args button_line_args(Button_event_args::RELEASE, texture_button_line);
-					args_arr[0] = &button_line_args;
-					if (button_line.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_line_args(Button_event_args::RELEASE, texture_button_line);
+						args_arr[0] = &button_line_args;
+						if (button_line.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_rectangle_args(Button_event_args::RELEASE, texture_button_rectangle);
-					args_arr[0] = &button_rectangle_args;
-					if (button_rectangle.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_rectangle_args(Button_event_args::RELEASE, texture_button_rectangle);
+						args_arr[0] = &button_rectangle_args;
+						if (button_rectangle.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_circle_args(Button_event_args::RELEASE, texture_button_circle);
-					args_arr[0] = &button_circle_args;
-					if (button_circle.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_circle_args(Button_event_args::RELEASE, texture_button_circle);
+						args_arr[0] = &button_circle_args;
+						if (button_circle.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_triangle_args(Button_event_args::RELEASE, texture_button_triangle);
-					args_arr[0] = &button_triangle_args;
-					if (button_triangle.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_triangle_args(Button_event_args::RELEASE, texture_button_triangle);
+						args_arr[0] = &button_triangle_args;
+						if (button_triangle.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_square_args(Button_event_args::RELEASE, texture_button_square);
-					args_arr[0] = &button_square_args;
-					if (button_square.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_square_args(Button_event_args::RELEASE, texture_button_square);
+						args_arr[0] = &button_square_args;
+						if (button_square.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_pentagon_args(Button_event_args::RELEASE, texture_button_pentagon);
-					args_arr[0] = &button_pentagon_args;
-					if (button_pentagon.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_pentagon_args(Button_event_args::RELEASE, texture_button_pentagon);
+						args_arr[0] = &button_pentagon_args;
+						if (button_pentagon.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_hexagon_args(Button_event_args::RELEASE, texture_button_hexagon);
-					args_arr[0] = &button_hexagon_args;
-					if (button_hexagon.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_hexagon_args(Button_event_args::RELEASE, texture_button_hexagon);
+						args_arr[0] = &button_hexagon_args;
+						if (button_hexagon.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
 
@@ -1229,47 +1479,55 @@ int main()
 						input.z = std::stof(input_z);
 					}
 
-					Button_texture_change_event_args button_move_args(Button_event_args::CLICK, texture_button_move_pressed);
-					Move_actor_event_args action_move_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y), main_scene.SCENE_SIZE);
-					args_arr[0] = &button_move_args;
-					args_arr[1] = &action_move_args;
-					if (button_move.try_click(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_move_args(Button_event_args::CLICK, texture_button_move_pressed);
+						Move_actor_event_args action_move_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y), main_scene.SCENE_SIZE);
+						args_arr[0] = &button_move_args;
+						args_arr[1] = &action_move_args;
+						if (button_move.try_click(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_rotate_args(Button_event_args::CLICK, texture_button_rotate_pressed);
-					Rotate_actor_event_args action_rotate_args(Button_event_args::CLICK, main_scene, input.x);
-					args_arr[0] = &button_rotate_args;
-					args_arr[1] = &action_rotate_args;
-					if (button_rotate.try_click(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_rotate_args(Button_event_args::CLICK, texture_button_rotate_pressed);
+						Rotate_actor_event_args action_rotate_args(Button_event_args::CLICK, main_scene, input.x);
+						args_arr[0] = &button_rotate_args;
+						args_arr[1] = &action_rotate_args;
+						if (button_rotate.try_click(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_scale_args(Button_event_args::CLICK, texture_button_scale_pressed);
-					Scale_actor_event_args action_scale_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y));
-					args_arr[0] = &button_scale_args;
-					args_arr[1] = &action_scale_args;
-					if (button_scale.try_click(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_scale_args(Button_event_args::CLICK, texture_button_scale_pressed);
+						Scale_actor_event_args action_scale_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y));
+						args_arr[0] = &button_scale_args;
+						args_arr[1] = &action_scale_args;
+						if (button_scale.try_click(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_color_args(Button_event_args::CLICK, texture_button_color_pressed);
-					input.x = (int)abs(input.x) % 256;
-					input.y = (int)abs(input.y) % 256;
-					input.z = (int)abs(input.z) % 256;
-					Color_actor_event_args action_color_args(Button_event_args::CLICK, main_scene, sf::Color(input.x, input.y, input.z));
-					args_arr[0] = &button_color_args;
-					args_arr[1] = &action_color_args;
-					if (button_color.try_click(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_color_args(Button_event_args::CLICK, texture_button_color_pressed);
+						input.x = (int)abs(input.x) % 256;
+						input.y = (int)abs(input.y) % 256;
+						input.z = (int)abs(input.z) % 256;
+						Color_actor_event_args action_color_args(Button_event_args::CLICK, main_scene, sf::Color(input.x, input.y, input.z));
+						args_arr[0] = &button_color_args;
+						args_arr[1] = &action_color_args;
+						if (button_color.try_click(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
 
@@ -1330,36 +1588,44 @@ int main()
 					const size_t PARAM_COUNT = 3;
 					Event_args* args_arr[PARAM_COUNT]{};
 
-					Button_texture_change_event_args button_move_args(Button_event_args::RELEASE, texture_button_move);
-					args_arr[0] = &button_move_args;
-					if (button_move.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_move_args(Button_event_args::RELEASE, texture_button_move);
+						args_arr[0] = &button_move_args;
+						if (button_move.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_rotate_args(Button_event_args::RELEASE, texture_button_rotate);
-					args_arr[0] = &button_rotate_args;
-					if (button_rotate.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_rotate_args(Button_event_args::RELEASE, texture_button_rotate);
+						args_arr[0] = &button_rotate_args;
+						if (button_rotate.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_scale_args(Button_event_args::RELEASE, texture_button_scale);
-					args_arr[0] = &button_scale_args;
-					if (button_scale.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_scale_args(Button_event_args::RELEASE, texture_button_scale);
+						args_arr[0] = &button_scale_args;
+						if (button_scale.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
-					Button_texture_change_event_args button_color_args(Button_event_args::RELEASE, texture_button_color);
-					args_arr[0] = &button_color_args;
-					if (button_color.try_release(args_arr, PARAM_COUNT))
-						break;
-					else
-						args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					{
+						Button_texture_change_event_args button_color_args(Button_event_args::RELEASE, texture_button_color);
+						args_arr[0] = &button_color_args;
+						if (button_color.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
 
@@ -1447,9 +1713,12 @@ int main()
 			main_window.draw(button_pentagon);
 			main_window.draw(button_hexagon);
 			main_window.draw(button_delete);
-			main_window.draw(button_reset);
 			main_window.draw(button_aggregate);
 			main_window.draw(button_properties);
+			main_window.draw(button_copy);
+			main_window.draw(button_paste);
+			main_window.draw(button_save);
+			main_window.draw(button_load);
 
 			main_window.display();
 
