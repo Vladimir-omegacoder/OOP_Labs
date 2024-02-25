@@ -270,7 +270,6 @@ public:
 		}
 	}
 
-	// Add transformations with selection
 	std::list<Actor*>& get_selection()
 	{
 		return controller.get_selection();

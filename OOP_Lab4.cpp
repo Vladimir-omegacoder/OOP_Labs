@@ -187,7 +187,7 @@ int main()
 	texture_top_panel.loadFromFile(TOP_PANEL_TEXTURE);
 	Control_panel top_panel;
 	top_panel.background.setTexture(texture_top_panel, true);
-	top_panel.background.setScale(1 * GLOBAL_SCALE.x, 60 / 80.f * GLOBAL_SCALE.y);
+	top_panel.background.setScale(1 * GLOBAL_SCALE.x, 6 / 8.f * GLOBAL_SCALE.y);
 
 
 
@@ -609,7 +609,8 @@ int main()
 	sf::Texture main_scene_texture;
 	main_scene_texture.loadFromFile(SCENE_TEXTURE);
 
-	Scene main_scene(sf::Vector2u(MAIN_WINDOW_SIZE.x, MAIN_WINDOW_SIZE.y * 0.8667));
+	Scene main_scene(sf::Vector2u(MAIN_WINDOW_SIZE.x,
+		MAIN_WINDOW_SIZE.y - top_panel.background.getLocalBounds().height * top_panel.background.getScale().y));
 	main_scene.get_backgruond().setTexture(main_scene_texture);
 	main_scene.get_backgruond().setScale(GLOBAL_SCALE);
 
@@ -1367,7 +1368,6 @@ int main()
 					{
 
 						main_scene.selection_to_buffer();
-						std::cout << "Copied.\n";
 
 					}
 
@@ -1375,7 +1375,6 @@ int main()
 					{
 
 						main_scene.buffer_to_scene();
-						std::cout << "Pasted.\n";
 
 					}
 
@@ -1670,8 +1669,8 @@ int main()
 				for (auto& i : main_scene.get_selection())
 				{
 					sf::FloatRect bounds = (*i)->get_global_bounds();
-
-					if (bounds.top + bounds.height < main_scene.SCENE_SIZE.y + top_panel.background.getGlobalBounds().height)
+					float temp = top_panel.background.getGlobalBounds().height;
+					if ((bounds.top + bounds.height) * GLOBAL_SCALE.y < main_scene.SCENE_SIZE.y + top_panel.background.getGlobalBounds().height)
 					{
 						(*i)->move(0, 10);
 					}
