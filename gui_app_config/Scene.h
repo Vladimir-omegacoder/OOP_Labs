@@ -1,8 +1,13 @@
 #pragma once
 #include <iostream>
 #include "../graphics/Primitives.h"
+#include <vector>
 #include <list>
 #include <algorithm>
+#include <fstream>
+
+
+
 
 
 
@@ -72,7 +77,17 @@ public:
 			return *shape_actor;
 		}
 
+		const Shape& operator*() const
+		{
+			return *shape_actor;
+		}
+
 		Shape* operator->()
+		{
+			return shape_actor;
+		}
+
+		const Shape* operator->() const
 		{
 			return shape_actor;
 		}
@@ -431,7 +446,145 @@ public:
 
 	}
 
+	void reset_default_state()
+	{
+		actors.clear();
+		buffer.clear();
+		controller.get_selection().clear();
+	}
+
+	void save_state(Scene_memento& memento) const
+	{
+
+		for (auto& i : actors)
+		{
+			
+			if (const Line* line = dynamic_cast<const Line*>(i.get_ptr()))
+			{
+				memento.shapes.push_back(new Line(*line));
+			}
+			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i.get_ptr()))
+			{
+				memento.shapes.push_back(new Rectangle(*rectangle));
+			}
+			else if (const Circle* circle = dynamic_cast<const Circle*>(i.get_ptr()))
+			{
+				memento.shapes.push_back(new Circle(*circle));
+			}
+			else if (const Regular* regular = dynamic_cast<const Regular*>(i.get_ptr()))
+			{
+				memento.shapes.push_back(new Regular(*regular));
+			}
+			else if (const Composite* composite = dynamic_cast<const Composite*>(i.get_ptr()))
+			{
+				memento.shapes.push_back(new Composite(*composite));
+			}
+
+		}
+
+	}
+
+	void load_state(const Scene_memento& memento)
+	{
+
+		reset_default_state();
+
+		for (auto& i : memento.shapes)
+		{
+
+			if (const Line* line = dynamic_cast<const Line*>(i))
+			{
+				actors.push_back(Actor(new Line(*line)));
+			}
+			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i))
+			{
+				actors.push_back(Actor(new Rectangle(*rectangle)));
+			}
+			else if (const Circle* circle = dynamic_cast<const Circle*>(i))
+			{
+				actors.push_back(Actor(new Circle(*circle)));
+			}
+			else if (const Regular* regular = dynamic_cast<const Regular*>(i))
+			{
+				actors.push_back(Actor(new Regular(*regular)));
+			}
+			else if (const Composite* composite = dynamic_cast<const Composite*>(i))
+			{
+				actors.push_back(Actor(new Composite(*composite)));
+			}
+
+		}
+
+	}
+
 };
 
 
 
+
+
+class Scene_memento
+{
+
+private:
+
+	friend class Scene;
+
+	std::vector<const Shape*> shapes;
+
+public:
+
+	Scene_memento() : shapes(0) {}
+
+};
+
+
+
+class Scene_utils
+{
+
+private:
+
+	Scene_memento memento;
+
+
+public:
+
+	Scene_utils() = default;
+
+	void save_snapshot(const Scene& scene)
+	{
+		scene.save_state(memento);
+	}
+
+	void load_snapshot(Scene& scene)
+	{
+		scene.load_state(memento);
+	}
+
+	void save_snapshot_file(const char* filename) const
+	{
+
+		std::ofstream out;
+		out.exceptions(std::ofstream::badbit | std::ofstream::failbit);
+
+		try
+		{
+			out.open(filename, std::ios_base::trunc);
+			out.write((char*)&memento, sizeof(Scene_memento));
+		}
+		catch (const std::exception& ex)
+		{
+			std::cerr << ex.what() << '\n';
+		}
+
+		out.close();
+
+	}
+
+	void load_snapshot_file(const char* filename)
+	{
+
+	}
+
+};
