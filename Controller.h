@@ -4,18 +4,62 @@
 #include "Square.h"
 #include "Triangle.h"
 #include "Composite.h"
+#include <map>
+#include <string>
 #include <vector>
 
 class Controller: public sf::Drawable
 {
-public:
+private:
 	std::vector<Figure*> figures;
 
 	Figure* actve = nullptr;
 
-	Figure* buffer = nullptr;
+	/*Figure* buffer = nullptr;*/
+
+	std::map<std::string, Figure*> save_figures;
 
 	sf::Color befor_activ_color;
+
+
+
+	Controller() {};
+
+
+public:
+
+	static Controller& get_instance()
+	{
+		static Controller instance;
+		return instance;
+	}
+
+	Controller(const Controller&) = delete;
+	Controller operator = (const Controller&) = delete;
+
+
+
+
+	std::vector<Figure*>& _figures()
+	{
+		return figures;
+	}
+
+	Figure*& _actve()
+	{
+		return actve;
+	}
+
+	std::map<std::string, Figure*>& _save_figures()
+	{
+		return save_figures;
+	}
+
+	sf::Color _befor_activ_color()
+	{
+		return befor_activ_color;
+	}
+
 
 
 
@@ -116,64 +160,126 @@ public:
 
 
 
-	void copy()
+	//void copy()
+	//{
+	//	if (actve)
+	//	{
+	//		if (buffer != nullptr)
+	//		{
+	//			delete buffer;
+	//			buffer = nullptr;
+	//		}
+
+	//		if (Circle* circle_ptr = dynamic_cast<Circle*>(actve))
+	//		{
+	//			buffer = new Circle(*circle_ptr);
+	//		}
+	//		else if (Square* square_ptr = dynamic_cast<Square*>(actve))
+	//		{
+	//			buffer = new Square (*square_ptr);
+	//		}
+	//		else if (Triangle* triangle_ptr = dynamic_cast<Triangle*>(actve))
+	//		{			
+	//			buffer = new Triangle (*triangle_ptr);
+	//		}
+	//		else if (Composite* composite_ptr = dynamic_cast<Composite*>(actve))
+	//		{			
+	//			buffer = new Composite (*composite_ptr);
+	//		}
+
+	//		buffer->set_ñolor(befor_activ_color);
+	//	}
+	//	else
+	//	{
+	//		buffer = nullptr;
+	//	}
+	//}
+
+	//void paste()
+	//{
+	//	if (buffer)
+	//	{
+	//		if (Circle* circle_ptr = dynamic_cast<Circle*>(buffer))
+	//		{
+	//			figures.push_back(new Circle(*circle_ptr));
+	//		}
+	//		else if (Square* square_ptr = dynamic_cast<Square*>(buffer))
+	//		{
+	//			figures.push_back(new Square(*square_ptr));
+	//		}
+	//		else if (Triangle* triangle_ptr = dynamic_cast<Triangle*>(buffer))
+	//		{
+	//			figures.push_back(new Triangle(*triangle_ptr));
+	//		}
+	//		else if (Composite* composite_ptr = dynamic_cast<Composite*>(buffer))
+	//		{
+	//			figures.push_back(new Composite(*composite_ptr));
+	//		}
+	//	}
+	//}
+
+
+	bool copy_figure(std::string name_figure)
 	{
-		if (actve)
+		if (save_figures.find(name_figure) != save_figures.end())
 		{
-			if (buffer != nullptr)
-			{
-				delete buffer;
-				buffer = nullptr;
-			}
+			return false;
+		}
 
-			if (Circle* circle_ptr = dynamic_cast<Circle*>(actve))
-			{
-				buffer = new Circle(*circle_ptr);
-			}
-			else if (Square* square_ptr = dynamic_cast<Square*>(actve))
-			{
-				buffer = new Square (*square_ptr);
-			}
-			else if (Triangle* triangle_ptr = dynamic_cast<Triangle*>(actve))
-			{			
-				buffer = new Triangle (*triangle_ptr);
-			}
-			else if (Composite* composite_ptr = dynamic_cast<Composite*>(actve))
-			{			
-				buffer = new Composite (*composite_ptr);
-			}
-
-			buffer->set_ñolor(befor_activ_color);
+		if (Circle* circle_ptr = dynamic_cast<Circle*>(actve))
+		{
+			save_figures.emplace(name_figure, new Circle(*circle_ptr));
+		}
+		else if (Square* square_ptr = dynamic_cast<Square*>(actve))
+		{
+			save_figures.emplace(name_figure, new Square(*square_ptr));
+		}
+		else if (Triangle* triangle_ptr = dynamic_cast<Triangle*>(actve))
+		{
+			save_figures.emplace(name_figure, new Triangle(*triangle_ptr));
+		}
+		else if (Composite* composite_ptr = dynamic_cast<Composite*>(actve))
+		{
+			save_figures.emplace(name_figure, new Composite(*composite_ptr));
 		}
 		else
 		{
-			buffer = nullptr;
+			return false;
 		}
+
+		save_figures[name_figure]->set_ñolor(befor_activ_color);
+		return true;
 	}
 
-	void paste()
+
+	bool paste_figure(std::string name_figure)
 	{
-		if (buffer)
+		if (save_figures.find(name_figure) != save_figures.end())
 		{
-			if (Circle* circle_ptr = dynamic_cast<Circle*>(buffer))
+			if (Circle* circle_ptr = dynamic_cast<Circle*>(save_figures[name_figure]))
 			{
 				figures.push_back(new Circle(*circle_ptr));
 			}
-			else if (Square* square_ptr = dynamic_cast<Square*>(buffer))
+			else if (Square* square_ptr = dynamic_cast<Square*>(save_figures[name_figure]))
 			{
 				figures.push_back(new Square(*square_ptr));
 			}
-			else if (Triangle* triangle_ptr = dynamic_cast<Triangle*>(buffer))
+			else if (Triangle* triangle_ptr = dynamic_cast<Triangle*>(save_figures[name_figure]))
 			{
 				figures.push_back(new Triangle(*triangle_ptr));
 			}
-			else if (Composite* composite_ptr = dynamic_cast<Composite*>(buffer))
+			else if (Composite* composite_ptr = dynamic_cast<Composite*>(save_figures[name_figure]))
 			{
 				figures.push_back(new Composite(*composite_ptr));
 			}
+
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
-
 
 
 
