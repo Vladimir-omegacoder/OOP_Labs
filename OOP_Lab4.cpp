@@ -872,6 +872,8 @@ int main()
 
 			if (auto action_args = dynamic_cast<Memento_event_args*>(args))
 			{
+				action_args->utils.save_snapshot(action_args->scene);
+				action_args->utils.save_snapshot_file(action_args->filename);
 				std::cout << "SAVED.\n";
 			}
 
@@ -885,6 +887,8 @@ int main()
 
 			if (auto action_args = dynamic_cast<Memento_event_args*>(args))
 			{
+				action_args->utils.load_snapshot_file(action_args->filename);
+				action_args->utils.load_snapshot(action_args->scene);
 				std::cout << "LOADED.\n";
 			}
 
@@ -1076,7 +1080,7 @@ int main()
 
 						{
 							Button_texture_change_event_args button_save_args(Button_event_args::CLICK, texture_button_save_pressed);
-							Scene_action_actor_event_args save_action_args(Button_event_args::CLICK, main_scene);
+							Memento_event_args save_action_args(Button_event_args::CLICK, main_scene, utils, "scene_test.txt");
 							args_arr[0] = &button_save_args;
 							args_arr[1] = &save_action_args;
 							if (button_save.try_click(args_arr, PARAM_COUNT))
@@ -1087,7 +1091,7 @@ int main()
 
 						{
 							Button_texture_change_event_args button_load_args(Button_event_args::CLICK, texture_button_load_pressed);
-							Scene_action_actor_event_args load_action_args(Button_event_args::CLICK, main_scene);
+							Memento_event_args load_action_args(Button_event_args::CLICK, main_scene, utils, "scene_test.txt");
 							args_arr[0] = &button_load_args;
 							args_arr[1] = &load_action_args;
 							if (button_load.try_click(args_arr, PARAM_COUNT))

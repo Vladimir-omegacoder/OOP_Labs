@@ -17,11 +17,160 @@ private:
 
 	friend class Scene;
 
-	std::vector<const Shape*> shapes;
+	struct Data_block
+	{
+
+		enum Shape_type
+		{
+			NONE,
+			SHAPE_LINE,
+			SHAPE_RECTANGLE,
+			SHAPE_CIRCLE,
+			SHAPE_REGULAR,
+			SHAPE_COMPOSITE,
+		};
+
+
+
+		Shape_type type = NONE;
+		const Shape* shape = nullptr;
+
+
+
+		Data_block() = default;
+
+		Data_block(Shape_type type, const Shape* shape) :
+			type(type), shape(shape) {}
+
+
+
+		void write_to_file(std::ofstream& out) const
+		{
+			
+			out.write((char*)&type, sizeof(type));
+
+			switch (type)
+			{
+
+			case SHAPE_LINE:
+				out.write((char*)&(*static_cast<const Line*>(shape)), sizeof(Line));
+				break;
+
+			case SHAPE_RECTANGLE:
+				out.write((char*)&(*static_cast<const Rectangle*>(shape)), sizeof(Rectangle));
+				break;
+
+			case SHAPE_CIRCLE:
+				out.write((char*)&(*static_cast<const Circle*>(shape)), sizeof(Circle));
+				break;
+
+			case SHAPE_REGULAR:
+				out.write((char*)&(*static_cast<const Regular*>(shape)), sizeof(Regular));
+				break;
+
+			case SHAPE_COMPOSITE:
+				out.write((char*)&(*static_cast<const Composite*>(shape)), sizeof(Composite));
+				break;
+
+			default:
+				break;
+			}
+
+		}
+
+		void read_from_file(std::ifstream& in)
+		{
+
+			in.read((char*)&type, sizeof(type));
+			Line line(0, 0);
+			Rectangle rectangle;
+			Circle circle(0);
+			Regular regular(0, 0);
+			Composite composite;
+
+			switch (type)
+			{
+
+			case SHAPE_LINE:
+				in.read((char*)&line, sizeof(Line));
+				shape = new Line(line);
+				break;
+
+			case SHAPE_RECTANGLE:
+				in.read((char*)&rectangle, sizeof(Rectangle));
+				shape = new Rectangle(rectangle);
+				break;
+
+			case SHAPE_CIRCLE:
+				in.read((char*)&circle, sizeof(Circle));
+				shape = new Circle(circle);
+				break;
+
+			case SHAPE_REGULAR:
+				in.read((char*)&regular, sizeof(Regular));
+				shape = new Regular(regular);
+				break;
+
+			case SHAPE_COMPOSITE:
+				in.read((char*)&composite, sizeof(Composite));
+				shape = new Composite(composite);
+				break;
+
+			default:
+				std::cerr << "Couldn't load the shape'\n";
+				break;
+			}
+
+		}
+
+	};
+
+	std::vector<Data_block> content;
 
 public:
 
-	Scene_memento() : shapes(0) {}
+	Scene_memento() : content(0) {}
+
+	void write_to_file(std::ofstream& out) const
+	{
+
+		size_t size = content.size();
+		out.write((char*)&size, sizeof(size));
+		
+		for (auto& i : content)
+		{
+			i.write_to_file(out);
+		}
+
+		//out.write((char*)&content, sizeof(content));
+
+	}
+
+	void read_from_file(std::ifstream& in)
+	{
+
+		for (auto& i : content)
+		{
+			delete i.shape;
+		}
+		content.clear();
+
+		size_t size;
+
+		in.seekg(0, std::ios::end);
+		size_t file_size = in.tellg();
+		in.seekg(0, std::ios::beg);
+
+		in.read((char*)&size, sizeof(size));
+
+		for (size_t i = 0; i < size; i++)
+		{
+			Data_block temp;
+			temp.read_from_file(in);
+			content.push_back(temp);
+		}
+
+	}
 
 };
 
@@ -497,23 +646,23 @@ public:
 			
 			if (const Line* line = dynamic_cast<const Line*>(i.get_ptr()))
 			{
-				memento.shapes.push_back(new Line(*line));
+				memento.content.push_back(std::move(Scene_memento::Data_block(Scene_memento::Data_block::SHAPE_LINE ,new Line(*line))));
 			}
 			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i.get_ptr()))
 			{
-				memento.shapes.push_back(new Rectangle(*rectangle));
+				memento.content.push_back(std::move(Scene_memento::Data_block(Scene_memento::Data_block::SHAPE_RECTANGLE, new Rectangle(*rectangle))));
 			}
 			else if (const Circle* circle = dynamic_cast<const Circle*>(i.get_ptr()))
 			{
-				memento.shapes.push_back(new Circle(*circle));
+				memento.content.push_back(std::move(Scene_memento::Data_block(Scene_memento::Data_block::SHAPE_CIRCLE, new Circle(*circle))));
 			}
 			else if (const Regular* regular = dynamic_cast<const Regular*>(i.get_ptr()))
 			{
-				memento.shapes.push_back(new Regular(*regular));
+				memento.content.push_back(std::move(Scene_memento::Data_block(Scene_memento::Data_block::SHAPE_REGULAR, new Regular(*regular))));
 			}
 			else if (const Composite* composite = dynamic_cast<const Composite*>(i.get_ptr()))
 			{
-				memento.shapes.push_back(new Composite(*composite));
+				memento.content.push_back(std::move(Scene_memento::Data_block(Scene_memento::Data_block::SHAPE_COMPOSITE, new Composite(*composite))));
 			}
 
 		}
@@ -525,26 +674,26 @@ public:
 
 		reset_default_state();
 
-		for (auto& i : memento.shapes)
+		for (auto& i : memento.content)
 		{
 
-			if (const Line* line = dynamic_cast<const Line*>(i))
+			if (const Line* line = dynamic_cast<const Line*>(i.shape))
 			{
 				get_instance()->actors.push_back(Actor(new Line(*line)));
 			}
-			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i))
+			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i.shape))
 			{
 				get_instance()->actors.push_back(Actor(new Rectangle(*rectangle)));
 			}
-			else if (const Circle* circle = dynamic_cast<const Circle*>(i))
+			else if (const Circle* circle = dynamic_cast<const Circle*>(i.shape))
 			{
 				get_instance()->actors.push_back(Actor(new Circle(*circle)));
 			}
-			else if (const Regular* regular = dynamic_cast<const Regular*>(i))
+			else if (const Regular* regular = dynamic_cast<const Regular*>(i.shape))
 			{
 				get_instance()->actors.push_back(Actor(new Regular(*regular)));
 			}
-			else if (const Composite* composite = dynamic_cast<const Composite*>(i))
+			else if (const Composite* composite = dynamic_cast<const Composite*>(i.shape))
 			{
 				get_instance()->actors.push_back(Actor(new Composite(*composite)));
 			}
@@ -592,19 +741,32 @@ public:
 		try
 		{
 			out.open(filename, std::ios_base::trunc);
-			out.write((char*)&memento, sizeof(Scene_memento));
+			memento.write_to_file(out);
+			out.close();
 		}
 		catch (const std::exception& ex)
 		{
 			std::cerr << ex.what() << '\n';
 		}
 
-		out.close();
-
 	}
 
 	void load_snapshot_file(const char* filename)
 	{
+
+		std::ifstream in;
+		in.exceptions(std::ofstream::badbit | std::ofstream::failbit);
+
+		try
+		{
+			in.open(filename);
+			memento.read_from_file(in);
+			in.close();
+		}
+		catch (const std::exception& ex)
+		{
+			std::cerr << ex.what() << '\n';
+		}
 
 	}
 
