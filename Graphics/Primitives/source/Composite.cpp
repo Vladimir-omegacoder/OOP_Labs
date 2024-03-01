@@ -294,14 +294,98 @@ const sf::Texture* Composite::get_texture() const
 void Composite::serialize(std::ofstream& out) const
 {
 
+	out.write((char*)&arr_capacity, sizeof(arr_capacity));
+	out.write((char*)&arr_size, sizeof(arr_size));
+	for (size_t i = 0; i < arr_size; i++)
+	{
 
+		int shape_type = -1;
+
+		if (const Line* line = dynamic_cast<const Line*>(shapes_arr[i]))
+		{
+			shape_type = 1;
+		}
+		else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(shapes_arr[i]))
+		{
+			shape_type = 2;
+		}
+		else if (const Circle* circle = dynamic_cast<const Circle*>(shapes_arr[i]))
+		{
+			shape_type = 3;
+		}
+		else if (const Regular* regular = dynamic_cast<const Regular*>(shapes_arr[i]))
+		{
+			shape_type = 4;
+		}
+		else if (const Composite* composite = dynamic_cast<const Composite*>(shapes_arr[i]))
+		{
+			shape_type = 5;
+		}
+
+		out.write((char*)&shape_type, sizeof(shape_type));
+
+		shapes_arr[i]->serialize(out);
+
+	}
+	out.write((char*)&transformations, sizeof(transformations));
+	out.write((char*)&fill_color, sizeof(fill_color));
+	out.write((char*)&outline_color, sizeof(outline_color));
+	out.write((char*)&outline_thickness, sizeof(outline_thickness));
 
 }
 
 void Composite::deserialize(std::ifstream& in)
 {
 
+	in.read((char*)&arr_capacity, sizeof(arr_capacity));
+	in.read((char*)&arr_size, sizeof(arr_size));
+	shapes_arr = new Shape* [arr_capacity] {};
+	for (size_t i = 0; i < arr_size; i++)
+	{
 
+		int shape_type = -1;
+		in.read((char*)&shape_type, sizeof(shape_type));
+
+		Shape* shape = nullptr;
+
+		switch (shape_type)
+		{
+
+		case 1:
+			shape = new Line(0, 0);
+			break;
+
+		case 2:
+			shape = new Rectangle(sf::Vector2f(0, 0));
+			break;
+
+		case 3:
+			shape = new Circle(0);
+			break;
+
+		case 4:
+			shape = new Regular(0, 0);
+			break;
+
+		case 5:
+			shape = new Composite();
+			break;
+
+		default:
+			break;
+
+		}
+
+		shape->deserialize(in);
+		shapes_arr[i] = shape;
+
+	}
+	in.read((char*)&transformations, sizeof(transformations));
+	in.read((char*)&fill_color, sizeof(fill_color));
+	in.read((char*)&outline_color, sizeof(outline_color));
+	in.read((char*)&outline_thickness, sizeof(outline_thickness));
+	texture = nullptr;
+	reset_rect = false;
 
 }
 

@@ -11,9 +11,9 @@ class Composite : public Shape
 
 private:
 
-	Shape** shapes_arr;
 	size_t arr_capacity;
 	size_t arr_size;
+	Shape** shapes_arr;
 
 	sf::Transformable transformations;
 	sf::Color fill_color;
@@ -29,7 +29,8 @@ private:
 
 public:
 
-	Composite() : shapes_arr(nullptr), arr_capacity(0), arr_size(0) {}
+	Composite() : arr_capacity(0), arr_size(0), shapes_arr(nullptr), transformations(), fill_color(), outline_color(),
+					outline_thickness(), texture(nullptr), reset_rect(false) {}
 
 	Composite(const Composite& other) :
 		arr_capacity(other.arr_capacity), arr_size(other.arr_size), shapes_arr(new Shape* [other.arr_capacity] {}),
