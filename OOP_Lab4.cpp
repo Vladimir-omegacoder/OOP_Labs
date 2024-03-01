@@ -1484,11 +1484,11 @@ int main()
 					{
 						input.x = std::stof(input_x);
 					}
-					if (input_y != "" && input_x != "-")
+					if (input_y != "" && input_y != "-")
 					{
 						input.y = std::stof(input_y);
 					}
-					if (input_z != "" && input_x != "-")
+					if (input_z != "" && input_z != "-")
 					{
 						input.z = std::stof(input_z);
 					}

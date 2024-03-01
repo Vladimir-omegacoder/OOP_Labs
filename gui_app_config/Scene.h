@@ -4,20 +4,20 @@
 #include <vector>
 #include <list>
 #include <algorithm>
-#include <fstream>
+#include "../graphics/Primitives/include/Serializable.h"
 
 
 
 
 
-class Scene_memento
+class Scene_memento : public Serializable
 {
 
 private:
 
 	friend class Scene;
 
-	struct Data_block
+	struct Data_block : public Serializable
 	{
 
 		enum Shape_type
@@ -33,93 +33,62 @@ private:
 
 
 		Shape_type type = NONE;
-		const Shape* shape = nullptr;
+		Shape* shape = nullptr;
 
 
 
 		Data_block() = default;
 
-		Data_block(Shape_type type, const Shape* shape) :
+		Data_block(Shape_type type, Shape* shape) :
 			type(type), shape(shape) {}
 
 
 
-		void write_to_file(std::ofstream& out) const
+
+		virtual void serialize(std::ofstream& out) const override
 		{
-			
+
 			out.write((char*)&type, sizeof(type));
-
-			switch (type)
-			{
-
-			case SHAPE_LINE:
-				out.write((char*)&(*static_cast<const Line*>(shape)), sizeof(Line));
-				break;
-
-			case SHAPE_RECTANGLE:
-				out.write((char*)&(*static_cast<const Rectangle*>(shape)), sizeof(Rectangle));
-				break;
-
-			case SHAPE_CIRCLE:
-				out.write((char*)&(*static_cast<const Circle*>(shape)), sizeof(Circle));
-				break;
-
-			case SHAPE_REGULAR:
-				out.write((char*)&(*static_cast<const Regular*>(shape)), sizeof(Regular));
-				break;
-
-			case SHAPE_COMPOSITE:
-				out.write((char*)&(*static_cast<const Composite*>(shape)), sizeof(Composite));
-				break;
-
-			default:
-				break;
-			}
+			shape->serialize(out);
 
 		}
 
-		void read_from_file(std::ifstream& in)
+		virtual void deserialize(std::ifstream& in) override
 		{
 
 			in.read((char*)&type, sizeof(type));
-			Line line(0, 0);
-			Rectangle rectangle;
-			Circle circle(0);
-			Regular regular(0, 0);
-			Composite composite;
+
+			delete shape;
 
 			switch (type)
 			{
 
-			case SHAPE_LINE:
-				in.read((char*)&line, sizeof(Line));
-				shape = new Line(line);
+			case Scene_memento::Data_block::SHAPE_LINE:
+				shape = new Line(0, 0);
 				break;
 
-			case SHAPE_RECTANGLE:
-				in.read((char*)&rectangle, sizeof(Rectangle));
-				shape = new Rectangle(rectangle);
+			case Scene_memento::Data_block::SHAPE_RECTANGLE:
+				shape = new Rectangle(sf::Vector2f(0, 0));
 				break;
 
-			case SHAPE_CIRCLE:
-				in.read((char*)&circle, sizeof(Circle));
-				shape = new Circle(circle);
+			case Scene_memento::Data_block::SHAPE_CIRCLE:
+				shape = new Circle(0);
 				break;
 
-			case SHAPE_REGULAR:
-				in.read((char*)&regular, sizeof(Regular));
-				shape = new Regular(regular);
+			case Scene_memento::Data_block::SHAPE_REGULAR:
+				shape = new Regular(0, 0);
 				break;
 
-			case SHAPE_COMPOSITE:
-				in.read((char*)&composite, sizeof(Composite));
-				shape = new Composite(composite);
+			case Scene_memento::Data_block::SHAPE_COMPOSITE:
+				shape = new Composite();
 				break;
 
 			default:
-				std::cerr << "Couldn't load the shape'\n";
 				break;
+
 			}
+
+			shape->deserialize(in);
 
 		}
 
@@ -131,42 +100,46 @@ public:
 
 	Scene_memento() : content(0) {}
 
-	void write_to_file(std::ofstream& out) const
+	~Scene_memento()
 	{
-
-		size_t size = content.size();
-		out.write((char*)&size, sizeof(size));
-		
-		for (auto& i : content)
-		{
-			i.write_to_file(out);
-		}
-
-		//out.write((char*)&content, sizeof(content));
-
+		clear();
 	}
 
-	void read_from_file(std::ifstream& in)
+	void clear()
 	{
-
 		for (auto& i : content)
 		{
 			delete i.shape;
 		}
 		content.clear();
+	}
+
+	virtual void serialize(std::ofstream& out) const override
+	{
+
+		size_t size = content.size();
+		out.write((char*)&size, sizeof(size));
+
+		for (auto& i : content)
+		{
+			i.serialize(out);
+		}
+
+	}
+
+	virtual void deserialize(std::ifstream& in) override
+	{
+
+		clear();
 
 		size_t size;
-
-		in.seekg(0, std::ios::end);
-		size_t file_size = in.tellg();
-		in.seekg(0, std::ios::beg);
 
 		in.read((char*)&size, sizeof(size));
 
 		for (size_t i = 0; i < size; i++)
 		{
 			Data_block temp;
-			temp.read_from_file(in);
+			temp.deserialize(in);
 			content.push_back(temp);
 		}
 
@@ -641,6 +614,8 @@ public:
 	void save_state(Scene_memento& memento) const
 	{
 
+		memento.clear();
+
 		for (auto& i : get_instance()->actors)
 		{
 			
@@ -741,7 +716,7 @@ public:
 		try
 		{
 			out.open(filename, std::ios_base::trunc);
-			memento.write_to_file(out);
+			memento.serialize(out);
 			out.close();
 		}
 		catch (const std::exception& ex)
@@ -760,7 +735,7 @@ public:
 		try
 		{
 			in.open(filename);
-			memento.read_from_file(in);
+			memento.deserialize(in);
 			in.close();
 		}
 		catch (const std::exception& ex)

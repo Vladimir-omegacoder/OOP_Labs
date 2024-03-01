@@ -183,6 +183,63 @@ const sf::Texture* Circle::get_texture() const
 
 
 
+void Circle::serialize(std::ofstream& out) const
+{
+
+    float           radius = circle.getRadius();
+    sf::Vector2f    position = get_position();
+    sf::Vector2f    scale = get_scale();
+    sf::Vector2f    origin = get_origin();
+    float           rotation = get_rotation();
+    float           outline_thickness = get_outline_thickness();
+    sf::Color       fill_color = get_fill_color();
+    sf::Color       outline_color = get_outline_color();
+
+    out.write((char*)&radius, sizeof(radius));
+    out.write((char*)&position, sizeof(position));
+    out.write((char*)&scale, sizeof(scale));
+    out.write((char*)&origin, sizeof(origin));
+    out.write((char*)&rotation, sizeof(rotation));
+    out.write((char*)&outline_thickness, sizeof(outline_thickness));
+    out.write((char*)&fill_color, sizeof(fill_color));
+    out.write((char*)&outline_color, sizeof(outline_color));
+
+}
+
+void Circle::deserialize(std::ifstream& in)
+{
+
+    float           radius;
+    sf::Vector2f    position;
+    sf::Vector2f    scale;
+    sf::Vector2f    origin;
+    float           rotation;
+    float           outline_thickness;
+    sf::Color       fill_color;
+    sf::Color       outline_color;
+
+    in.read((char*)&radius, sizeof(radius));
+    in.read((char*)&position, sizeof(position));
+    in.read((char*)&scale, sizeof(scale));
+    in.read((char*)&origin, sizeof(origin));
+    in.read((char*)&rotation, sizeof(rotation));
+    in.read((char*)&outline_thickness, sizeof(outline_thickness));
+    in.read((char*)&fill_color, sizeof(fill_color));
+    in.read((char*)&outline_color, sizeof(outline_color));
+
+    circle.setRadius(radius);
+    set_position(position);
+    set_scale(scale);
+    set_origin(origin);
+    set_rotation(rotation);
+    set_outline_thickness(outline_thickness);
+    set_fill_color(fill_color);
+    set_outline_color(outline_color);
+
+}
+
+
+
 void Circle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     target.draw(circle, states);

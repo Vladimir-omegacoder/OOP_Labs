@@ -1,5 +1,6 @@
 #pragma once
 #include "Shape.h"
+#include "Serializable.h"
 
 
 
@@ -17,7 +18,7 @@ private:
 
 public:
 
-	Rectangle(const sf::Vector2f& size = sf::Vector2f(0, 0)) : rect(size) {}
+	Rectangle(const sf::Vector2f& size) : rect(size) {}
 
 
 
@@ -68,5 +69,9 @@ public:
 	virtual sf::FloatRect get_global_bounds() const override;
 
 	virtual const sf::Texture* get_texture() const override;
+
+
+	virtual void serialize(std::ofstream& out) const override;
+	virtual void deserialize(std::ifstream& in) override;
 
 };

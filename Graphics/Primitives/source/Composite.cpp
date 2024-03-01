@@ -291,6 +291,22 @@ const sf::Texture* Composite::get_texture() const
 
 
 
+void Composite::serialize(std::ofstream& out) const
+{
+
+
+
+}
+
+void Composite::deserialize(std::ifstream& in)
+{
+
+
+
+}
+
+
+
 void Composite::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 

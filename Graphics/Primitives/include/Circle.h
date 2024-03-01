@@ -69,4 +69,8 @@ public:
 
 	virtual const sf::Texture* get_texture() const override;
 
+
+	virtual void serialize(std::ofstream& out) const override;
+	virtual void deserialize(std::ifstream& in) override;
+
 };

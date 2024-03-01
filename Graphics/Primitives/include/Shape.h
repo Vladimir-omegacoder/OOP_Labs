@@ -1,11 +1,12 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "Serializable.h"
 
 
 
 
 
-class Shape : public sf::Drawable
+class Shape : public sf::Drawable, public Serializable
 {
 
 public:
