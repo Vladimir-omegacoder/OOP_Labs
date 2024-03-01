@@ -294,8 +294,16 @@ private:
 
 		std::list<Actor*> selection;
 
+		Controller() = default;
+
 
 	public:
+
+		Controller(const Controller& other) = delete;
+		Controller& operator=(const Controller& other) = delete;
+
+		Controller(Controller&& other) = delete;
+		Controller& operator=(Controller&& other) = delete;
 
 		inline static Controller* get_instance()
 		{
@@ -368,8 +376,16 @@ private:
 		}
 	}
 
+	Scene() = default;
+
 
 public:
+
+	Scene(const Scene& other) = delete;
+	Scene& operator=(const Scene& other) = delete;
+
+	Scene(Scene&& other) = delete;
+	Scene& operator=(Scene&& other) = delete;
 
 	inline static Scene* get_instance()
 	{
