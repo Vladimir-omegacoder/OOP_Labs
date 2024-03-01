@@ -8,10 +8,6 @@
 
 
 
-//#define MAIN_WINDOW_SIZE sf::Vector2u(1000, 600)
-//#define PROPERTIES_WINDOW_SIZE sf::Vector2u(350, 500)
-
-
 #define FONT_GENERAL DEFAULT_CONTROLS_FONT
 
 
@@ -609,7 +605,8 @@ int main()
 	sf::Texture main_scene_texture;
 	main_scene_texture.loadFromFile(SCENE_TEXTURE);
 
-	Scene main_scene(sf::Vector2u(MAIN_WINDOW_SIZE.x,
+	Scene& main_scene = *Scene::get_instance();
+	main_scene.set_scene_size(sf::Vector2u(MAIN_WINDOW_SIZE.x,
 		MAIN_WINDOW_SIZE.y - top_panel.background.getLocalBounds().height * top_panel.background.getScale().y));
 	main_scene.get_backgruond().setTexture(main_scene_texture);
 	main_scene.get_backgruond().setScale(GLOBAL_SCALE);
@@ -855,11 +852,25 @@ int main()
 
 	button_paste.add_event_handler(paste_selected, Button_event_args::CLICK);
 
+	Scene_utils utils;
+
+	class Memento_event_args : public Scene_action_actor_event_args
+	{
+
+	public:
+
+		Scene_utils& utils;
+		const char* filename;
+
+		Memento_event_args(Event_type event_type, Scene& scene, Scene_utils& utils, const char* filename) : 
+			Scene_action_actor_event_args(event_type, scene), utils(utils), filename(filename) {}
+
+	};
 	
 	void(*save_scene)(Button*, Event_args*) = [](Button* button, Event_args* args)
 		{
 
-			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
+			if (auto action_args = dynamic_cast<Memento_event_args*>(args))
 			{
 				std::cout << "SAVED.\n";
 			}
@@ -872,7 +883,7 @@ int main()
 	void(*load_scene)(Button*, Event_args*) = [](Button* button, Event_args* args)
 		{
 
-			if (auto action_args = dynamic_cast<Scene_action_actor_event_args*>(args))
+			if (auto action_args = dynamic_cast<Memento_event_args*>(args))
 			{
 				std::cout << "LOADED.\n";
 			}
@@ -1480,7 +1491,7 @@ int main()
 
 					{
 						Button_texture_change_event_args button_move_args(Button_event_args::CLICK, texture_button_move_pressed);
-						Move_actor_event_args action_move_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y), main_scene.SCENE_SIZE);
+						Move_actor_event_args action_move_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y), main_scene.get_scene_size());
 						args_arr[0] = &button_move_args;
 						args_arr[1] = &action_move_args;
 						if (button_move.try_click(args_arr, PARAM_COUNT))
@@ -1670,7 +1681,7 @@ int main()
 				{
 					sf::FloatRect bounds = (*i)->get_global_bounds();
 					float temp = top_panel.background.getGlobalBounds().height;
-					if ((bounds.top + bounds.height) * GLOBAL_SCALE.y < main_scene.SCENE_SIZE.y + top_panel.background.getGlobalBounds().height)
+					if ((bounds.top + bounds.height) * GLOBAL_SCALE.y < main_scene.get_scene_size().y + top_panel.background.getGlobalBounds().height)
 					{
 						(*i)->move(0, 10);
 					}

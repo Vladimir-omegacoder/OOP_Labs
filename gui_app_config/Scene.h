@@ -10,6 +10,23 @@
 
 
 
+class Scene_memento
+{
+
+private:
+
+	friend class Scene;
+
+	std::vector<const Shape*> shapes;
+
+public:
+
+	Scene_memento() : shapes(0) {}
+
+};
+
+
+
 
 
 class Scene : public sf::Drawable
@@ -17,7 +34,7 @@ class Scene : public sf::Drawable
 
 public:
 
-	sf::Vector2u SCENE_SIZE;
+	sf::Vector2u scene_size;
 
 	class Actor : public sf::Drawable
 	{
@@ -158,23 +175,25 @@ private:
 
 	public:
 
-		Controller() = default;
-
-		Controller(const Controller& other) = delete;
+		inline static Controller* get_instance()
+		{
+			static Controller controller;
+			return &controller;
+		}
 
 		void select_actor(Actor* actor)
 		{
 
-			for (auto& i : selection)
+			for (auto& i : get_instance()->selection)
 			{
 				i->diselect();
 			}
-			selection.clear();
+			get_instance()->selection.clear();
 
 			if (actor != nullptr)
 			{
 				actor->select();
-				selection.push_back(actor);
+				get_instance()->selection.push_back(actor);
 			}
 
 		}
@@ -187,24 +206,24 @@ private:
 				return;
 			}
 
-			auto it = std::find(selection.begin(), selection.end(), actor);
+			auto it = std::find(get_instance()->selection.begin(), get_instance()->selection.end(), actor);
 
-			if (it != selection.end())
+			if (it != get_instance()->selection.end())
 			{
 				(*it)->diselect();
-				selection.erase(it);
+				get_instance()->selection.erase(it);
 			}
 			else
 			{
 				actor->select();
-				selection.push_back(actor);
+				get_instance()->selection.push_back(actor);
 			}
 
 		}
 
 		std::list<Actor*>& get_selection()
 		{
-			return selection;
+			return get_instance()->selection;
 		}
 
 	};
@@ -215,7 +234,6 @@ private:
 
 	std::list<Actor> actors;
 	std::list<Actor> buffer;
-	Controller controller;
 
 
 
@@ -231,22 +249,34 @@ private:
 
 public:
 
-	Scene(const sf::Vector2u& size) : SCENE_SIZE(size) {}
+	inline static Scene* get_instance()
+	{
+		static Scene scene;
+		return &scene;
+	}
 
-	Scene(const Scene& other) = delete;
 
 
+	void set_scene_size(const sf::Vector2u& size)
+	{
+		get_instance()->scene_size = size;
+	}
+
+	sf::Vector2u get_scene_size() const
+	{
+		return get_instance()->scene_size;
+	}
 
 	sf::Sprite& get_backgruond() 
 	{
-		return background;
+		return get_instance()->background;
 	}
 
 
 
 	void add_actor(Actor&& actor)
 	{
-		actors.push_front(std::move(actor));
+		get_instance()->actors.push_front(std::move(actor));
 	}
 
 
@@ -261,18 +291,18 @@ public:
 
 		if (!add_to_selection)
 		{
-			controller.select_actor(actor);
+			Controller::get_instance()->select_actor(actor);
 		}
 		else
 		{
-			controller.add_to_selection(actor);
+			Controller::get_instance()->add_to_selection(actor);
 		}
 
 	}
 	
 	bool cursor_inside(sf::Vector2i mouse_pos)
 	{
-		sf::FloatRect bounds = background.getGlobalBounds();
+		sf::FloatRect bounds = get_instance()->background.getGlobalBounds();
 
 		if (mouse_pos.x < bounds.left || mouse_pos.x > bounds.left + bounds.width
 			|| mouse_pos.y < bounds.top || mouse_pos.y > bounds.top + bounds.height)
@@ -287,13 +317,13 @@ public:
 
 	std::list<Actor*>& get_selection()
 	{
-		return controller.get_selection();
+		return Controller::get_instance()->get_selection();
 	}
 
 	Actor* try_select_actor(sf::Vector2i mouse_pos, bool add_to_selection = false)
 	{
 
-		for (auto& i : actors)
+		for (auto& i : get_instance()->actors)
 		{
 
 			sf::FloatRect shape_bounds = i->get_global_bounds();
@@ -314,47 +344,49 @@ public:
 
 			if (add_to_selection)
 			{
-				controller.add_to_selection(&i);
+				Controller::get_instance()->add_to_selection(&i);
 			}
 			else
 			{
-				controller.select_actor(&i);
+				Controller::get_instance()->select_actor(&i);
 			}
 
 			return &i;
 
 		}
 
-		for (auto& i : controller.get_selection())
+		for (auto& i : Controller::get_instance()->get_selection())
 		{
 			i->diselect();
 		}
 
-		controller.get_selection().clear();
+		Controller::get_instance()->get_selection().clear();
 
 		return nullptr;
 
 	}
 
+
+
 	void remove_selected_actors()
 	{
-		for (auto& i : controller.get_selection())
+		for (auto& i : Controller::get_instance()->get_selection())
 		{
-			actors.remove(*i);
+			get_instance()->actors.remove(*i);
 		}
-		controller.get_selection().clear();
+		Controller::get_instance()->get_selection().clear();
 	}
 
 	void aggregate_selected()
 	{
 
-		if (controller.get_selection().size() < 2)
+		if (Controller::get_instance()->get_selection().size() < 2)
 		{
 			return;
 		}
 
 		Composite* composite = new Composite();
-		for (auto& i : controller.get_selection())
+		for (auto& i : Controller::get_instance()->get_selection())
 		{
 			i->diselect();
 			i->get_ptr()->set_outline_color(sf::Color::Transparent);
@@ -363,52 +395,54 @@ public:
 			composite->add_shape(std::move(temp));
 		}
 
-		for (auto it = actors.begin(); it != actors.end();)
+		for (auto it = get_instance()->actors.begin(); it != get_instance()->actors.end();)
 		{
 			if (it->get_ptr() == nullptr)
 			{
-				actors.erase(it);
-				it = actors.begin();
+				get_instance()->actors.erase(it);
+				it = get_instance()->actors.begin();
 				continue;
 			}
 			++it;
 		}
 
-		controller.get_selection().clear();	
+		Controller::get_instance()->get_selection().clear();
 
-		actors.push_back(std::move(Actor(composite)));
+		get_instance()->actors.push_back(std::move(Actor(composite)));
 
-		controller.select_actor(&actors.back());
+		Controller::get_instance()->select_actor(&get_instance()->actors.back());
 
 	}
+
+
 
 	void selection_to_buffer()
 	{
 
-		buffer.clear();
+		get_instance()->buffer.clear();
 
-		for (auto& i : controller.get_selection())
+		for (auto& i : Controller::get_instance()->get_selection())
 		{
 
 			if (const Line* line = dynamic_cast<const Line*>(i->get_ptr()))
 			{
-				buffer.push_back(new Line(*line));
+				get_instance()->buffer.push_back(new Line(*line));
 			}
 			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i->get_ptr()))
 			{
-				buffer.push_back(new Rectangle(*rectangle));
+				get_instance()->buffer.push_back(new Rectangle(*rectangle));
 			}
 			else if (const Circle* circle = dynamic_cast<const Circle*>(i->get_ptr()))
 			{
-				buffer.push_back(new Circle(*circle));
+				get_instance()->buffer.push_back(new Circle(*circle));
 			}
 			else if (const Regular* regular = dynamic_cast<const Regular*>(i->get_ptr()))
 			{
-				buffer.push_back(new Regular(*regular));
+				get_instance()->buffer.push_back(new Regular(*regular));
 			}
 			else if (const Composite* composite = dynamic_cast<const Composite*>(i->get_ptr()))
 			{
-				buffer.push_back(new Composite(*composite));
+				get_instance()->buffer.push_back(new Composite(*composite));
 			}
 
 		}
@@ -418,45 +452,47 @@ public:
 	void buffer_to_scene()
 	{
 
-		for (auto& i : buffer)
+		for (auto& i : get_instance()->buffer)
 		{
 
 			if (const Line* line = dynamic_cast<const Line*>(i.get_ptr()))
 			{
-				actors.push_back(new Line(*line));
+				get_instance()->actors.push_back(new Line(*line));
 			}
 			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i.get_ptr()))
 			{
-				actors.push_back(new Rectangle(*rectangle));
+				get_instance()->actors.push_back(new Rectangle(*rectangle));
 			}
 			else if (const Circle* circle = dynamic_cast<const Circle*>(i.get_ptr()))
 			{
-				actors.push_back(new Circle(*circle));
+				get_instance()->actors.push_back(new Circle(*circle));
 			}
 			else if (const Regular* regular = dynamic_cast<const Regular*>(i.get_ptr()))
 			{
-				actors.push_back(new Regular(*regular));
+				get_instance()->actors.push_back(new Regular(*regular));
 			}
 			else if (const Composite* composite = dynamic_cast<const Composite*>(i.get_ptr()))
 			{
-				actors.push_back(new Composite(*composite));
+				get_instance()->actors.push_back(new Composite(*composite));
 			}
 
 		}
 
 	}
 
+
+
 	void reset_default_state()
 	{
-		actors.clear();
-		buffer.clear();
-		controller.get_selection().clear();
+		get_instance()->actors.clear();
+		get_instance()->buffer.clear();
+		Controller::get_instance()->get_selection().clear();
 	}
 
 	void save_state(Scene_memento& memento) const
 	{
 
-		for (auto& i : actors)
+		for (auto& i : get_instance()->actors)
 		{
 			
 			if (const Line* line = dynamic_cast<const Line*>(i.get_ptr()))
@@ -494,23 +530,23 @@ public:
 
 			if (const Line* line = dynamic_cast<const Line*>(i))
 			{
-				actors.push_back(Actor(new Line(*line)));
+				get_instance()->actors.push_back(Actor(new Line(*line)));
 			}
 			else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(i))
 			{
-				actors.push_back(Actor(new Rectangle(*rectangle)));
+				get_instance()->actors.push_back(Actor(new Rectangle(*rectangle)));
 			}
 			else if (const Circle* circle = dynamic_cast<const Circle*>(i))
 			{
-				actors.push_back(Actor(new Circle(*circle)));
+				get_instance()->actors.push_back(Actor(new Circle(*circle)));
 			}
 			else if (const Regular* regular = dynamic_cast<const Regular*>(i))
 			{
-				actors.push_back(Actor(new Regular(*regular)));
+				get_instance()->actors.push_back(Actor(new Regular(*regular)));
 			}
 			else if (const Composite* composite = dynamic_cast<const Composite*>(i))
 			{
-				actors.push_back(Actor(new Composite(*composite)));
+				get_instance()->actors.push_back(Actor(new Composite(*composite)));
 			}
 
 		}
@@ -522,21 +558,6 @@ public:
 
 
 
-
-class Scene_memento
-{
-
-private:
-
-	friend class Scene;
-
-	std::vector<const Shape*> shapes;
-
-public:
-
-	Scene_memento() : shapes(0) {}
-
-};
 
 
 
