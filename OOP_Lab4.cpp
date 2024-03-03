@@ -76,6 +76,10 @@
 #define BUTTON_COLOR_PRESSED		"resources/button/button_color/button_color_pressed.png"
 
 
+#define BUTTON_CONFIRM				"resources/button/buttom_confirm/button_confirm.png"
+#define BUTTON_CONFIRM_PRESSED		"resources/button/buttom_confirm/button_confirm_pressed.png"
+
+
 
 #define CHECKBOX_GENERAL			"resources/checkbox/checkbox_unchecked.png"
 #define CHECKBOX_CHECKED_GENERAL	"resources/checkbox/checkbox_checked.png"
@@ -83,31 +87,54 @@
 
 
 
-void enter_symbol(Textbox& textbox, uint32_t character)
+void enter_name(Textbox& textbox, uint32_t character)
 {
 
-	if (character > 25 && character < 36)
+	sf::String temp = textbox.get_text().getString();
+
+	if (character == 8)
+	{
+		if (temp.getSize() > 0)
+		{
+			temp.erase(temp.getSize() - 1, 1);
+			textbox.get_text().setString(temp);
+		}
+	}
+	else if (temp.getSize() < 15)
+	{
+		temp += character;
+		textbox.get_text().setString(temp);
+	}
+
+}
+
+
+
+void enter_number(Textbox& textbox, uint32_t character)
+{
+
+	if (character > 47 && character < 58)
 	{
 		if (textbox.get_text().getString().getSize() < 6)
 		{
 			sf::String temp = textbox.get_text().getString();
-			temp += character + 22;
+			temp += character;
 			textbox.get_text().setString(temp);
 
 		}
 	}
 
-	if (character == 56)
+	if (character == 45)
 	{
 		if (textbox.get_text().getString().getSize() == 0)
 		{
 			sf::String temp = textbox.get_text().getString();
-			temp += (char)45;
+			temp += character;
 			textbox.get_text().setString(temp);
 		}
 	}
 
-	if (character == 59)
+	if (character == 8)
 	{
 		if (textbox.get_text().getString().getSize() > 0)
 		{
@@ -117,9 +144,19 @@ void enter_symbol(Textbox& textbox, uint32_t character)
 		}
 	}
 
+	if (character == 46)
+	{
+
+		sf::String temp = textbox.get_text().getString();
+		if (temp.find('.') == sf::String::InvalidPos)
+		{
+			temp += character;
+			textbox.get_text().setString(temp);
+		}
+
+	}
+
 }
-
-
 
 
 
@@ -130,6 +167,7 @@ int main()
 
 	sf::Vector2u MAIN_WINDOW_SIZE = sf::Vector2u(800, 600);
 	sf::Vector2u PROPERTIES_WINDOW_SIZE = sf::Vector2u(350, 500);
+	sf::Vector2u INPUT_WINDOW_SIZE = sf::Vector2u(600, 100);
 
 	sf::RenderWindow main_window(sf::VideoMode(MAIN_WINDOW_SIZE.x, MAIN_WINDOW_SIZE.y), "Main window");
 
@@ -427,7 +465,7 @@ int main()
 	properties_window.close();
 
 	// Attaching opening properties window to the properties button
-	class Button_open_properties_window_event_args : public Button_event_args
+	class Button_window_event_args : public Button_event_args
 	{
 
 	public:
@@ -435,14 +473,14 @@ int main()
 		sf::RenderWindow& window;
 		sf::Vector2u window_size;
 
-		Button_open_properties_window_event_args(Event_type event_type, sf::RenderWindow& window, const sf::Vector2u& size) :
+		Button_window_event_args(Event_type event_type, sf::RenderWindow& window, const sf::Vector2u& size) :
 			Button_event_args(event_type), window(window), window_size(size) {}
 
 	};
 
 	void(*open_properties_window)(Button*, Event_args*) = [](Button* button, Event_args* args)
 		{
-			if (auto open_window_args = dynamic_cast<Button_open_properties_window_event_args*>(args))
+			if (auto open_window_args = dynamic_cast<Button_window_event_args*>(args))
 			{
 				open_window_args->window.create(sf::VideoMode(open_window_args->window_size.x, open_window_args->window_size.y), "Properties");
 			}
@@ -596,6 +634,25 @@ int main()
 	checkbox_enable_trace.add_event_handler(check, Checkbox_event_args::CHECK);
 	checkbox_enable_move_by_law.add_event_handler(check, Checkbox_event_args::CHECK);
 
+
+
+
+
+	// Creating input window
+	sf::RenderWindow input_window(sf::VideoMode(INPUT_WINDOW_SIZE.x, INPUT_WINDOW_SIZE.y), "Input");
+	input_window.close();
+
+	sf::Texture texture_button_confirm, texture_button_confirm_pressed;
+	texture_button_confirm.loadFromFile(BUTTON_CONFIRM);
+	texture_button_confirm_pressed.loadFromFile(BUTTON_CONFIRM_PRESSED);
+
+	Button button_confirm;
+
+	button_confirm.get_graphics().setTexture(texture_button_confirm);
+	button_confirm.get_graphics().setPosition(445, 5);
+
+	button_confirm.add_event_handler(press, Button_event_args::CLICK);
+	button_confirm.add_event_handler(release, Button_event_args::RELEASE);
 
 
 
@@ -852,6 +909,10 @@ int main()
 
 	button_paste.add_event_handler(paste_selected, Button_event_args::CLICK);
 
+
+
+
+
 	Scene_utils utils;
 
 	class Memento_event_args : public Scene_action_actor_event_args
@@ -866,7 +927,35 @@ int main()
 			Scene_action_actor_event_args(event_type, scene), utils(utils), filename(filename) {}
 
 	};
-	
+
+	void(*open_save_window)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+			if (auto open_window_args = dynamic_cast<Button_window_event_args*>(args))
+			{
+				open_window_args->window.create(sf::VideoMode(open_window_args->window_size.x, open_window_args->window_size.y), "Save");
+			}
+		};
+	button_save.add_event_handler(open_save_window, Button_event_args::CLICK);
+
+	void(*open_load_window)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+			if (auto open_window_args = dynamic_cast<Button_window_event_args*>(args))
+			{
+				open_window_args->window.create(sf::VideoMode(open_window_args->window_size.x, open_window_args->window_size.y), "Load");
+			}
+		};
+	button_load.add_event_handler(open_load_window, Button_event_args::CLICK);
+
+	void(*close_input)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+
+			if (auto action_args = dynamic_cast<Button_window_event_args*>(args))
+			{
+				action_args->window.close();
+			}
+
+		};
+	button_confirm.add_event_handler(close_input, Button_event_args::Event_type::RELEASE);
 	void(*save_scene)(Button*, Event_args*) = [](Button* button, Event_args* args)
 		{
 
@@ -878,10 +967,6 @@ int main()
 			}
 
 		};
-
-	button_save.add_event_handler(save_scene, Button_event_args::CLICK);
-
-
 	void(*load_scene)(Button*, Event_args*) = [](Button* button, Event_args* args)
 		{
 
@@ -894,7 +979,17 @@ int main()
 
 		};
 
-	button_load.add_event_handler(load_scene, Button_event_args::CLICK);
+	Textbox name_input;
+	{
+		name_input.get_graphics().setTexture(texture_textbox);
+		name_input.get_graphics().setScale(2, 1);
+		name_input.get_text().setFont(general_font);
+		name_input.get_text().setCharacterSize(45);
+		name_input.get_text().setFillColor(sf::Color::Black);
+		name_input.get_graphics().setPosition(15, 15);
+		name_input.get_text().setPosition(20, 10);
+	}
+
 
 
 
@@ -1020,9 +1115,10 @@ int main()
 						const size_t PARAM_COUNT = 3;
 						Event_args* args_arr[PARAM_COUNT]{};
 
+						// Properties
 						{
 							Button_texture_change_event_args button_propeties_args0(Button_event_args::CLICK, texture_button_properties_pressed);
-							Button_open_properties_window_event_args button_propeties_args1(Button_event_args::CLICK, properties_window, PROPERTIES_WINDOW_SIZE);
+							Button_window_event_args button_propeties_args1(Button_event_args::CLICK, properties_window, PROPERTIES_WINDOW_SIZE);
 							args_arr[0] = &button_propeties_args0;
 							args_arr[1] = &button_propeties_args1;
 							if (button_properties.try_click(args_arr, PARAM_COUNT))
@@ -1031,7 +1127,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Delete
 						{
 							Button_texture_change_event_args button_delete_args(Button_event_args::CLICK, texture_button_delete_pressed);
 							Scene_action_actor_event_args delete_action_args(Button_event_args::CLICK, main_scene);
@@ -1043,7 +1139,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Aggregate
 						{
 							Button_texture_change_event_args button_aggregate_args(Button_event_args::CLICK, texture_button_aggregate_pressed);
 							Scene_action_actor_event_args aggregate_action_args(Button_event_args::CLICK, main_scene);
@@ -1055,7 +1151,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Copy
 						{
 							Button_texture_change_event_args button_copy_args(Button_event_args::CLICK, texture_button_copy_pressed);
 							Scene_action_actor_event_args copy_action_args(Button_event_args::CLICK, main_scene);
@@ -1067,6 +1163,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
+						// Paste
 						{
 							Button_texture_change_event_args button_paste_args(Button_event_args::CLICK, texture_button_paste_pressed);
 							Scene_action_actor_event_args paste_action_args(Button_event_args::CLICK, main_scene);
@@ -1078,30 +1175,39 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
+						// Save
 						{
 							Button_texture_change_event_args button_save_args(Button_event_args::CLICK, texture_button_save_pressed);
-							Memento_event_args save_action_args(Button_event_args::CLICK, main_scene, utils, "scene_test.txt");
+							Button_window_event_args button_window_input_args(Button_event_args::CLICK, input_window, INPUT_WINDOW_SIZE);
 							args_arr[0] = &button_save_args;
-							args_arr[1] = &save_action_args;
+							args_arr[1] = &button_window_input_args;
 							if (button_save.try_click(args_arr, PARAM_COUNT))
+							{
+								button_confirm.add_event_handler(save_scene, Button_event_args::CLICK);
 								break;
+							}
 							else
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
+						// Load
 						{
 							Button_texture_change_event_args button_load_args(Button_event_args::CLICK, texture_button_load_pressed);
-							Memento_event_args load_action_args(Button_event_args::CLICK, main_scene, utils, "scene_test.txt");
+							Button_window_event_args button_window_input_args(Button_event_args::CLICK, input_window, INPUT_WINDOW_SIZE);
 							args_arr[0] = &button_load_args;
-							args_arr[1] = &load_action_args;
+							args_arr[1] = &button_window_input_args;
 							if (button_load.try_click(args_arr, PARAM_COUNT))
+							{
+								button_confirm.add_event_handler(load_scene, Button_event_args::CLICK);
 								break;
+							}
 							else
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
 
 
+						// Line
 						{
 							Button_texture_change_event_args button_line_args(Button_event_args::CLICK, texture_button_line_pressed);
 							Shape* line = new Line(100, 5);
@@ -1118,7 +1224,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Rectangle
 						{
 							Button_texture_change_event_args button_rectangle_args(Button_event_args::CLICK, texture_button_rectangle_pressed);
 							Shape* rectangle = new Rectangle(sf::Vector2f(200, 100));
@@ -1135,7 +1241,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Circle
 						{
 							Button_texture_change_event_args button_circle_args(Button_event_args::CLICK, texture_button_circle_pressed);
 							Shape* circle = new Circle(50);
@@ -1152,7 +1258,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Triangle
 						{
 							Button_texture_change_event_args button_triangle_args(Button_event_args::CLICK, texture_button_triangle_pressed);
 							Shape* triangle = new Regular(50, 3);
@@ -1169,7 +1275,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Square
 						{
 							Button_texture_change_event_args button_square_args(Button_event_args::CLICK, texture_button_square_pressed);
 							Shape* square = new Regular(50, 4);
@@ -1187,7 +1293,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Pentagon
 						{
 							Button_texture_change_event_args button_pentagon_args(Button_event_args::CLICK, texture_button_pentagon_pressed);
 							Shape* pentagon = new Regular(50, 5);
@@ -1204,7 +1310,7 @@ int main()
 								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 						}
 
-
+						// Hexagon
 						{
 							Button_texture_change_event_args button_hexagon_args(Button_event_args::CLICK, texture_button_hexagon_pressed);
 							Shape* hexagon = new Regular(50, 6);
@@ -1480,19 +1586,20 @@ int main()
 					std::string input_x = (std::string)textbox_X.get_text().getString();
 					std::string input_y = (std::string)textbox_Y.get_text().getString();
 					std::string input_z = (std::string)textbox_Z.get_text().getString();
-					if (input_x != "" && input_x != "-")
+					if (input_x != "" && input_x != "-" && input_x != ".")
 					{
 						input.x = std::stof(input_x);
 					}
-					if (input_y != "" && input_y != "-")
+					if (input_y != "" && input_y != "-" && input_y != ".")
 					{
 						input.y = std::stof(input_y);
 					}
-					if (input_z != "" && input_z != "-")
+					if (input_z != "" && input_z != "-" && input_z != ".")
 					{
 						input.z = std::stof(input_z);
 					}
 
+					// Move
 					{
 						Button_texture_change_event_args button_move_args(Button_event_args::CLICK, texture_button_move_pressed);
 						Move_actor_event_args action_move_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y), main_scene.get_scene_size());
@@ -1504,7 +1611,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Rotate
 					{
 						Button_texture_change_event_args button_rotate_args(Button_event_args::CLICK, texture_button_rotate_pressed);
 						Rotate_actor_event_args action_rotate_args(Button_event_args::CLICK, main_scene, input.x);
@@ -1516,7 +1623,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Scale
 					{
 						Button_texture_change_event_args button_scale_args(Button_event_args::CLICK, texture_button_scale_pressed);
 						Scale_actor_event_args action_scale_args(Button_event_args::CLICK, main_scene, sf::Vector2f(input.x, input.y));
@@ -1528,7 +1635,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Color
 					{
 						Button_texture_change_event_args button_color_args(Button_event_args::CLICK, texture_button_color_pressed);
 						input.x = (int)abs(input.x) % 256;
@@ -1652,28 +1759,120 @@ int main()
 
 				}
 
-				if (main_event.type == sf::Event::KeyPressed)
+				if (main_event.type == sf::Event::TextEntered)
 				{
 
 					if (textbox_X.is_active())
 					{
-						enter_symbol(textbox_X, main_event.key.code);
+						enter_number(textbox_X, main_event.text.unicode);
 						break;
 					}
 					if (textbox_Y.is_active())
 					{
-						enter_symbol(textbox_Y, main_event.key.code);
+						enter_number(textbox_Y, main_event.text.unicode);
 						break;
 					}
 					if (textbox_Z.is_active())
 					{
-						enter_symbol(textbox_Z, main_event.key.code);
+						enter_number(textbox_Z, main_event.text.unicode);
 						break;
 					}
 
 				}
 
 
+
+			}
+
+
+
+			while (input_window.pollEvent(main_event))
+			{
+
+				if (main_event.type == sf::Event::Closed)
+				{
+
+					button_confirm.remove_event_handler(save_scene, Button_event_args::Event_type::CLICK);
+					button_confirm.remove_event_handler(load_scene, Button_event_args::Event_type::CLICK);
+					name_input.get_text().setString("");
+					input_window.close();
+
+				}
+
+				if (main_event.type == sf::Event::MouseMoved)
+				{
+
+					if (!button_confirm.is_hovered())
+						button_confirm.try_hover(sf::Mouse::getPosition(input_window));
+					else
+						button_confirm.try_unhover(sf::Mouse::getPosition(input_window));
+
+					if (!name_input.is_hovered())
+						name_input.try_hover(sf::Mouse::getPosition(input_window));
+					else
+						name_input.try_unhover(sf::Mouse::getPosition(input_window));
+
+				}
+
+				if (main_event.type == sf::Event::MouseButtonPressed)
+				{
+
+					if (name_input.try_click())
+						break;
+
+					const size_t PARAM_COUNT = 3;
+					Event_args* args_arr[PARAM_COUNT]{};
+					std::string input_string = (std::string)name_input.get_text().getString();
+
+					{
+						Button_texture_change_event_args button_confirm_args(Button_event_args::CLICK, texture_button_confirm_pressed);
+						std::string path("saved_files/" + input_string);
+						Memento_event_args file_action_args(Button_event_args::CLICK, main_scene, utils, path.c_str());
+						args_arr[0] = &button_confirm_args;
+						args_arr[1] = &file_action_args;
+						if (button_confirm.try_click(args_arr, PARAM_COUNT))
+						{
+							button_confirm.remove_event_handler(save_scene, Button_event_args::Event_type::CLICK);
+							button_confirm.remove_event_handler(load_scene, Button_event_args::Event_type::CLICK);
+							name_input.get_text().setString("");
+							break;
+						}
+					}
+
+				}
+
+				if (main_event.type == sf::Event::MouseButtonReleased)
+				{
+
+					const size_t PARAM_COUNT = 3;
+					Event_args* args_arr[PARAM_COUNT]{};
+
+					{
+						Button_texture_change_event_args button_confirm_args(Button_event_args::RELEASE, texture_button_confirm);
+						Button_window_event_args window_closing_args(Button_event_args::RELEASE, input_window, sf::Vector2u(0, 0));
+						args_arr[0] = &button_confirm_args;
+						args_arr[1] = &window_closing_args;
+						if (button_confirm.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
+
+					if (name_input.try_release())
+						break;
+
+				}
+
+				if (main_event.type == sf::Event::TextEntered)
+				{
+
+					if (name_input.is_active())
+					{
+						enter_name(name_input, main_event.text.unicode);
+						break;
+					}
+
+				}
 
 			}
 
@@ -1711,6 +1910,12 @@ int main()
 
 			properties_window.display();
 
+
+
+			input_window.clear(sf::Color(153, 153, 153));
+			input_window.draw(button_confirm);
+			input_window.draw(name_input);
+			input_window.display();
 
 
 
