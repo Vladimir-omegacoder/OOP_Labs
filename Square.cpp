@@ -58,16 +58,37 @@ void Square::draw(sf::RenderWindow& window) const
 	window.draw(square);
 }
 
-//void Square::set_memento(Memento& memento) const
-//{
-//	memento.figure = new Square(*this);
-//}
-//
-//void Square::get_memento(const Memento& memento)
-//{
-//	Square* square_mem = dynamic_cast<Square*>(memento.figure);
-//
-//	square = sf::RectangleShape(square_mem->square);
-//	this->color = square_mem->color;
-//	this->hidden = square_mem->hidden;
-//}
+
+void Square::write_to_file(std::ofstream& file)
+{
+	float side = square.getSize().x;
+
+	file.write((char*)&side, sizeof(float));
+	file.write((char*)&square.getFillColor(), sizeof(sf::Color));
+	file.write((char*)&square.getPosition(), sizeof(sf::Vector2f));
+	file.write((char*)&hidden, sizeof(bool));
+	file.write((char*)&square.getScale(), sizeof(sf::Vector2f));
+}
+
+void Square::read_from_file(std::ifstream& file)
+{
+	float side;
+	sf::Color color;
+	sf::Vector2f position, scale;
+	bool hidden;
+
+	file.read((char*)&side, sizeof(float));
+	file.read((char*)&color, sizeof(sf::Color));
+	file.read((char*)&position, sizeof(sf::Vector2f));
+	file.read((char*)&hidden, sizeof(bool));
+	file.read((char*)&scale, sizeof(sf::Vector2f));
+
+	square.setSize(sf::Vector2f(side, side));
+	set_ñolor(color);
+	set_position(position.x, position.y);
+	if (hidden)
+	{
+		hide();
+	}
+	square.scale(scale);
+}

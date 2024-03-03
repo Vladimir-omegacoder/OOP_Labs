@@ -38,19 +38,40 @@ void Circle::draw(sf::RenderWindow& window) const
 
 }
 
-//void Circle::set_memento(Memento& memento) const
-//{
-//	memento.figure = new Circle(*this);
-//}
-//
-//void Circle::get_memento(const Memento& memento)
-//{
-//	Circle* circle_mem = dynamic_cast<Circle*>(memento.figure);
-//
-//	circle = sf::CircleShape(circle_mem->circle);
-//	this->color = circle_mem->color;
-//	this->hidden = circle_mem->hidden;
-//}
+
+void Circle::write_to_file(std::ofstream& file)
+{
+	float radius = circle.getRadius();
+
+	file.write((char*)&radius, sizeof(float));
+	file.write((char*)&circle.getFillColor(), sizeof(sf::Color));
+	file.write((char*)&circle.getPosition(), sizeof(sf::Vector2f));
+	file.write((char*)&hidden, sizeof(bool));
+	file.write((char*)&circle.getScale(), sizeof(sf::Vector2f));
+}
+
+void Circle::read_from_file(std::ifstream& file)
+{
+	float radius;
+	sf::Color color;
+	sf::Vector2f position, scale;
+	bool hidden;
+
+	file.read((char*)&radius, sizeof(float));
+	file.read((char*)&color, sizeof(sf::Color));
+	file.read((char*)&position, sizeof(sf::Vector2f));
+	file.read((char*)&hidden, sizeof(bool));
+	file.read((char*)&scale, sizeof(sf::Vector2f));
+
+	circle.setRadius(radius);
+	set_ñolor(color);
+	set_position(position.x, position.y);
+	if (hidden)
+	{
+		hide();
+	}
+	circle.scale(scale);
+}
 
 
 void Circle::set_position(float x, float y)

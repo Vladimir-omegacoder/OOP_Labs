@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include <fstream>
 
 class Figure
 {
@@ -46,8 +47,6 @@ public:
 	virtual sf::FloatRect get_global_bounds() const = 0;
 
 
-
-	//virtual void set_memento(Memento& memento) const = 0;
-
-	//virtual void get_memento(const Memento& memento) = 0;
+	virtual void write_to_file(std::ofstream& file) = 0;
+	virtual void read_from_file(std::ifstream& file) = 0;
 };

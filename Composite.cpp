@@ -49,41 +49,84 @@ void Composite::add_figure(const Figure& f)
 
 
 
-//void Composite::set_memento(Memento& memento) const
-//{
-//	memento.figure = new Composite(*this);
-//}
-//
-//void Composite::get_memento(const Memento& memento)
-//{
-//	Composite* composite_mem = dynamic_cast<Composite*>(memento.figure);
-//
-//	this->color = composite_mem->color;
-//	this->hidden = composite_mem->hidden;
-//
-//
-//	for (int i = 0; i < composite_mem->figures.size(); i++)
-//	{
-//		if (const Circle* circle = dynamic_cast<const Circle*>(composite_mem->figures[i]))
-//		{
-//			figures.push_back(new Circle(*circle));
-//		}
-//		else if (const Triangle* triangle = dynamic_cast<const Triangle*>(composite_mem->figures[i]))
-//		{
-//			figures.push_back(new Triangle(*triangle));
-//		}
-//		else if (const Square* square = dynamic_cast<const Square*>(composite_mem->figures[i]))
-//		{
-//			figures.push_back(new Square(*square));
-//		}
-//		else if (const Composite* composite = dynamic_cast<const Composite*>(composite_mem->figures[i]))
-//		{
-//			figures.push_back(new Composite(*composite));
-//		}
-//	}
-//}
+
+void Composite::write_to_file(std::ofstream& file)
+{
+	int size = figures.size();
+
+	file.write((char*)&size, sizeof(int));
+
+	for (int i = 0; i < size; i++)
+	{
+		char shape_type;
+
+		if (const Circle* circle = dynamic_cast<const Circle*>(figures[i]))
+		{
+			shape_type = 'C';
+		}
+		else if (const Triangle* triangle = dynamic_cast<const Triangle*>(figures[i]))
+		{
+			shape_type = 'T';
+		}
+		else if (const Square* square = dynamic_cast<const Square*>(figures[i]))
+		{
+			shape_type = 'S';
+		}
+		else if (const Composite* composite = dynamic_cast<const Composite*>(figures[i]))
+		{
+			shape_type = 'K';
+		}
+
+		file.write((char*)&shape_type, sizeof(char));
+
+		figures[i]->write_to_file(file);
+	}
+
+	file.write((char*)&hidden, sizeof(bool));
+}
 
 
+void Composite::read_from_file(std::ifstream& file)
+{
+	int size;
+	char shape_type;
+	bool hidden;
+
+	file.read((char*)&size, sizeof(int));
+
+
+	for (int i = 0; i < size; i++)
+	{
+		file.read((char*)&shape_type, sizeof(char));
+
+		if (shape_type == 'C')
+		{
+			figures.push_back(new Circle(3));
+			figures.back()->read_from_file(file);
+		}
+		else if (shape_type == 'T')
+		{
+			figures.push_back(new Triangle(3));
+			figures.back()->read_from_file(file);
+		}
+		else if (shape_type == 'S')
+		{
+			figures.push_back(new Square(3));
+			figures.back()->read_from_file(file);
+		}
+		else if (shape_type == 'K')
+		{
+			figures.push_back(new Composite());
+			figures.back()->read_from_file(file);
+		}
+	}
+
+	file.read((char*)&hidden, sizeof(bool));
+	if (hidden)
+	{
+		hide();
+	}
+}
 
 
 sf::FloatRect Composite::get_global_bounds() const

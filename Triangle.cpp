@@ -60,16 +60,37 @@ void Triangle::draw(sf::RenderWindow& window) const
 
 }
 
-//void Triangle::set_memento(Memento& memento) const
-//{
-//	memento.figure = new Triangle(*this);
-//}
-//
-//void Triangle::get_memento(const Memento& memento)
-//{
-//	Triangle* triangle_mem = dynamic_cast<Triangle*>(memento.figure);
-//
-//	triangle = sf::CircleShape(triangle_mem->triangle);
-//	this->color = triangle_mem->color;
-//	this->hidden = triangle_mem->hidden;
-//}
+
+void Triangle::write_to_file(std::ofstream& file)
+{
+	float height = triangle.getRadius();
+
+	file.write((char*)&height, sizeof(float));
+	file.write((char*)&triangle.getFillColor(), sizeof(sf::Color));
+	file.write((char*)&triangle.getPosition(), sizeof(sf::Vector2f));
+	file.write((char*)&hidden, sizeof(bool));
+	file.write((char*)&triangle.getScale(), sizeof(sf::Vector2f));
+}
+
+void Triangle::read_from_file(std::ifstream& file)
+{
+	float height;
+	sf::Color color;
+	sf::Vector2f position, scale;
+	bool hidden;
+
+	file.read((char*)&height, sizeof(float));
+	file.read((char*)&color, sizeof(sf::Color));
+	file.read((char*)&position, sizeof(sf::Vector2f));
+	file.read((char*)&hidden, sizeof(bool));
+	file.read((char*)&scale, sizeof(sf::Vector2f));
+
+	triangle.setRadius(height);
+	set_ñolor(color);
+	set_position(position.x, position.y);
+	if (hidden)
+	{
+		hide();
+	}
+	triangle.scale(scale);
+}

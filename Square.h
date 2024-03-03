@@ -31,9 +31,9 @@ public:
 
 	void draw(sf::RenderWindow& window) const;
 
+	
 
+	void write_to_file(std::ofstream& file);
 
-	//void set_memento(Memento& memento) const;
-
-	//void get_memento(const Memento& memento);
+	void read_from_file(std::ifstream& file);
 };

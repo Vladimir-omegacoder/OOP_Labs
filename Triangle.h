@@ -35,8 +35,8 @@ public:
 
 
 
-	//void set_memento(Memento& memento) const;
+	void write_to_file(std::ofstream& file);
 
-	//void get_memento(const Memento& memento);
+	void read_from_file(std::ifstream& file);
 };
 

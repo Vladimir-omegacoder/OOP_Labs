@@ -33,29 +33,9 @@ public:
 
 
 
-	//void set_memento(Memento& memento) const;
+	void write_to_file(std::ofstream& file);
 
-	//void get_memento(const Memento& memento);
+	void read_from_file(std::ifstream& file);
 
-
-	//void Foo()
-	//{
-
-		//Figure* ptr = nullptr;
-
-		//if (Circle* circle_ptr = dynamic_cast<Circle*>(ptr))
-		//{
-		//	circle_ptr->circle;
-		//}
-		//else if (Square* circle_ptr = dynamic_cast<Square*>(ptr))
-		//{
-
-		//}
-		//else if (Composite* circle_ptr = dynamic_cast<Composite*>(ptr))
-		//{
-		//	
-		//}
-
-	//}
 };
 

@@ -15,8 +15,6 @@ private:
 
 	Figure* actve = nullptr;
 
-	/*Figure* buffer = nullptr;*/
-
 	std::map<std::string, Figure*> save_figures;
 
 	sf::Color befor_activ_color;
@@ -55,7 +53,7 @@ public:
 		return save_figures;
 	}
 
-	sf::Color _befor_activ_color()
+	sf::Color& _befor_activ_color()
 	{
 		return befor_activ_color;
 	}
@@ -158,65 +156,6 @@ public:
 		}
 	}
 
-
-
-	//void copy()
-	//{
-	//	if (actve)
-	//	{
-	//		if (buffer != nullptr)
-	//		{
-	//			delete buffer;
-	//			buffer = nullptr;
-	//		}
-
-	//		if (Circle* circle_ptr = dynamic_cast<Circle*>(actve))
-	//		{
-	//			buffer = new Circle(*circle_ptr);
-	//		}
-	//		else if (Square* square_ptr = dynamic_cast<Square*>(actve))
-	//		{
-	//			buffer = new Square (*square_ptr);
-	//		}
-	//		else if (Triangle* triangle_ptr = dynamic_cast<Triangle*>(actve))
-	//		{			
-	//			buffer = new Triangle (*triangle_ptr);
-	//		}
-	//		else if (Composite* composite_ptr = dynamic_cast<Composite*>(actve))
-	//		{			
-	//			buffer = new Composite (*composite_ptr);
-	//		}
-
-	//		buffer->set_ñolor(befor_activ_color);
-	//	}
-	//	else
-	//	{
-	//		buffer = nullptr;
-	//	}
-	//}
-
-	//void paste()
-	//{
-	//	if (buffer)
-	//	{
-	//		if (Circle* circle_ptr = dynamic_cast<Circle*>(buffer))
-	//		{
-	//			figures.push_back(new Circle(*circle_ptr));
-	//		}
-	//		else if (Square* square_ptr = dynamic_cast<Square*>(buffer))
-	//		{
-	//			figures.push_back(new Square(*square_ptr));
-	//		}
-	//		else if (Triangle* triangle_ptr = dynamic_cast<Triangle*>(buffer))
-	//		{
-	//			figures.push_back(new Triangle(*triangle_ptr));
-	//		}
-	//		else if (Composite* composite_ptr = dynamic_cast<Composite*>(buffer))
-	//		{
-	//			figures.push_back(new Composite(*composite_ptr));
-	//		}
-	//	}
-	//}
 
 
 	bool copy_figure(std::string name_figure)

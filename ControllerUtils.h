@@ -127,27 +127,16 @@ public:
 
 
 
+	void save_file(std::string name_file, const Controller& controller)
+	{
+		this->save_state(controller);
+		memento.write_to_file(name_file);
+	}
 
-
-
-
-
-
-
-
-	//void save_in_file(std::fstream& file, const Controller& controller)
-	//{
-	//	this->save_state(controller);
-	//	file << memento;
-	//	//file.write((char*)&memento, sizeof(ControllerMemeto));
-	//}
-
-	//void load_in_file(std::fstream& file, Controller& controller)
-	//{
-	//	//file.read((char*)&memento, sizeof(ControllerMemeto));
-	//	file >> memento;
-	//	this->load_state(controller);
-	//}
-
+	void load_file(std::string name_file, Controller& controller)
+	{
+		memento.read_from_file(name_file);
+		this->load_state(controller);
+	}
 };
 

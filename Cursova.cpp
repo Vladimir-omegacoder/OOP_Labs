@@ -25,6 +25,8 @@ int main()
 
 	Controller& control2 = Controller::get_instance();
 
+
+
 	ControllerUtils utils;
 
 	std::string path = "Save.txt";
@@ -111,6 +113,19 @@ int main()
 				//Вставить
 				if ((main_event.key.code == sf::Keyboard::V) && (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)))
 				{
+					std::cout << "-----Збереженi фiгури-----\n";
+
+					int i = 1;
+
+					for (auto& f: control._save_figures())
+					{
+						std::cout << i << ". " << f.first << "\n";
+						i++;
+					}
+					std::cout << "--------------------------\n\n";
+
+
+
 					std::cout << "Введiть iм'я фiгури: ";
 					std::cin >> name_fiure;
 
@@ -144,20 +159,27 @@ int main()
 				}
 
 
+				//Сохранить в файл
+				if (main_event.key.code == sf::Keyboard::O)
+				{
+					std::cout << "Введiть iм'я файла куди хочете зберегти сцену\n";
+					std::cin >> path;
 
+					utils.save_file(path, control);
 
+					std::cout << "~~~~~~Збережено~~~~~~\n\n";
+				}
 
+				//Выгрузить из файла
+				if (main_event.key.code == sf::Keyboard::P)
+				{
+					std::cout << "Введiть iм'я файла з вiдки хочете завантажити сцену\n";
+					std::cin >> path;
 
-				//if (main_event.key.code == sf::Keyboard::O)
-				//{
-				//	utils.save_in_file(file, control);
-				//}
+					utils.load_file(path, control);
 
-				//if (main_event.key.code == sf::Keyboard::P)
-				//{
-				//	utils.load_in_file(file, control);
-				//}
-
+					std::cout << "~~~~~Завантажено~~~~~\n\n";
+				}
 			}
 		}
 
@@ -197,7 +219,7 @@ int main()
 				control._actve()->show();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) // Перекрасить
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) // Перекрасить
 			{
 				control._befor_activ_color() = sf::Color::Blue;
 			}
