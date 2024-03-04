@@ -660,6 +660,7 @@ public:
 		}
 		else
 		{
+			delete saved_prototypes.at(name);
 			saved_prototypes.at(name) = new_t;
 		}
 		
@@ -678,23 +679,23 @@ public:
 		
 		if (Line* line = dynamic_cast<Line*>(temp->second))
 		{
-			actors.push_back(std::move(Actor(line)));
+			actors.push_back(std::move(Actor(new Line(*line))));
 		}
 		else if (Rectangle* rectangle = dynamic_cast<Rectangle*>(temp->second))
 		{
-			actors.push_back(std::move(Actor(rectangle)));
+			actors.push_back(std::move(Actor(new Rectangle(*rectangle))));
 		}
 		else if (Circle* circle = dynamic_cast<Circle*>(temp->second))
 		{
-			actors.push_back(std::move(Actor(circle)));
+			actors.push_back(std::move(Actor(new Circle(*circle))));
 		}
 		else if (Regular* regular = dynamic_cast<Regular*>(temp->second))
 		{
-			actors.push_back(std::move(Actor(regular)));
+			actors.push_back(std::move(Actor(new Regular(*regular))));
 		}
 		else if (Composite* composite = dynamic_cast<Composite*>(temp->second))
 		{
-			actors.push_back(std::move(Actor(composite)));
+			actors.push_back(std::move(Actor(new Composite(*composite))));
 		}
 
 
