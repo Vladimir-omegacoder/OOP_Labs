@@ -5,6 +5,7 @@
 #include <list>
 #include <algorithm>
 #include "../graphics/Primitives/include/Serializable.h"
+#include <unordered_map>
 
 
 
@@ -364,6 +365,7 @@ private:
 
 	std::list<Actor> actors;
 	std::list<Actor> buffer;
+	std::unordered_map<std::string, Shape*> saved_prototypes;
 
 
 
@@ -615,6 +617,86 @@ public:
 			}
 
 		}
+
+	}
+
+
+
+	void save_prototype(const std::string& name)
+	{
+
+		if (get_selection().begin() == get_selection().end())
+		{
+			return;
+		}
+
+		Shape* temp = (*get_selection().begin())->get_ptr();
+		Shape* new_t = nullptr;
+
+		if (const Line* line = dynamic_cast<const Line*>(temp))
+		{
+			new_t = new Line(*line);
+		}
+		else if (const Rectangle* rectangle = dynamic_cast<const Rectangle*>(temp))
+		{
+			new_t = new Rectangle(*rectangle);
+		}
+		else if (const Circle* circle = dynamic_cast<const Circle*>(temp))
+		{
+			new_t = new Circle(*circle);
+		}
+		else if (const Regular* regular = dynamic_cast<const Regular*>(temp))
+		{
+			new_t = new Regular(*regular);
+		}
+		else if (const Composite* composite = dynamic_cast<const Composite*>(temp))
+		{
+			new_t = new Composite(*composite);
+		}
+
+		if (saved_prototypes.find(name) == saved_prototypes.end())
+		{
+			saved_prototypes.emplace(std::make_pair(name, new_t));
+		}
+		else
+		{
+			saved_prototypes.at(name) = new_t;
+		}
+		
+
+	}
+
+	void load_prototype(const std::string& name)
+	{
+
+		auto temp = saved_prototypes.find(name);
+
+		if (temp == saved_prototypes.end())
+		{
+			return;
+		}
+		
+		if (Line* line = dynamic_cast<Line*>(temp->second))
+		{
+			actors.push_back(std::move(Actor(line)));
+		}
+		else if (Rectangle* rectangle = dynamic_cast<Rectangle*>(temp->second))
+		{
+			actors.push_back(std::move(Actor(rectangle)));
+		}
+		else if (Circle* circle = dynamic_cast<Circle*>(temp->second))
+		{
+			actors.push_back(std::move(Actor(circle)));
+		}
+		else if (Regular* regular = dynamic_cast<Regular*>(temp->second))
+		{
+			actors.push_back(std::move(Actor(regular)));
+		}
+		else if (Composite* composite = dynamic_cast<Composite*>(temp->second))
+		{
+			actors.push_back(std::move(Actor(composite)));
+		}
+
 
 	}
 

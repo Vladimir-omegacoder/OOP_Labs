@@ -58,6 +58,12 @@
 #define BUTTON_LOAD					"resources/button/button_load/button_load.png"
 #define BUTTON_LOAD_PRESSED			"resources/button/button_load/button_load_pressed.png"
 
+#define BUTTON_SAVE_PROTOTYPE			"resources/button/button_save_prototype/button_save_prototype.png"
+#define BUTTON_SAVE_PROTOTYPE_PRESSED	"resources/button/button_save_prototype/button_save_prototype_pressed.png"
+
+#define BUTTON_LOAD_PROTOTYPE			"resources/button/button_load_prototype/button_load_prototype.png"
+#define BUTTON_LOAD_PROTOTYPE_PRESSED	"resources/button/button_load_prototype/button_load_prototype_pressed.png"
+
 
 
 #define TEXTBOX_GENERAL				DEFAULT_TEXTBOX_TEXTURE
@@ -240,7 +246,9 @@ int main()
 		texture_button_copy, texture_button_copy_pressed,
 		texture_button_paste, texture_button_paste_pressed,
 		texture_button_save, texture_button_save_pressed,
-		texture_button_load, texture_button_load_pressed;
+		texture_button_load, texture_button_load_pressed,
+		texture_button_save_prototype, texture_button_save_prototype_pressed,
+		texture_button_load_prototype, texture_button_load_prototype_pressed;
 
 	{
 		texture_button_line.loadFromFile(BUTTON_LINE);
@@ -285,6 +293,12 @@ int main()
 		texture_button_load.loadFromFile(BUTTON_LOAD);
 		texture_button_load_pressed.loadFromFile(BUTTON_LOAD_PRESSED);
 
+		texture_button_save_prototype.loadFromFile(BUTTON_SAVE_PROTOTYPE);
+		texture_button_save_prototype_pressed.loadFromFile(BUTTON_SAVE_PROTOTYPE_PRESSED);
+
+		texture_button_load_prototype.loadFromFile(BUTTON_LOAD_PROTOTYPE);
+		texture_button_load_prototype_pressed.loadFromFile(BUTTON_LOAD_PROTOTYPE_PRESSED);
+
 	}
 
 
@@ -303,10 +317,12 @@ int main()
 		button_copy,
 		button_paste,
 		button_save,
-		button_load;
+		button_load,
+		button_save_prototype,
+		button_load_prototype;
 
-	const sf::Vector2f b_size = sf::Vector2f(45, 45);
-	const sf::Vector2f b_spacing = sf::Vector2f(8, 8);
+	const sf::Vector2f b_size = sf::Vector2f(40, 40);
+	const sf::Vector2f b_spacing = sf::Vector2f(7, 7);
 
 	// Applying loaded textures to the buttons
 	{
@@ -367,13 +383,21 @@ int main()
 		button_load.get_graphics().setScale(b_size.x / texture_button_load.getSize().x * GLOBAL_SCALE.x,
 			b_size.y / texture_button_load.getSize().y * GLOBAL_SCALE.y);
 
+		button_save_prototype.get_graphics().setTexture(texture_button_save_prototype);
+		button_save_prototype.get_graphics().setScale(b_size.x / texture_button_save_prototype.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_save_prototype.getSize().y * GLOBAL_SCALE.y);
+
+		button_load_prototype.get_graphics().setTexture(texture_button_load_prototype);
+		button_load_prototype.get_graphics().setScale(b_size.x / texture_button_load_prototype.getSize().x * GLOBAL_SCALE.x,
+			b_size.y / texture_button_load_prototype.getSize().y * GLOBAL_SCALE.y);
+
 	}
 
 	// Aligning buttons on the panel
 	{
 
-		float padding1 = 25;
-		float padding2 = padding1 + 25;
+		float padding1 = 20;
+		float padding2 = padding1 + 20;
 
 		button_line.get_graphics().setPosition((4 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
 		button_rectangle.get_graphics().setPosition((5 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
@@ -382,9 +406,11 @@ int main()
 		button_square.get_graphics().setPosition((8 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
 		button_pentagon.get_graphics().setPosition((9 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
 		button_hexagon.get_graphics().setPosition((10 * (b_spacing.x + b_size.x) + b_spacing.x + padding1) * GLOBAL_SCALE.x, b_spacing .y* GLOBAL_SCALE.y);
-		button_properties.get_graphics().setPosition((11 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
-		button_aggregate.get_graphics().setPosition((12 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
-		button_delete.get_graphics().setPosition((13 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_save_prototype.get_graphics().setPosition((11 * (b_spacing.x + b_size.x) + b_spacing.x + padding1)* GLOBAL_SCALE.x, b_spacing.y* GLOBAL_SCALE.y);
+		button_load_prototype.get_graphics().setPosition((12 * (b_spacing.x + b_size.x) + b_spacing.x + padding1)* GLOBAL_SCALE.x, b_spacing.y* GLOBAL_SCALE.y);
+		button_properties.get_graphics().setPosition((13 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_aggregate.get_graphics().setPosition((14 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
+		button_delete.get_graphics().setPosition((15 * (b_spacing.x + b_size.x) + b_spacing.x + padding2) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
 		button_copy.get_graphics().setPosition((2 * (b_spacing.x + b_size.x) + b_spacing.x) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
 		button_paste.get_graphics().setPosition((3 * (b_spacing.x + b_size.x) + b_spacing.x) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
 		button_save.get_graphics().setPosition((0 * (b_spacing.x + b_size.x) + b_spacing.x) * GLOBAL_SCALE.x, b_spacing.y * GLOBAL_SCALE.y);
@@ -438,6 +464,8 @@ int main()
 		button_paste.add_event_handler(press, Button_event_args::CLICK);
 		button_save.add_event_handler(press, Button_event_args::CLICK);
 		button_load.add_event_handler(press, Button_event_args::CLICK);
+		button_save_prototype.add_event_handler(press, Button_event_args::CLICK);
+		button_load_prototype.add_event_handler(press, Button_event_args::CLICK);
 
 		button_line.add_event_handler(release, Button_event_args::RELEASE);
 		button_rectangle.add_event_handler(release, Button_event_args::RELEASE);
@@ -453,6 +481,8 @@ int main()
 		button_paste.add_event_handler(release, Button_event_args::RELEASE);
 		button_save.add_event_handler(release, Button_event_args::RELEASE);
 		button_load.add_event_handler(release, Button_event_args::RELEASE);
+		button_save_prototype.add_event_handler(release, Button_event_args::RELEASE);
+		button_load_prototype.add_event_handler(release, Button_event_args::RELEASE);
 
 	}
 
@@ -958,25 +988,21 @@ int main()
 	button_confirm.add_event_handler(close_input, Button_event_args::Event_type::RELEASE);
 	void(*save_scene)(Button*, Event_args*) = [](Button* button, Event_args* args)
 		{
-
 			if (auto action_args = dynamic_cast<Memento_event_args*>(args))
 			{
 				action_args->utils.save_snapshot(action_args->scene);
 				action_args->utils.save_snapshot_file(action_args->filename);
-				std::cout << "SAVED.\n";
+				std::cout << "Saved.\n";
 			}
-
 		};
 	void(*load_scene)(Button*, Event_args*) = [](Button* button, Event_args* args)
 		{
-
 			if (auto action_args = dynamic_cast<Memento_event_args*>(args))
 			{
 				action_args->utils.load_snapshot_file(action_args->filename);
 				action_args->utils.load_snapshot(action_args->scene);
-				std::cout << "LOADED.\n";
+				std::cout << "Loaded.\n";
 			}
-
 		};
 
 	Textbox name_input;
@@ -989,6 +1015,53 @@ int main()
 		name_input.get_graphics().setPosition(15, 15);
 		name_input.get_text().setPosition(20, 10);
 	}
+
+
+	void(*open_save_prototype_window)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+			if (auto open_window_args = dynamic_cast<Button_window_event_args*>(args))
+			{
+				open_window_args->window.create(sf::VideoMode(open_window_args->window_size.x, open_window_args->window_size.y), "Save prototype");
+			}
+		};
+	button_save_prototype.add_event_handler(open_save_prototype_window, Button_event_args::CLICK);
+
+	void(*open_load_prototype_window)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+			if (auto open_window_args = dynamic_cast<Button_window_event_args*>(args))
+			{
+				open_window_args->window.create(sf::VideoMode(open_window_args->window_size.x, open_window_args->window_size.y), "Load prototype");
+			}
+		};
+	button_load_prototype.add_event_handler(open_load_prototype_window, Button_event_args::CLICK);
+
+
+	class Prototype_event_args : public Scene_action_actor_event_args
+	{
+
+	public:
+
+		const std::string name;
+
+		Prototype_event_args(Event_type event_type, Scene& scene, const std::string name) : 
+			Scene_action_actor_event_args(event_type, scene), name(name) {}
+
+	};
+
+	void(*save_prototype)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+			if (auto action_args = dynamic_cast<Prototype_event_args*>(args))
+			{
+				action_args->scene.save_prototype(action_args->name);
+			}
+		};
+	void(*load_prototype)(Button*, Event_args*) = [](Button* button, Event_args* args)
+		{
+			if (auto action_args = dynamic_cast<Prototype_event_args*>(args))
+			{
+				action_args->scene.load_prototype(action_args->name);
+			}
+		};
 
 
 
@@ -1058,12 +1131,21 @@ int main()
 						else
 							button_load.try_unhover(sf::Mouse::getPosition(main_window));
 
+						if (!button_save_prototype.is_hovered())
+							button_save_prototype.try_hover(sf::Mouse::getPosition(main_window));
+						else
+							button_save_prototype.try_unhover(sf::Mouse::getPosition(main_window));
+
+						if (!button_load_prototype.is_hovered())
+							button_load_prototype.try_hover(sf::Mouse::getPosition(main_window));
+						else
+							button_load_prototype.try_unhover(sf::Mouse::getPosition(main_window));
+
 
 						if (!button_line.is_hovered())
 							button_line.try_hover(sf::Mouse::getPosition(main_window));
 						else
 							button_line.try_unhover(sf::Mouse::getPosition(main_window));
-
 
 						if (!button_rectangle.is_hovered())
 							button_rectangle.try_hover(sf::Mouse::getPosition(main_window));
@@ -1183,6 +1265,11 @@ int main()
 							args_arr[1] = &button_window_input_args;
 							if (button_save.try_click(args_arr, PARAM_COUNT))
 							{
+								button_confirm.remove_event_handler(save_scene, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(load_scene, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(save_prototype, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(load_prototype, Button_event_args::Event_type::CLICK);
+								name_input.get_text().setString("");
 								button_confirm.add_event_handler(save_scene, Button_event_args::CLICK);
 								break;
 							}
@@ -1198,7 +1285,52 @@ int main()
 							args_arr[1] = &button_window_input_args;
 							if (button_load.try_click(args_arr, PARAM_COUNT))
 							{
+								button_confirm.remove_event_handler(save_scene, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(load_scene, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(save_prototype, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(load_prototype, Button_event_args::Event_type::CLICK);
+								name_input.get_text().setString("");
 								button_confirm.add_event_handler(load_scene, Button_event_args::CLICK);
+								break;
+							}
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
+
+						// Save prototype
+						{
+							Button_texture_change_event_args button_save_prototype_args(Button_event_args::CLICK, texture_button_save_prototype_pressed);
+							Button_window_event_args button_window_input_args(Button_event_args::CLICK, input_window, INPUT_WINDOW_SIZE);
+							args_arr[0] = &button_save_prototype_args;
+							args_arr[1] = &button_window_input_args;
+							if (button_save_prototype.try_click(args_arr, PARAM_COUNT))
+							{
+								button_confirm.remove_event_handler(save_scene, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(load_scene, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(save_prototype, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(load_prototype, Button_event_args::Event_type::CLICK);
+								name_input.get_text().setString("");
+								button_confirm.add_event_handler(save_prototype, Button_event_args::CLICK);
+								break;
+							}
+							else
+								args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+						}
+
+						// Load prototype
+						{
+							Button_texture_change_event_args button_load_prototype_args(Button_event_args::CLICK, texture_button_load_prototype_pressed);
+							Button_window_event_args button_window_input_args(Button_event_args::CLICK, input_window, INPUT_WINDOW_SIZE);
+							args_arr[0] = &button_load_prototype_args;
+							args_arr[1] = &button_window_input_args;
+							if (button_load_prototype.try_click(args_arr, PARAM_COUNT))
+							{
+								button_confirm.remove_event_handler(save_scene, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(load_scene, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(save_prototype, Button_event_args::Event_type::CLICK);
+								button_confirm.remove_event_handler(load_prototype, Button_event_args::Event_type::CLICK);
+								name_input.get_text().setString("");
+								button_confirm.add_event_handler(load_prototype, Button_event_args::CLICK);
 								break;
 							}
 							else
@@ -1341,6 +1473,7 @@ int main()
 					const size_t PARAM_COUNT = 3;
 					Event_args* args_arr[PARAM_COUNT]{};
 
+					// Properties
 					{
 						Button_texture_change_event_args button_properties_args(Button_event_args::RELEASE, texture_button_properties);
 						args_arr[0] = &button_properties_args;
@@ -1350,7 +1483,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Delete
 					{
 						Button_texture_change_event_args button_delete_args(Button_event_args::RELEASE, texture_button_delete);
 						args_arr[0] = &button_delete_args;
@@ -1360,7 +1493,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Aggregate
 					{
 						Button_texture_change_event_args button_aggregate_args(Button_event_args::RELEASE, texture_button_aggregate);
 						args_arr[0] = &button_aggregate_args;
@@ -1370,7 +1503,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Copy
 					{
 						Button_texture_change_event_args button_copy_args(Button_event_args::RELEASE, texture_button_copy);
 						args_arr[0] = &button_copy_args;
@@ -1380,6 +1513,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
+					// Paste
 					{
 						Button_texture_change_event_args button_paste_args(Button_event_args::RELEASE, texture_button_paste);
 						args_arr[0] = &button_paste_args;
@@ -1389,6 +1523,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
+					// Save
 					{
 						Button_texture_change_event_args button_save_args(Button_event_args::RELEASE, texture_button_save);
 						args_arr[0] = &button_save_args;
@@ -1398,6 +1533,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
+					// Load
 					{
 						Button_texture_change_event_args button_load_args(Button_event_args::RELEASE, texture_button_load);
 						args_arr[0] = &button_load_args;
@@ -1407,8 +1543,29 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
+					// Save prototype
+					{
+						Button_texture_change_event_args button_save_prototype_args(Button_event_args::RELEASE, texture_button_save_prototype);
+						args_arr[0] = &button_save_prototype_args;
+						if (button_save_prototype.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
+
+					// Load prototype
+					{
+						Button_texture_change_event_args button_load_prototype_args(Button_event_args::RELEASE, texture_button_load_prototype);
+						args_arr[0] = &button_load_prototype_args;
+						if (button_load_prototype.try_release(args_arr, PARAM_COUNT))
+							break;
+						else
+							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
+					}
 
 
+
+					// Line
 					{
 						Button_texture_change_event_args button_line_args(Button_event_args::RELEASE, texture_button_line);
 						args_arr[0] = &button_line_args;
@@ -1418,7 +1575,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Reactangle
 					{
 						Button_texture_change_event_args button_rectangle_args(Button_event_args::RELEASE, texture_button_rectangle);
 						args_arr[0] = &button_rectangle_args;
@@ -1428,7 +1585,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Circle
 					{
 						Button_texture_change_event_args button_circle_args(Button_event_args::RELEASE, texture_button_circle);
 						args_arr[0] = &button_circle_args;
@@ -1438,7 +1595,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Triangle
 					{
 						Button_texture_change_event_args button_triangle_args(Button_event_args::RELEASE, texture_button_triangle);
 						args_arr[0] = &button_triangle_args;
@@ -1448,7 +1605,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Square
 					{
 						Button_texture_change_event_args button_square_args(Button_event_args::RELEASE, texture_button_square);
 						args_arr[0] = &button_square_args;
@@ -1458,7 +1615,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Pentagon
 					{
 						Button_texture_change_event_args button_pentagon_args(Button_event_args::RELEASE, texture_button_pentagon);
 						args_arr[0] = &button_pentagon_args;
@@ -1468,7 +1625,7 @@ int main()
 							args_arr[0] = args_arr[1] = args_arr[2] = nullptr;
 					}
 
-
+					// Hexagon
 					{
 						Button_texture_change_event_args button_hexagon_args(Button_event_args::RELEASE, texture_button_hexagon);
 						args_arr[0] = &button_hexagon_args;
@@ -1794,6 +1951,8 @@ int main()
 
 					button_confirm.remove_event_handler(save_scene, Button_event_args::Event_type::CLICK);
 					button_confirm.remove_event_handler(load_scene, Button_event_args::Event_type::CLICK);
+					button_confirm.remove_event_handler(save_prototype, Button_event_args::Event_type::CLICK);
+					button_confirm.remove_event_handler(load_prototype, Button_event_args::Event_type::CLICK);
 					name_input.get_text().setString("");
 					input_window.close();
 
@@ -1828,12 +1987,16 @@ int main()
 						Button_texture_change_event_args button_confirm_args(Button_event_args::CLICK, texture_button_confirm_pressed);
 						std::string path("saved_files/" + input_string);
 						Memento_event_args file_action_args(Button_event_args::CLICK, main_scene, utils, path.c_str());
+						Prototype_event_args prototype_action_args(Button_event_args::CLICK, main_scene, input_string);
 						args_arr[0] = &button_confirm_args;
 						args_arr[1] = &file_action_args;
+						args_arr[2] = &prototype_action_args;
 						if (button_confirm.try_click(args_arr, PARAM_COUNT))
 						{
 							button_confirm.remove_event_handler(save_scene, Button_event_args::Event_type::CLICK);
 							button_confirm.remove_event_handler(load_scene, Button_event_args::Event_type::CLICK);
+							button_confirm.remove_event_handler(save_prototype, Button_event_args::Event_type::CLICK);
+							button_confirm.remove_event_handler(load_prototype, Button_event_args::Event_type::CLICK);
 							name_input.get_text().setString("");
 							break;
 						}
@@ -1938,6 +2101,8 @@ int main()
 			main_window.draw(button_paste);
 			main_window.draw(button_save);
 			main_window.draw(button_load);
+			main_window.draw(button_save_prototype);
+			main_window.draw(button_load_prototype);
 
 			main_window.display();
 
